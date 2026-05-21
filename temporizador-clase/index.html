@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Temporizador de Clase | Miguel Iglesias</title>
+  <link rel="icon" href="./logo.png" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(14, 165, 233, 0.22), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(79, 70, 229, 0.18), transparent 35%),
+        linear-gradient(135deg, #f8fafc, #e0f2fe);
+      color: #1f2937;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 10px;
+      transition: background 0.35s ease, color 0.35s ease;
+    }
+
+    body.dark-mode {
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(99, 102, 241, 0.16), transparent 35%),
+        linear-gradient(135deg, #020617, #0f172a);
+      color: #e5e7eb;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 920px;
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.14);
+      border: 1px solid rgba(14, 165, 233, 0.25);
+      overflow: hidden;
+      position: relative;
+      transition: background 0.35s ease, border 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .dark-mode .app {
+      background: rgba(15, 23, 42, 0.96);
+      border-color: rgba(56, 189, 248, 0.25);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    }
+
+    .app::before {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: rgba(14, 165, 233, 0.08);
+      right: -90px;
+      top: -90px;
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .home-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      background: #dbeafe;
+      color: #075985;
+      border: 1px solid #93c5fd;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.92rem;
+      margin-bottom: 16px;
+      box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
+      transition: transform .15s ease, background .15s ease;
+    }
+
+    .home-button:hover {
+      transform: translateY(-2px);
+      background: #bfdbfe;
+    }
+
+    .brand {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .logo {
+      width: 82px;
+      height: 82px;
+      object-fit: contain;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.16);
+      padding: 4px;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 6px 0 4px;
+      font-size: 1.7rem;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+    }
+
+    .dark-mode h1 {
+      color: #f8fafc;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #475569;
+      margin-bottom: 14px;
+      font-size: 0.9rem;
+    }
+
+    .dark-mode .subtitle,
+    .dark-mode .info,
+    .dark-mode .footer {
+      color: #cbd5e1;
+    }
+
+    .dark-toggle-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .panel,
+    .stage {
+      background: #f8fafc;
+      border-radius: 20px;
+      padding: 14px;
+      border: 1px solid #dbeafe;
+      transition: background 0.35s ease, border 0.35s ease;
+    }
+
+    .dark-mode .panel,
+    .dark-mode .stage,
+    .dark-mode .preset-card {
+      background: #111827;
+      border-color: #334155;
+    }
+
+    .panel-title {
+      font-weight: bold;
+      color: #075985;
+      margin-bottom: 10px;
+    }
+
+    .dark-mode .panel-title,
+    .dark-mode .preset-card h3 {
+      color: #f8fafc;
+    }
+
+    input,
+    select {
+      width: 100%;
+      border: 2px solid #bae6fd;
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-size: 1rem;
+      outline: none;
+      background: white;
+      color: #0f172a;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #0ea5e9;
+      box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
+    }
+
+    .time-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .preset-card {
+      border: 1px solid #dbeafe;
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 12px;
+      text-align: left;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s ease, border .15s ease;
+    }
+
+    .preset-card:hover {
+      transform: translateY(-2px);
+      border-color: #7dd3fc;
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.10);
+    }
+
+    .preset-card h3 {
+      margin: 0 0 4px;
+      font-size: 0.95rem;
+      color: #0f172a;
+    }
+
+    .preset-card p {
+      margin: 0;
+      font-size: 0.82rem;
+      color: #64748b;
+      font-weight: 700;
+    }
+
+    .dark-mode .preset-card p {
+      color: #cbd5e1;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.12);
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .primary {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: white;
+      font-size: 1.08rem;
+      padding: 15px 18px;
+    }
+
+    .secondary {
+      background: #e0f2fe;
+      color: #075985;
+    }
+
+    .danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .full-button {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .stage {
+      background: linear-gradient(180deg, #ffffff, #f0f9ff);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 470px;
+    }
+
+    .dark-mode .stage {
+      background: linear-gradient(180deg, #111827, #0f172a);
+    }
+
+    .timer-ring {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: conic-gradient(#0284c7 360deg, #e0f2fe 0deg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+      box-shadow: 0 18px 34px rgba(15, 23, 42, 0.16);
+      transition: background 0.35s linear, transform 0.25s ease;
+    }
+
+    .timer-ring.warning {
+      animation: timerPulse 0.8s infinite alternate;
+    }
+
+    @keyframes timerPulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.025); }
+    }
+
+    .timer-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: inset 0 0 0 3px #bae6fd;
+      padding: 18px;
+    }
+
+    .dark-mode .timer-inner {
+      background: #111827;
+      box-shadow: inset 0 0 0 3px #38bdf8;
+    }
+
+    .time-display {
+      font-size: 3.6rem;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: -2px;
+      line-height: 1;
+    }
+
+    .dark-mode .time-display {
+      color: #f8fafc;
+    }
+
+    .timer-label {
+      margin-top: 12px;
+      color: #64748b;
+      font-weight: 900;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .dark-mode .timer-label {
+      color: #cbd5e1;
+    }
+
+    .status-box {
+      margin-top: 18px;
+      padding: 14px 18px;
+      border-radius: 18px;
+      background: #ecfeff;
+      border: 2px dashed #38bdf8;
+      color: #075985;
+      font-weight: 900;
+      min-width: 240px;
+      transition: transform .25s ease;
+    }
+
+    .dark-mode .status-box {
+      background: #082f49;
+      color: #f8fafc;
+    }
+
+    .status-pop {
+      animation: statusPop 0.65s ease;
+    }
+
+    @keyframes statusPop {
+      0% { transform: scale(1); }
+      35% { transform: scale(1.06); box-shadow: 0 0 0 8px rgba(56,189,248,0.18); }
+      100% { transform: scale(1); }
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 18px;
+      color: #64748b;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 760px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .stage {
+        min-height: 380px;
+      }
+
+      .timer-ring {
+        width: 250px;
+        height: 250px;
+      }
+
+      .time-display {
+        font-size: 2.8rem;
+      }
+
+      .preset-grid,
+      .button-row,
+      .time-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <a class="home-button" href="../">⬅ Volver al menú</a>
+
+    <div class="content">
+      <div class="brand">
+        <img class="logo" src="./logo.png" alt="Logo Miguel Iglesias" />
+      </div>
+
+      <h1>Temporizador de clase</h1>
+      <p class="subtitle">Controla actividades, estaciones, retos y transiciones con un temporizador visual para el aula.</p>
+
+      <div class="dark-toggle-wrap">
+        <button class="secondary" id="darkModeBtn" style="padding:8px 14px;font-size:0.85rem;">🌙 Modo oscuro</button>
+      </div>
+
+      <section class="layout">
+        <div class="panel">
+          <div class="panel-title">Presets rápidos</div>
+
+          <div class="preset-grid">
+            <div class="preset-card" data-minutes="2">
+              <h3>⚡ Inicio rápido</h3>
+              <p>2 minutos</p>
+            </div>
+
+            <div class="preset-card" data-minutes="5">
+              <h3>🗣️ Conversación</h3>
+              <p>5 minutos</p>
+            </div>
+
+            <div class="preset-card" data-minutes="10">
+              <h3>✍️ Escritura</h3>
+              <p>10 minutos</p>
+            </div>
+
+            <div class="preset-card" data-minutes="15">
+              <h3>👥 Trabajo en grupo</h3>
+              <p>15 minutos</p>
+            </div>
+
+            <div class="preset-card custom-preset" id="customPresetCard">
+              <h3 id="customPresetTitle">⭐ Mi actividad</h3>
+              <p id="customPresetTime">7 minutos</p>
+            </div>
+          </div>
+
+          <div class="panel-title">Preset personalizable</div>
+
+          <div class="time-grid">
+            <div>
+              <label class="panel-title" for="customPresetName" style="font-size:0.86rem;display:block;">Actividad</label>
+              <input id="customPresetName" type="text" value="Mi actividad" />
+            </div>
+
+            <div>
+              <label class="panel-title" for="customPresetMinutes" style="font-size:0.86rem;display:block;">Minutos</label>
+              <input id="customPresetMinutes" type="number" min="1" max="99" value="7" />
+            </div>
+          </div>
+
+          <button class="secondary full-button" id="saveCustomPresetBtn">⭐ Guardar preset</button>
+
+          <div class="panel-title" style="margin-top:14px;">Sonido final</div>
+          <select id="finishSoundSelect">
+            <option value="classic">🔔 TIN TIN TIN clásico</option>
+            <option value="chime">✨ Campanita elegante</option>
+            <option value="school">🏫 Campana de clase</option>
+            <option value="arcade">🎮 Arcade</option>
+          </select>
+
+          <div class="panel-title">Tiempo personalizado</div>
+
+          <div class="time-grid">
+            <div>
+              <label class="panel-title" for="minutesInput" style="font-size:0.86rem;display:block;">Minutos</label>
+              <input id="minutesInput" type="number" min="0" max="99" value="5" />
+            </div>
+
+            <div>
+              <label class="panel-title" for="secondsInput" style="font-size:0.86rem;display:block;">Segundos</label>
+              <input id="secondsInput" type="number" min="0" max="59" value="0" />
+            </div>
+          </div>
+
+          <button class="primary full-button" id="setTimerBtn">⏱️ Preparar tiempo</button>
+
+          <div class="button-row">
+            <button class="secondary" id="startPauseBtn">▶️ Iniciar</button>
+            <button class="danger" id="resetBtn">🔄 Reiniciar</button>
+          </div>
+
+          <div class="button-row">
+            <button class="secondary" id="addMinuteBtn">+1 min</button>
+            <button class="secondary" id="subtractMinuteBtn">-1 min</button>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="timer-ring" id="timerRing">
+            <div class="timer-inner">
+              <div class="time-display" id="timeDisplay">05:00</div>
+              <div class="timer-label" id="timerLabel">Listo</div>
+            </div>
+          </div>
+
+          <div class="status-box" id="statusBox">Selecciona un tiempo y pulsa iniciar.</div>
+        </div>
+      </section>
+
+      <div class="footer">Creado para clase por Miguel Iglesias</div>
+    </div>
+  </main>
+
+  <script>
+    let totalSeconds = 300;
+    let remainingSeconds = 300;
+    let timerInterval = null;
+    let isRunning = false;
+    let audioCtx = null;
+
+    const minutesInput = document.getElementById('minutesInput');
+    const secondsInput = document.getElementById('secondsInput');
+    const setTimerBtn = document.getElementById('setTimerBtn');
+    const startPauseBtn = document.getElementById('startPauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const addMinuteBtn = document.getElementById('addMinuteBtn');
+    const subtractMinuteBtn = document.getElementById('subtractMinuteBtn');
+    const timeDisplay = document.getElementById('timeDisplay');
+    const timerLabel = document.getElementById('timerLabel');
+    const timerRing = document.getElementById('timerRing');
+    const statusBox = document.getElementById('statusBox');
+    const darkModeBtn = document.getElementById('darkModeBtn');
+    const customPresetCard = document.getElementById('customPresetCard');
+    const customPresetTitle = document.getElementById('customPresetTitle');
+    const customPresetTime = document.getElementById('customPresetTime');
+    const customPresetName = document.getElementById('customPresetName');
+    const customPresetMinutes = document.getElementById('customPresetMinutes');
+    const saveCustomPresetBtn = document.getElementById('saveCustomPresetBtn');
+    const finishSoundSelect = document.getElementById('finishSoundSelect');
+
+    document.addEventListener('DOMContentLoaded', initApp);
+
+    function initApp() {
+      loadCustomPreset();
+
+      const savedTime = safeLoad('classTimerTime', 300);
+      totalSeconds = savedTime;
+      remainingSeconds = savedTime;
+      updateInputsFromSeconds(savedTime);
+      updateDisplay();
+
+      document.querySelectorAll('.preset-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const minutes = Number(card.dataset.minutes);
+          const label = card.querySelector('h3')?.textContent || 'Actividad';
+          setTime(minutes * 60);
+          timerLabel.textContent = label.replace(/[⚡🗣️✍️👥⭐]/g, '').trim() || 'Listo';
+          showStatus(`${label} · ${minutes} minutos preparados.`);
+          playSoftClick();
+        });
+      });
+
+      setTimerBtn.addEventListener('click', prepareCustomTime);
+      startPauseBtn.addEventListener('click', toggleTimer);
+      resetBtn.addEventListener('click', resetTimer);
+      addMinuteBtn.addEventListener('click', () => adjustTime(60));
+      subtractMinuteBtn.addEventListener('click', () => adjustTime(-60));
+      darkModeBtn.addEventListener('click', toggleDarkMode);
+      saveCustomPresetBtn.addEventListener('click', saveCustomPreset);
+      finishSoundSelect.addEventListener('change', () => {
+        safeSave('classTimerFinishSound', finishSoundSelect.value);
+        showStatus('Sonido final actualizado.');
+        playFinishSound();
+      });
+
+      finishSoundSelect.value = safeLoad('classTimerFinishSound', 'classic');
+
+      if (safeLoad('darkMode', false)) {
+        document.body.classList.add('dark-mode');
+        darkModeBtn.textContent = '☀️ Modo claro';
+      }
+    }
+
+    function safeLoad(key, fallback) {
+      try {
+        return JSON.parse(localStorage.getItem(key)) || fallback;
+      } catch (error) {
+        return fallback;
+      }
+    }
+
+    function safeSave(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      darkModeBtn.textContent = isDark ? '☀️ Modo claro' : '🌙 Modo oscuro';
+      safeSave('darkMode', isDark);
+    }
+
+    function loadCustomPreset() {
+      const preset = safeLoad('customClassTimerPreset', {
+        name: 'Mi actividad',
+        minutes: 7
+      });
+
+      customPresetName.value = preset.name;
+      customPresetMinutes.value = preset.minutes;
+      customPresetTitle.textContent = `⭐ ${preset.name}`;
+      customPresetTime.textContent = `${preset.minutes} minutos`;
+      customPresetCard.dataset.minutes = preset.minutes;
+    }
+
+    function saveCustomPreset() {
+      const name = customPresetName.value.trim() || 'Mi actividad';
+      const minutes = Math.max(1, Math.min(99, Number(customPresetMinutes.value) || 7));
+
+      const preset = { name, minutes };
+      safeSave('customClassTimerPreset', preset);
+
+      customPresetName.value = name;
+      customPresetMinutes.value = minutes;
+      customPresetTitle.textContent = `⭐ ${name}`;
+      customPresetTime.textContent = `${minutes} minutos`;
+      customPresetCard.dataset.minutes = minutes;
+
+      showStatus(`Preset guardado: ${name} · ${minutes} minutos.`);
+      playSoftClick();
+    }
+
+    function prepareCustomTime() {
+      const minutes = Math.max(0, Number(minutesInput.value) || 0);
+      const seconds = Math.min(59, Math.max(0, Number(secondsInput.value) || 0));
+      const newTotal = (minutes * 60) + seconds;
+
+      if (newTotal <= 0) {
+        showStatus('Elige un tiempo mayor que cero.');
+        return;
+      }
+
+      setTime(newTotal);
+      showStatus('Tiempo preparado.');
+      playSoftClick();
+    }
+
+    function setTime(seconds) {
+      stopTimer();
+      totalSeconds = seconds;
+      remainingSeconds = seconds;
+      safeSave('classTimerTime', seconds);
+      updateInputsFromSeconds(seconds);
+      updateDisplay();
+      timerLabel.textContent = 'Listo';
+      startPauseBtn.textContent = '▶️ Iniciar';
+      timerRing.classList.remove('warning');
+    }
+
+    function updateInputsFromSeconds(seconds) {
+      minutesInput.value = Math.floor(seconds / 60);
+      secondsInput.value = seconds % 60;
+    }
+
+    function toggleTimer() {
+      if (remainingSeconds <= 0) {
+        resetTimer();
+        return;
+      }
+
+      if (isRunning) {
+        stopTimer();
+        timerLabel.textContent = 'Pausado';
+        startPauseBtn.textContent = '▶️ Reanudar';
+        showStatus('Temporizador pausado.');
+      } else {
+        startTimer();
+      }
+    }
+
+    function startTimer() {
+      if (isRunning) return;
+
+      isRunning = true;
+      timerLabel.textContent = 'En marcha';
+      startPauseBtn.textContent = '⏸️ Pausar';
+      showStatus('Tiempo en marcha.');
+      playStartSound();
+
+      timerInterval = setInterval(() => {
+        remainingSeconds -= 1;
+        updateDisplay();
+
+        if (remainingSeconds <= 10 && remainingSeconds > 0) {
+          timerRing.classList.add('warning');
+          playTickSound();
+        }
+
+        if (remainingSeconds <= 0) {
+          finishTimer();
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      isRunning = false;
+      clearInterval(timerInterval);
+      timerInterval = null;
+      timerRing.classList.remove('warning');
+    }
+
+    function resetTimer() {
+      stopTimer();
+      remainingSeconds = totalSeconds;
+      updateDisplay();
+      timerLabel.textContent = 'Listo';
+      startPauseBtn.textContent = '▶️ Iniciar';
+      showStatus('Temporizador reiniciado.');
+      playSoftClick();
+    }
+
+    function adjustTime(amount) {
+      const newTime = Math.max(0, remainingSeconds + amount);
+      if (newTime <= 0) {
+        showStatus('El tiempo no puede ser menor que cero.');
+        return;
+      }
+
+      stopTimer();
+      totalSeconds = newTime;
+      remainingSeconds = newTime;
+      safeSave('classTimerTime', newTime);
+      updateInputsFromSeconds(newTime);
+      updateDisplay();
+      timerLabel.textContent = 'Listo';
+      startPauseBtn.textContent = '▶️ Iniciar';
+      showStatus(amount > 0 ? 'Se añadió 1 minuto.' : 'Se quitó 1 minuto.');
+      playSoftClick();
+    }
+
+    function finishTimer() {
+      stopTimer();
+      remainingSeconds = 0;
+      updateDisplay();
+      timerLabel.textContent = 'Tiempo terminado';
+      startPauseBtn.textContent = '▶️ Iniciar';
+      showStatus('¡Tiempo terminado!');
+      timerRing.classList.add('warning');
+      playFinishSound();
+
+      setTimeout(() => {
+        timerRing.classList.remove('warning');
+      }, 3500);
+    }
+
+    function updateDisplay() {
+      const minutes = Math.floor(remainingSeconds / 60);
+      const seconds = remainingSeconds % 60;
+      timeDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+      const progress = totalSeconds > 0 ? remainingSeconds / totalSeconds : 0;
+      const degrees = Math.max(0, progress * 360);
+      const color = remainingSeconds <= 10 && remainingSeconds > 0 ? '#f97316' : '#0284c7';
+      timerRing.style.background = `conic-gradient(${color} ${degrees}deg, #e0f2fe ${degrees}deg)`;
+    }
+
+    function showStatus(message) {
+      statusBox.textContent = message;
+      statusBox.classList.remove('status-pop');
+      void statusBox.offsetWidth;
+      statusBox.classList.add('status-pop');
+    }
+
+    function getAudioContext() {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return null;
+
+      if (!audioCtx || audioCtx.state === 'closed') {
+        audioCtx = new AudioContext();
+      }
+
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      return audioCtx;
+    }
+
+    function playTone(frequency, duration = 0.08, type = 'sine', volume = 0.06, delay = 0) {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      const oscillator = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const start = ctx.currentTime + delay;
+
+      oscillator.type = type;
+      oscillator.frequency.setValueAtTime(frequency, start);
+      gain.gain.setValueAtTime(volume, start);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+
+      oscillator.connect(gain);
+      gain.connect(ctx.destination);
+      oscillator.start(start);
+      oscillator.stop(start + duration + 0.02);
+    }
+
+    function playSoftClick() {
+      playTone(620, 0.08, 'sine', 0.04);
+    }
+
+    function playStartSound() {
+      [523.25, 659.25].forEach((freq, index) => {
+        playTone(freq, 0.12, 'sine', 0.06, index * 0.08);
+      });
+    }
+
+    function playTickSound() {
+      playTone(880, 0.04, 'square', 0.035);
+    }
+
+    function playFinishSound() {
+      const selectedSound = finishSoundSelect.value || safeLoad('classTimerFinishSound', 'classic');
+
+      if (selectedSound === 'classic') {
+        playClassicTinTinTin();
+      } else if (selectedSound === 'chime') {
+        playElegantChime();
+      } else if (selectedSound === 'school') {
+        playSchoolBell();
+      } else if (selectedSound === 'arcade') {
+        playArcadeFinish();
+      }
+    }
+
+    function playClassicTinTinTin() {
+      [0, 0.24, 0.48].forEach(delay => {
+        playTone(1046.5, 0.14, 'triangle', 0.12, delay);
+        playTone(1567.98, 0.12, 'sine', 0.055, delay + 0.02);
+      });
+    }
+
+    function playElegantChime() {
+      const melody = [
+        { freq: 523.25, delay: 0.00, duration: 0.22 },
+        { freq: 659.25, delay: 0.14, duration: 0.22 },
+        { freq: 783.99, delay: 0.28, duration: 0.24 },
+        { freq: 1046.5, delay: 0.44, duration: 0.36 },
+        { freq: 1318.51, delay: 0.72, duration: 0.42 }
+      ];
+
+      melody.forEach(note => {
+        playTone(note.freq, note.duration, 'sine', 0.08, note.delay);
+      });
+    }
+
+    function playSchoolBell() {
+      [0, 0.18, 0.36, 0.7, 0.88, 1.06].forEach(delay => {
+        playTone(880, 0.12, 'square', 0.08, delay);
+        playTone(660, 0.12, 'triangle', 0.06, delay + 0.03);
+      });
+    }
+
+    function playArcadeFinish() {
+      const melody = [
+        { freq: 659.25, delay: 0.00 },
+        { freq: 783.99, delay: 0.10 },
+        { freq: 987.77, delay: 0.20 },
+        { freq: 1318.51, delay: 0.32 },
+        { freq: 987.77, delay: 0.48 }
+      ];
+
+      melody.forEach(note => {
+        playTone(note.freq, 0.12, 'square', 0.055, note.delay);
+      });
+    }
+  </script>
+</body>
+</html>
