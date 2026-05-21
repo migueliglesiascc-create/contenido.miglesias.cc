@@ -478,27 +478,28 @@
       }
     }
 .home-button{
-  position: fixed;
-  top: 18px;
-  left: 18px;
-  text-decoration: none;
-  background: #ffffff;
-  color: #075985;
-  border: 2px solid #bae6fd;
-  padding: 12px 18px;
-  border-radius: 999px;
-  font-size: 0.95rem;
-  font-weight: 900;
-  line-height: 1;
-  box-shadow: 0 8px 18px rgba(15,23,42,.14);
-  transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
-  z-index: 1000;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  text-decoration:none;
+  background:#dbeafe;
+  color:#075985;
+  border:1px solid #93c5fd;
+  padding:10px 16px;
+  border-radius:999px;
+  font-weight:800;
+  font-size:0.92rem;
+  margin-bottom:16px;
+  box-shadow:
+    0 6px 14px rgba(15,23,42,.08);
+  transition:
+    transform .15s ease,
+    background .15s ease;
 }
-
 .home-button:hover{
-  transform: translateY(-2px);
-  background: #e0f2fe;
-  box-shadow: 0 12px 22px rgba(15,23,42,.16);
+  transform:translateY(-2px);
+  background:#bfdbfe;
+
 }
 
 .dark-mode .home-button{
@@ -519,11 +520,10 @@
   </style>
 </head>
 <body>
+  <main class="app">
   <a class="home-button" href="../" aria-label="Volver al menú principal">
     ⬅ Volver al menú
   </a>
-
-  <main class="app">
     <div class="content">
       <div class="brand">
         <img class="logo" src="./logo.png" alt="Logo Miguel Iglesias" />
