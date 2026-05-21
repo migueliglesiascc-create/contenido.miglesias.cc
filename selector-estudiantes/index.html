@@ -47,7 +47,7 @@
       transition: background 0.35s ease, border 0.35s ease, box-shadow 0.35s ease;
     }
 
-    body.dark-mode .app {
+    .dark-mode .app {
       background: rgba(15, 23, 42, 0.96);
       border-color: rgba(56, 189, 248, 0.25);
       box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
@@ -94,7 +94,7 @@
       letter-spacing: -0.5px;
     }
 
-    body.dark-mode h1 {
+    .dark-mode h1 {
       color: #f8fafc;
     }
 
@@ -105,9 +105,9 @@
       font-size: 0.9rem;
     }
 
-    body.dark-mode .subtitle,
-    body.dark-mode .info,
-    body.dark-mode .footer {
+    .dark-mode .subtitle,
+    .dark-mode .info,
+    .dark-mode .footer {
       color: #cbd5e1;
     }
 
@@ -127,9 +127,9 @@
       transition: background 0.35s ease, border 0.35s ease;
     }
 
-    body.dark-mode .panel,
-    body.dark-mode .stage,
-    body.dark-mode .history {
+    .dark-mode .panel,
+    .dark-mode .stage,
+    .dark-mode .history {
       background: #111827;
       border-color: #334155;
     }
@@ -322,7 +322,7 @@
       transition: transform 0.25s ease, background 0.35s ease, border 0.35s ease;
     }
 
-    body.dark-mode .result-box {
+    .dark-mode .result-box {
       background: #082f49;
       border-color: #38bdf8;
     }
@@ -356,10 +356,10 @@
       transition: color 0.35s ease;
     }
 
-    body.dark-mode .student-name,
-    body.dark-mode .label,
-    body.dark-mode .history h2,
-    body.dark-mode .panel-title {
+    .dark-mode .student-name,
+    .dark-mode .label,
+    .dark-mode .history h2,
+    .dark-mode .panel-title {
       color: #f8fafc;
     }
 
@@ -477,9 +477,48 @@
         font-size: 0.62rem;
       }
     }
+.home-button{
+
+  position:absolute;
+
+  top:18px;
+  left:18px;
+
+  text-decoration:none;
+
+  background:#ffffff;
+
+  color:#075985;
+
+  border:2px solid #bae6fd;
+
+  padding:10px 16px;
+
+  border-radius:999px;
+
+  font-weight:800;
+
+  box-shadow:
+    0 6px 14px rgba(15,23,42,.10);
+
+  transition:.15s ease;
+
+  z-index:1000;
+
+}
+
+.home-button:hover{
+
+  transform:translateY(-2px);
+
+  background:#e0f2fe;
+
+}
   </style>
 </head>
-<body>
+<>
+  <a class="home-button" href="../">
+</a>
   <main class="app">
     <div class="content">
       <div class="brand">
