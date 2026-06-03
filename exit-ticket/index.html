@@ -217,8 +217,10 @@ function showTeacherMessage(message){const old=teacherPreviewQuestion.textConten
 function showStudentMessage(message){const old=studentQuestion.textContent;studentQuestion.textContent=message;const card=document.getElementById("studentTicketCard");card.classList.remove("pop");void card.offsetWidth;card.classList.add("pop");setTimeout(()=>{studentQuestion.textContent=currentQuestion||old;},1700);}
 
 function postToAPI(payload){
- return fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)})
- .then(r=>r.json()).catch(e=>{console.error("API error:",e);return{status:"error"};});
+ const params = new URLSearchParams(payload);
+ return fetch(`${API_URL}?${params.toString()}`)
+ .then(r=>r.json())
+ .catch(e=>{console.error("API error:",e);return{status:"error"};});
 }
 
 function safeLoad(key,fallback){try{return JSON.parse(localStorage.getItem(key))||fallback;}catch(e){return fallback;}}
