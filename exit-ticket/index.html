@@ -121,6 +121,7 @@ let currentSession="", currentQuestion="¿Qué aprendiste hoy?", currentStudentL
 const params=new URLSearchParams(window.location.search);
 const isStudentMode=params.get("mode")==="student";
 const sessionFromUrl=params.get("session")||"";
+const questionFromUrl=params.get("question")||"";
 
 const teacherMode=document.getElementById("teacherMode"), studentMode=document.getElementById("studentMode");
 const teacherQuestion=document.getElementById("teacherQuestion"), teacherPreviewQuestion=document.getElementById("teacherPreviewQuestion"), sessionInput=document.getElementById("sessionInput");
@@ -168,7 +169,15 @@ function showStudentMode(){
  teacherMode.classList.add("hidden"); studentMode.classList.remove("hidden");
  homeButton?.classList.add("hidden"); closeStudentBtn?.classList.remove("hidden");
  if(!sessionFromUrl){studentQuestion.textContent="No hay sesión activa."; studentSessionInfo.textContent="Pide a tu maestro un nuevo código QR."; return;}
- currentSession=sessionFromUrl; studentSessionInfo.textContent=`Sesión: ${currentSession}`; loadSessionForStudent(currentSession);
+currentSession=sessionFromUrl;
+studentSessionInfo.textContent=`Sesión: ${currentSession}`;
+
+if(questionFromUrl){
+  currentQuestion=questionFromUrl;
+  studentQuestion.textContent=questionFromUrl;
+}
+
+loadSessionForStudent(currentSession);
 }
 
 function generateSessionCode(){const n=new Date(),m=String(n.getMonth()+1).padStart(2,"0"),d=String(n.getDate()).padStart(2,"0"),r=Math.floor(1000+Math.random()*9000);return `EXIT-${m}${d}-${r}`;}
@@ -176,8 +185,8 @@ function generateSessionCode(){const n=new Date(),m=String(n.getMonth()+1).padSt
 function createSession(){
  currentQuestion=teacherQuestion.value.trim()||"¿Qué aprendiste hoy?";
  currentSession=sessionInput.value.trim()||generateSessionCode();
- currentStudentLink=`${BASE_STUDENT_URL}?mode=student&session=${encodeURIComponent(currentSession)}`;
- safeSave("exitTicketCurrentSession",currentSession); safeSave("exitTicketCurrentQuestion",currentQuestion); safeSave("exitTicketStudentLink",currentStudentLink);
+currentStudentLink=`${BASE_STUDENT_URL}?mode=student&session=${encodeURIComponent(currentSession)}&question=${encodeURIComponent(currentQuestion)}`;
+safeSave("exitTicketCurrentSession",currentSession); safeSave("exitTicketCurrentQuestion",currentQuestion); safeSave("exitTicketStudentLink",currentStudentLink);
  teacherPreviewQuestion.textContent=currentQuestion; showQR(currentSession,currentStudentLink); renderResponses([]); playMagicSound();
  postToAPI({action:"createSession",session:currentSession,question:currentQuestion}).then(()=>showTeacherMessage("Sesión creada. Comparte el QR con tus estudiantes."));
 }
@@ -191,17 +200,18 @@ function showQR(session,link){
 
 function loadSessionForStudent(session){
  callAPI({action:"getSession", session:session})
- .then(data=>{
-   if(data.status==="success"){
-     currentQuestion=data.question;
-     studentQuestion.textContent=data.question;
-     playSoftClick();
-   }
-   else{
-     studentQuestion.textContent="Sesión no encontrada.";
-     studentSessionInfo.textContent="Revisa el QR o pide al maestro una nueva sesión.";
-   }
- })
+.then(data=>{
+  if(data && data.status==="success"){
+    showStudentMessage("¡Respuesta enviada! Gracias.");
+    studentResponse.value="";
+    selectedMood="";
+    document.querySelectorAll(".mood-button").forEach(btn=>btn.classList.remove("selected"));
+    playSuccessSound();
+  }else{
+    showStudentMessage("No se pudo guardar. Inténtalo de nuevo.");
+    console.warn("submitResponse response:", data);
+  }
+});
  .catch(()=>{
    studentQuestion.textContent="No se pudo cargar la sesión.";
    studentSessionInfo.textContent="Comprueba la conexión o inténtalo de nuevo.";
