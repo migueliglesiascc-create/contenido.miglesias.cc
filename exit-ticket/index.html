@@ -240,7 +240,19 @@ function renderResponses(items){
  });
 }
 
-function copyStudentLink(){if(!currentStudentLink){showTeacherMessage("Primero crea una sesión.");return;}navigator.clipboard.writeText(currentStudentLink).then(()=>{showTeacherMessage("Enlace copiado.");playSoftClick();});}
+function copyStudentLink(){
+ if(!currentSession){
+   showTeacherMessage("Primero crea una sesión.");
+   return;
+ }
+
+ currentStudentLink=`${BASE_STUDENT_URL}?mode=student&session=${encodeURIComponent(currentSession)}&question=${encodeURIComponent(currentQuestion)}`;
+
+ navigator.clipboard.writeText(currentStudentLink).then(()=>{
+   showTeacherMessage("Enlace del estudiante copiado.");
+   playSoftClick();
+ });
+}
 
 function copyResponses(){
  if(!responses.length){showTeacherMessage("No hay respuestas para copiar.");return;}
