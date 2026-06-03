@@ -158,7 +158,7 @@ function showTeacherMode(){
   if(refreshTimer) clearInterval(refreshTimer);
  refreshTimer = setInterval(()=>{
    if(currentSession) refreshResponses();
- },5000);
+ },15000);
  currentSession=safeLoad("exitTicketCurrentSession",""); currentQuestion=safeLoad("exitTicketCurrentQuestion","¿Qué aprendiste hoy?"); currentStudentLink=safeLoad("exitTicketStudentLink","");
  teacherQuestion.value=currentQuestion; teacherPreviewQuestion.textContent=currentQuestion;
  if(currentSession&&currentStudentLink){showQR(currentSession,currentStudentLink);refreshResponses();}else{renderResponses([]);}
