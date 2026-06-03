@@ -242,11 +242,48 @@ function selectMood(button){selectedMood=button.dataset.mood;document.querySelec
 function showTeacherMessage(message){const old=teacherPreviewQuestion.textContent;teacherPreviewQuestion.textContent=message;const card=document.getElementById("teacherTicketCard");card.classList.remove("pop");void card.offsetWidth;card.classList.add("pop");setTimeout(()=>{teacherPreviewQuestion.textContent=currentQuestion||old;},1500);}
 function showStudentMessage(message){const old=studentQuestion.textContent;studentQuestion.textContent=message;const card=document.getElementById("studentTicketCard");card.classList.remove("pop");void card.offsetWidth;card.classList.add("pop");setTimeout(()=>{studentQuestion.textContent=currentQuestion||old;},1700);}
 
+function callAPI(payload){
+  return new Promise((resolve, reject) => {
+
+    const callbackName =
+      "cb_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+
+    const params = new URLSearchParams(payload);
+    params.append("callback", callbackName);
+
+    const script = document.createElement("script");
+    script.src = API_URL + "?" + params.toString();
+
+    window[callbackName] = function(data){
+      resolve(data);
+
+      delete window[callbackName];
+
+      if(script.parentNode){
+        script.parentNode.removeChild(script);
+      }
+    };
+
+    script.onerror = function(error){
+      reject(error);
+
+      delete window[callbackName];
+
+      if(script.parentNode){
+        script.parentNode.removeChild(script);
+      }
+    };
+
+    document.body.appendChild(script);
+  });
+}
+
 function postToAPI(payload){
- const params = new URLSearchParams(payload);
- return fetch(`${API_URL}?${params.toString()}`)
- .then(r=>r.json())
- .catch(e=>{console.error("API error:",e);return{status:"error"};});
+  return callAPI(payload)
+    .catch(error => {
+      console.error("API error:", error);
+      return { status: "error" };
+    });
 }
 
 function safeLoad(key,fallback){try{return JSON.parse(localStorage.getItem(key))||fallback;}catch(e){return fallback;}}
