@@ -170,11 +170,22 @@ function showQR(session,link){
 }
 
 function loadSessionForStudent(session){
- fetch(`${API_URL}?action=getSession&session=${encodeURIComponent(session)}`)
- .then(r=>r.json()).then(data=>{
-   if(data.status==="success"){currentQuestion=data.question;studentQuestion.textContent=data.question;playSoftClick();}
-   else{studentQuestion.textContent="Sesión no encontrada.";studentSessionInfo.textContent="Revisa el QR o pide al maestro una nueva sesión.";}
- }).catch(()=>{studentQuestion.textContent="No se pudo cargar la sesión.";studentSessionInfo.textContent="Comprueba la conexión o inténtalo de nuevo.";});
+ callAPI({action:"getSession", session:session})
+ .then(data=>{
+   if(data.status==="success"){
+     currentQuestion=data.question;
+     studentQuestion.textContent=data.question;
+     playSoftClick();
+   }
+   else{
+     studentQuestion.textContent="Sesión no encontrada.";
+     studentSessionInfo.textContent="Revisa el QR o pide al maestro una nueva sesión.";
+   }
+ })
+ .catch(()=>{
+   studentQuestion.textContent="No se pudo cargar la sesión.";
+   studentSessionInfo.textContent="Comprueba la conexión o inténtalo de nuevo.";
+ });
 }
 
 function submitStudentResponse(){
@@ -186,10 +197,25 @@ function submitStudentResponse(){
 }
 
 function refreshResponses(){
- if(!currentSession){showTeacherMessage("Primero crea una sesión.");return;}
- fetch(`${API_URL}?action=getResponses&session=${encodeURIComponent(currentSession)}`)
- .then(r=>r.json()).then(data=>{if(data.status==="success"){responses=data.responses||[];renderResponses(responses);playSoftClick();}else{renderResponses([]);}})
- .catch(()=>showTeacherMessage("No se pudieron cargar las respuestas."));
+ if(!currentSession){
+   showTeacherMessage("Primero crea una sesión.");
+   return;
+ }
+
+ callAPI({action:"getResponses", session:currentSession})
+ .then(data=>{
+   if(data.status==="success"){
+     responses=data.responses||[];
+     renderResponses(responses);
+     playSoftClick();
+   }
+   else{
+     renderResponses([]);
+   }
+ })
+ .catch(()=>{
+   showTeacherMessage("No se pudieron cargar las respuestas.");
+ });
 }
 
 function renderResponses(items){
