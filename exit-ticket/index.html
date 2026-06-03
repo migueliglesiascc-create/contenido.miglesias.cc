@@ -148,8 +148,17 @@ function initApp(){
 }
 
 function showTeacherMode(){
- teacherMode.classList.remove("hidden"); studentMode.classList.add("hidden");
+ teacherMode.classList.remove("hidden"); 
+ studentMode.classList.add("hidden");
+  if(refreshTimer){
+   clearInterval(refreshTimer);
+   refreshTimer = null;
+ }
  homeButton?.classList.remove("hidden"); closeStudentBtn?.classList.add("hidden");
+  if(refreshTimer) clearInterval(refreshTimer);
+ refreshTimer = setInterval(()=>{
+   if(currentSession) refreshResponses();
+ },5000);
  currentSession=safeLoad("exitTicketCurrentSession",""); currentQuestion=safeLoad("exitTicketCurrentQuestion","¿Qué aprendiste hoy?"); currentStudentLink=safeLoad("exitTicketStudentLink","");
  teacherQuestion.value=currentQuestion; teacherPreviewQuestion.textContent=currentQuestion;
  if(currentSession&&currentStudentLink){showQR(currentSession,currentStudentLink);refreshResponses();}else{renderResponses([]);}
