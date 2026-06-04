@@ -313,7 +313,18 @@ function postToAPI(payload){
 }
 
 function closeStudentWindow(){
-  window.close();
+ document.body.innerHTML = `
+   <main class="app">
+     <div class="content" style="text-align:center;padding:40px 20px;">
+       <div class="brand">
+         <img class="logo" src="./logo.png" alt="Logo Miguel Iglesias" />
+       </div>
+       <h1>Respuesta enviada</h1>
+       <p class="subtitle">Puedes cerrar esta pestaña o volver a clase.</p>
+     </div>
+   </main>
+ `;
+}
 
   setTimeout(()=>{
     document.body.innerHTML = `
