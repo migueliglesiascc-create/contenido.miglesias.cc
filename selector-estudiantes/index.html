@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selector Aleatorio | Miguel Iglesias</title>
+  <link rel="icon" href="./logo.png" />
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../favicon.png">
+  
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(14, 165, 233, 0.22), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(79, 70, 229, 0.18), transparent 35%),
+        linear-gradient(135deg, #f8fafc, #e0f2fe);
+      color: #1f2937;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 10px;
+      transition: background 0.35s ease, color 0.35s ease;
+    }
+
+    body.dark-mode {
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(99, 102, 241, 0.16), transparent 35%),
+        linear-gradient(135deg, #020617, #0f172a);
+      color: #e5e7eb;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1040px;
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.14);
+      border: 1px solid rgba(14, 165, 233, 0.25);
+      overflow: hidden;
+      position: relative;
+      transition: background 0.35s ease, border 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .dark-mode .app {
+      background: rgba(15, 23, 42, 0.96);
+      border-color: rgba(56, 189, 248, 0.25);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    }
+
+    .app::before {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: rgba(14, 165, 233, 0.08);
+      right: -90px;
+      top: -90px;
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .logo {
+      width: 82px;
+      height: 82px;
+      object-fit: contain;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.16);
+      padding: 4px;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 6px 0 4px;
+      font-size: 1.7rem;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+    }
+
+    .dark-mode h1 {
+      color: #f8fafc;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #475569;
+      margin-bottom: 14px;
+      font-size: 0.9rem;
+    }
+
+    .dark-mode .subtitle,
+    .dark-mode .info,
+    .dark-mode .footer {
+      color: #cbd5e1;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .panel,
+    .stage {
+      background: #f8fafc;
+      border-radius: 20px;
+      padding: 14px;
+      border: 1px solid #dbeafe;
+      transition: background 0.35s ease, border 0.35s ease;
+    }
+
+    .dark-mode .panel,
+    .dark-mode .stage,
+    .dark-mode .history {
+      background: #111827;
+      border-color: #334155;
+    }
+
+    .panel-title {
+      font-weight: bold;
+      color: #075985;
+      margin-bottom: 10px;
+    }
+
+    .list-tools {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 2px solid #bae6fd;
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-size: 1rem;
+      outline: none;
+      background: white;
+      color: #0f172a;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #0ea5e9;
+      box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
+    }
+
+    textarea {
+      min-height: 145px;
+      resize: vertical;
+    }
+
+    .mini-buttons,
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .bottom-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.12);
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .primary {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: white;
+      grid-column: span 2;
+      font-size: 1.08rem;
+      padding: 15px 18px;
+    }
+
+    .secondary {
+      background: #e0f2fe;
+      color: #075985;
+    }
+
+    .danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .stage {
+      background: linear-gradient(180deg, #ffffff, #f0f9ff);
+      text-align: center;
+    }
+
+    .pointer {
+      width: 0;
+      height: 0;
+      border-left: 18px solid transparent;
+      border-right: 18px solid transparent;
+      border-top: 34px solid #0f172a;
+      margin: 0 auto -12px;
+      position: relative;
+      z-index: 4;
+    }
+
+    .wheel-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 8px auto 18px;
+    }
+
+    .wheel {
+      width: 310px;
+      height: 310px;
+      border-radius: 50%;
+      background: conic-gradient(#0ea5e9 0deg 45deg, #ffffff 45deg 90deg, #1d4ed8 90deg 135deg, #ffffff 135deg 180deg, #0ea5e9 180deg 225deg, #ffffff 225deg 270deg, #1d4ed8 270deg 315deg, #ffffff 315deg 360deg);
+      border: 8px solid white;
+      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.18), inset 0 0 0 3px #0f172a;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 3s cubic-bezier(.08,.78,.16,1);
+      overflow: hidden;
+    }
+
+    .wheel::after {
+      content: "";
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: inset 0 0 0 3px #0ea5e9;
+      position: absolute;
+      z-index: 2;
+    }
+
+    .wheel-logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      object-fit: contain;
+      z-index: 3;
+      background: white;
+      position: absolute;
+    }
+
+    .wheel-name {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 88px;
+      color: #0f172a;
+      font-weight: 900;
+      font-size: 0.58rem;
+      text-align: left;
+      line-height: 1;
+      text-shadow: 0 1px 2px rgba(255,255,255,0.95);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      z-index: 1;
+      pointer-events: none;
+      transform-origin: left center;
+      padding-left: 8px;
+    }
+
+    .spin-glow {
+      animation: pulse 0.42s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { filter: brightness(1); }
+      to { filter: brightness(1.12); }
+    }
+
+    .result-box {
+      margin-top: 8px;
+      padding: 16px;
+      border-radius: 18px;
+      background: #ecfeff;
+      text-align: center;
+      border: 2px dashed #38bdf8;
+      transition: transform 0.25s ease, background 0.35s ease, border 0.35s ease;
+    }
+
+    .dark-mode .result-box {
+      background: #082f49;
+      border-color: #38bdf8;
+    }
+
+    .result-pop {
+      animation: resultPop 0.65s ease;
+    }
+
+    @keyframes resultPop {
+      0% { transform: scale(1); }
+      35% { transform: scale(1.06); box-shadow: 0 0 0 8px rgba(56,189,248,0.18); }
+      100% { transform: scale(1); }
+    }
+
+    .label {
+      color: #64748b;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .student-name {
+      font-size: 1.65rem;
+      font-weight: 900;
+      color: #0f172a;
+      min-height: 44px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      word-break: break-word;
+      transition: color 0.35s ease;
+    }
+
+    .dark-mode .student-name,
+    .dark-mode .label,
+    .dark-mode .history h2,
+    .dark-mode .panel-title {
+      color: #f8fafc;
+    }
+
+    .info {
+      margin-top: 14px;
+      text-align: center;
+      color: #475569;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .history {
+      margin-top: 22px;
+      background: #f8fafc;
+      border-radius: 20px;
+      padding: 16px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .history h2 {
+      font-size: 1.05rem;
+      margin: 0 0 10px;
+      color: #334155;
+    }
+
+    .history-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      background: #e0f2fe;
+      color: #075985;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .decision-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.55);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 3000;
+      padding: 20px;
+    }
+
+    .decision-box { 
+      background: white;
+      border-radius: 28px;
+      padding: 28px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 55px rgba(15,23,42,0.28);
+    }
+
+    .decision-box h3 {
+      margin-top: 0;
+      color: #0f172a;
+      font-size: 1.4rem;
+    }
+
+    .decision-name {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #0284c7;
+      margin: 16px 0 24px;
+    }
+
+    .decision-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .keep-btn {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .remove-btn {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 18px;
+      color: #64748b;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 760px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .student-name {
+        font-size: 1.7rem;
+      }
+
+      .wheel {
+        width: 260px;
+        height: 260px;
+      }
+
+      .wheel-name {
+        width: 92px;
+        font-size: 0.62rem;
+      }
+    }
+.home-button{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  text-decoration:none;
+  background:#dbeafe;
+  color:#075985;
+  border:1px solid #93c5fd;
+  padding:10px 16px;
+  border-radius:999px;
+  font-weight:800;
+  font-size:0.92rem;
+  margin-bottom:16px;
+  box-shadow:
+    0 6px 14px rgba(15,23,42,.08);
+  transition:
+    transform .15s ease,
+    background .15s ease;
+}
+.home-button:hover{
+  transform:translateY(-2px);
+  background:#bfdbfe;
+
+}
+
+.dark-mode .home-button{
+  background: #0f172a;
+  color: #e0f2fe;
+  border-color: #38bdf8;
+}
+
+@media (max-width: 760px){
+  .home-button{
+    position: static;
+    display: inline-block;
+    margin: 10px 0 8px 10px;
+    font-size: 0.85rem;
+    padding: 10px 14px;
+  }
+}
+
+    .source-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .source-card {
+      border: 2px solid #bae6fd;
+      background: white;
+      color: #075985;
+      border-radius: 18px;
+      padding: 12px 10px;
+      font-weight: 900;
+      text-align: center;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+
+    .source-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 18px rgba(15,23,42,.10);
+    }
+
+    .source-card.active {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: white;
+      border-color: #0284c7;
+    }
+
+    .source-note {
+      margin: 0 0 12px;
+      text-align: center;
+      font-size: .88rem;
+      font-weight: 800;
+      color: #075985;
+      background: #e0f2fe;
+      border-radius: 999px;
+      padding: 8px 12px;
+    }
+
+    .stage-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      margin-top: 12px;
+    }
+
+    .fullscreen-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(14,165,233,.22), transparent 35%),
+                  linear-gradient(135deg, #f8fafc, #e0f2fe);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .fullscreen-overlay.active {
+      display: flex;
+    }
+
+    .fullscreen-card {
+      width: min(980px, 96vw);
+      min-height: min(720px, 94vh);
+      background: rgba(255,255,255,.98);
+      border: 1px solid #bae6fd;
+      border-radius: 28px;
+      box-shadow: 0 25px 60px rgba(15,23,42,.22);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .fullscreen-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 10px 14px;
+    }
+
+    .fullscreen-title {
+      margin: 10px 0 12px;
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: #0f172a;
+      text-align: center;
+    }
+
+    .fullscreen-stage {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+    }
+
+    .fullscreen-overlay .wheel {
+      width: min(520px, 78vw);
+      height: min(520px, 78vw);
+    }
+
+    .fullscreen-overlay .wheel::after {
+      width: 82px;
+      height: 82px;
+    }
+
+    .fullscreen-overlay .wheel-logo {
+      width: 74px;
+      height: 74px;
+    }
+
+    .fullscreen-overlay .wheel-name {
+      width: 130px;
+      font-size: .7rem;
+    }
+
+    .fullscreen-overlay .result-box {
+      width: min(680px, 86vw);
+      margin-top: 20px;
+    }
+
+    .fullscreen-overlay .stage-actions {
+      display: none;
+    }
+
+    .fullscreen-overlay .student-name {
+      font-size: 2.4rem;
+    }
+
+    .fullscreen-pick {
+      width: min(360px, 86vw);
+      margin-top: 16px;
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: white;
+      font-size: 1.15rem;
+      padding: 15px 18px;
+    }
+
+    @media (max-width: 760px){
+      .source-row{
+        grid-template-columns: 1fr;
+      }
+
+      .fullscreen-card{
+        padding: 16px;
+      }
+
+      .fullscreen-title{
+        font-size: 1.3rem;
+        margin-top: 44px;
+      }
+
+      .fullscreen-overlay .student-name{
+        font-size: 1.8rem;
+      }
+    }
+
+  
+    .wheel-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin: 8px 0 4px;
+      flex-wrap: wrap;
+    }
+
+    .wheel-controls-label {
+      font-size: .82rem;
+      font-weight: 900;
+      color: #075985;
+      background: #e0f2fe;
+      border-radius: 999px;
+      padding: 7px 10px;
+    }
+
+    .wheel-size-btn {
+      background: #e0f2fe;
+      color: #075985;
+      border: 1px solid #bae6fd;
+      padding: 8px 13px;
+      font-size: 1rem;
+      min-width: 42px;
+    }
+
+    .fullscreen-overlay .wheel-controls {
+      margin-top: 2px;
+      margin-bottom: 8px;
+    }
+
+    .fullscreen-overlay .wheel-controls-label {
+      font-size: .9rem;
+    }
+
+  </style>
+</head>
+<body>
+  <main class="app">
+  <a class="home-button" href="../" aria-label="Volver al menú principal">
+    ⬅ Volver al menú
+  </a>
+    <div class="content">
+      <div class="brand">
+        <img class="logo" src="./logo.png" alt="Logo Miguel Iglesias" />
+      </div>
+
+      <h1>Selector Aleatorio</h1>
+      <p class="subtitle">Guarda listas por clase, elige estudiantes al azar y decide si mantenerlos o sacarlos de la ronda.</p>
+
+      <div style="display:flex;justify-content:center;margin-bottom:12px;">
+        <button class="secondary" id="darkModeBtn" style="padding:8px 14px;font-size:0.85rem;">🌙 Modo oscuro</button>
+      </div>
+
+      <section class="layout">
+        <div class="panel">
+          <div class="panel-title">Origen de los datos</div>
+
+          <div class="source-row">
+            <button class="source-card active" id="databaseSourceBtn">📚 Base de datos</button>
+            <button class="source-card" id="localSourceBtn">💾 Local</button>
+          </div>
+
+          <p id="sourceNote" class="source-note">Fuente: Base de datos común</p>
+
+          <div id="databaseTools">
+            <div class="panel-title">Base de datos común</div>
+
+            <div class="list-tools">
+              <select id="dbClassSelect">
+                <option value="">Cargando clases...</option>
+              </select>
+
+              <button class="secondary" id="loadDbClassBtn">📚 Cargar clase desde la base de datos</button>
+            </div>
+          </div>
+
+          <div id="localTools" style="display:none;">
+            <div class="panel-title">Listas guardadas localmente</div>
+
+            <div class="list-tools">
+              <input id="listNameInput" type="text" placeholder="Crear lista personalizada" />
+
+              <select id="savedListsSelect">
+                <option value="">Seleccionar una lista guardada...</option>
+              </select>
+
+              <div class="mini-buttons">
+                <button class="secondary" id="saveNamedListBtn">💾 Guardar lista</button>
+                <button class="danger" id="deleteNamedListBtn">🗑️ Borrar lista</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-title">Estudiantes de la lista actual</div>
+          <textarea id="studentInput" placeholder="Ejemplo:\nAna García\nCarlos López\nMaría Pérez"></textarea>
+
+          <div class="buttons">
+            <button class="primary" id="pickStudentBtn">🎲 Elegir estudiante</button>
+          </div>
+
+          <div class="bottom-buttons">
+            <button class="secondary" id="resetRoundBtn">🔄 Reiniciar ronda</button>
+            <button class="danger" id="clearCurrentBtn">🗑️ Borrar pantalla</button>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="pointer"></div>
+          <div class="wheel-wrap">
+            <div id="wheel" class="wheel">
+              <img class="wheel-logo" src="logo.png" alt="Logo Miguel Iglesias" />
+            </div>
+          </div>
+
+          <div class="wheel-controls">
+            <span class="wheel-controls-label">Tamaño de nombres</span>
+            <button class="wheel-size-btn" id="decreaseFontBtn">−</button>
+            <button class="wheel-size-btn" id="increaseFontBtn">+</button>
+          </div>
+
+          <section class="result-box">
+            <div class="label">Estudiante seleccionado:</div>
+            <div id="result" class="student-name">---</div>
+          </section>
+
+          <p id="info" class="info">No hay lista cargada todavía.</p>
+
+          <div class="stage-actions">
+            <button class="secondary" id="fullscreenBtn">⛶ Ver ruleta en pantalla completa</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="history">
+        <h2>Ya seleccionados en esta ronda</h2>
+        <div id="historyList" class="history-list"></div>
+      </section>
+
+      <div class="footer">Creado para clase por Miguel Iglesias</div>
+    </div>
+  </main>
+
+  <div id="fullscreenOverlay" class="fullscreen-overlay">
+    <div class="fullscreen-card">
+      <button class="fullscreen-close" id="closeFullscreenBtn">✕ Cerrar</button>
+      <div class="fullscreen-title">Selector Aleatorio · Modo clase</div>
+      <div id="fullscreenStage" class="fullscreen-stage"></div>
+      <button class="fullscreen-pick" id="fullscreenPickBtn">🎲 Elegir estudiante</button>
+    </div>
+  </div>
+
+  <div id="decisionModal" class="decision-modal">
+    <div class="decision-box">
+      <h3>¿Qué quieres hacer?</h3>
+      <div id="decisionStudent" class="decision-name"></div>
+      <div class="decision-buttons">
+        <button class="keep-btn" id="keepStudentBtn">✅ Mantener en la ronda</button>
+        <button class="remove-btn" id="removeStudentBtn">✔️ Sacar de la ronda</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const DATABASE_API_URL = "https://script.google.com/macros/s/AKfycbyysudqQSafy_m38E2p267y_HBMRduy1SN478w7DxiW81_drA4yuxbpfkfzcqClgCzMqg/exec";
+
+    let students = [];
+    let remaining = [];
+    let selectedHistory = [];
+    let savedClassLists = {};
+    let currentRotation = 0;
+    let spinning = false;
+    let pendingStudent = null;
+    let pendingStudentIndex = -1;
+    let audioCtx = null;
+    let wheelNameScale = safeLoad('wheelNameScale', 1);
+
+    const input = document.getElementById('studentInput');
+    const dbClassSelect = document.getElementById('dbClassSelect');
+    const loadDbClassBtn = document.getElementById('loadDbClassBtn');
+    const databaseSourceBtn = document.getElementById('databaseSourceBtn');
+    const localSourceBtn = document.getElementById('localSourceBtn');
+    const sourceNote = document.getElementById('sourceNote');
+    const databaseTools = document.getElementById('databaseTools');
+    const localTools = document.getElementById('localTools');
+    const listNameInput = document.getElementById('listNameInput');
+    const savedListsSelect = document.getElementById('savedListsSelect');
+    const result = document.getElementById('result');
+    const info = document.getElementById('info');
+    const historyList = document.getElementById('historyList');
+    const wheel = document.getElementById('wheel');
+    const decisionModal = document.getElementById('decisionModal');
+    const decisionStudent = document.getElementById('decisionStudent');
+
+    const saveNamedListBtn = document.getElementById('saveNamedListBtn');
+    const deleteNamedListBtn = document.getElementById('deleteNamedListBtn');
+    const resetRoundBtn = document.getElementById('resetRoundBtn');
+    const pickStudentBtn = document.getElementById('pickStudentBtn');
+    const clearCurrentBtn = document.getElementById('clearCurrentBtn');
+    const keepStudentBtn = document.getElementById('keepStudentBtn');
+    const removeStudentBtn = document.getElementById('removeStudentBtn');
+    const darkModeBtn = document.getElementById('darkModeBtn');
+    const resultBox = document.querySelector('.result-box');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    const fullscreenOverlay = document.getElementById('fullscreenOverlay');
+    const fullscreenStage = document.getElementById('fullscreenStage');
+    const closeFullscreenBtn = document.getElementById('closeFullscreenBtn');
+    const fullscreenPickBtn = document.getElementById('fullscreenPickBtn');
+    const decreaseFontBtn = document.getElementById('decreaseFontBtn');
+    const increaseFontBtn = document.getElementById('increaseFontBtn');
+    const originalStage = document.querySelector('.stage');
+    const originalStageParent = originalStage.parentNode;
+
+    document.addEventListener('DOMContentLoaded', initApp);
+
+    function initApp() {
+      savedClassLists = safeLoad('savedClassLists', {});
+      students = safeLoad('students', []);
+      remaining = safeLoad('remaining', []);
+      selectedHistory = safeLoad('selectedHistory', []);
+
+      if (students.length > 0) {
+        input.value = students.join('\n');
+      }
+
+      databaseSourceBtn.addEventListener('click', () => setDataSource('database'));
+      localSourceBtn.addEventListener('click', () => setDataSource('local'));
+      loadDbClassBtn.addEventListener('click', loadStudentsFromDatabase);
+      saveNamedListBtn.addEventListener('click', saveNamedList);
+      deleteNamedListBtn.addEventListener('click', deleteNamedList);
+      savedListsSelect.addEventListener('change', loadSelectedList);
+      resetRoundBtn.addEventListener('click', resetRound);
+      pickStudentBtn.addEventListener('click', pickStudent);
+      clearCurrentBtn.addEventListener('click', clearCurrentScreen);
+      keepStudentBtn.addEventListener('click', keepStudent);
+      removeStudentBtn.addEventListener('click', removeStudent);
+      darkModeBtn.addEventListener('click', toggleDarkMode);
+      fullscreenBtn.addEventListener('click', openFullscreen);
+      closeFullscreenBtn.addEventListener('click', closeFullscreen);
+      fullscreenPickBtn.addEventListener('click', pickStudent);
+      decreaseFontBtn.addEventListener('click', () => changeWheelNameSize(-0.1));
+      increaseFontBtn.addEventListener('click', () => changeWheelNameSize(0.1));
+
+      if (safeLoad('darkMode', false)) {
+        document.body.classList.add('dark-mode');
+        darkModeBtn.textContent = '☀️ Modo claro';
+      }
+
+      setDataSource(safeLoad('selectorDataSource', 'database'));
+      updateSavedListsSelect();
+      loadDatabaseClasses();
+      updateInfo();
+      updateHistory();
+      renderWheel();
+    }
+
+    function safeLoad(key, fallback) {
+      try {
+        return JSON.parse(localStorage.getItem(key)) || fallback;
+      } catch (error) {
+        return fallback;
+      }
+    }
+
+    function safeSave(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function setDataSource(source) {
+      const isDatabase = source === 'database';
+
+      databaseSourceBtn.classList.toggle('active', isDatabase);
+      localSourceBtn.classList.toggle('active', !isDatabase);
+      databaseTools.style.display = isDatabase ? 'block' : 'none';
+      localTools.style.display = isDatabase ? 'none' : 'block';
+      sourceNote.textContent = isDatabase ? 'Fuente: Base de datos común' : 'Fuente: Lista local';
+      safeSave('selectorDataSource', source);
+    }
+
+    function shortWheelName(fullName) {
+      const parts = String(fullName || '').trim().split(/\s+/).filter(Boolean);
+
+      if (parts.length === 0) return '';
+      if (parts.length === 1) return parts[0];
+
+      return `${parts[0]} ${parts[1].charAt(0).toUpperCase()}.`;
+    }
+
+    function changeWheelNameSize(delta) {
+      wheelNameScale = Math.max(0.6, Math.min(1.6, Number((wheelNameScale + delta).toFixed(2))));
+      safeSave('wheelNameScale', wheelNameScale);
+      renderWheel();
+    }
+
+    function openFullscreen() {
+      fullscreenOverlay.classList.add('active');
+      fullscreenStage.appendChild(originalStage);
+      renderWheel();
+    }
+
+    function closeFullscreen() {
+      fullscreenOverlay.classList.remove('active');
+      originalStageParent.appendChild(originalStage);
+      renderWheel();
+    }
+
+    function callDatabaseAPI(params) {
+      return new Promise((resolve, reject) => {
+        const callbackName = 'clasesBolsilloCallback_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
+        const script = document.createElement('script');
+
+        params.callback = callbackName;
+        const query = new URLSearchParams(params).toString();
+
+        window[callbackName] = (data) => {
+          delete window[callbackName];
+          script.remove();
+          resolve(data);
+        };
+
+        script.onerror = () => {
+          delete window[callbackName];
+          script.remove();
+          reject(new Error('No se pudo conectar con la base de datos.'));
+        };
+
+        script.src = DATABASE_API_URL + '?' + query;
+        document.body.appendChild(script);
+      });
+    }
+
+    function loadDatabaseClasses() {
+      dbClassSelect.innerHTML = '<option value="">Cargando clases...</option>';
+
+      callDatabaseAPI({ action: 'getClasses' })
+        .then(data => {
+          dbClassSelect.innerHTML = '<option value="">Seleccionar clase desde la base de datos...</option>';
+
+          if (!data || data.status !== 'success' || !Array.isArray(data.classes) || data.classes.length === 0) {
+            const option = document.createElement('option');
+            option.value = '';
+            option.textContent = 'No hay clases activas';
+            dbClassSelect.appendChild(option);
+            return;
+          }
+
+          data.classes.forEach(cls => {
+            const option = document.createElement('option');
+            option.value = String(cls.classId || '').trim();
+            option.textContent = cls.displayName || `${cls.course} · ${cls.section} · ${cls.schoolYear}`;
+            dbClassSelect.appendChild(option);
+          });
+        })
+        .catch(() => {
+          dbClassSelect.innerHTML = '<option value="">Error al cargar clases</option>';
+        });
+    }
+
+    function loadStudentsFromDatabase() {
+      const classId = String(dbClassSelect.value || '').trim();
+
+      if (!classId) {
+        result.textContent = 'Elige una clase';
+        return;
+      }
+
+      result.textContent = 'Cargando clase...';
+
+      callDatabaseAPI({ action: 'getStudents', classId })
+        .then(data => {
+          if (!data || data.status !== 'success' || !Array.isArray(data.students)) {
+            result.textContent = 'No se pudo cargar';
+            return;
+          }
+
+          const names = data.students
+            .map(student => String(student.studentName || '').trim())
+            .filter(name => name.length > 0)
+            .filter((name, index, arr) => arr.indexOf(name) === index);
+
+          if (names.length === 0) {
+            result.textContent = 'Clase sin estudiantes';
+            info.textContent = 'Añade estudiantes activos en StudentLists.';
+            return;
+          }
+
+          const selectedOption = dbClassSelect.options[dbClassSelect.selectedIndex];
+
+          students = names;
+          remaining = [...students];
+          selectedHistory = [];
+          input.value = students.join('\n');
+          listNameInput.value = selectedOption ? selectedOption.textContent : classId;
+          saveCurrentState();
+
+          sourceNote.textContent = 'Fuente: Base de datos común';
+          result.textContent = 'Clase cargada';
+          updateInfo();
+          updateHistory();
+          renderWheel();
+        })
+        .catch(() => {
+          result.textContent = 'Error de conexión';
+        });
+    }
+
+    function getNamesFromTextarea() {
+      return input.value
+        .split('\n')
+        .map(name => name.trim())
+        .filter(name => name.length > 0)
+        .filter((name, index, arr) => arr.indexOf(name) === index);
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      darkModeBtn.textContent = isDark ? '☀️ Modo claro' : '🌙 Modo oscuro';
+      safeSave('darkMode', isDark);
+    }
+
+    function saveNamedList() {
+      const listName = listNameInput.value.trim();
+      const names = getNamesFromTextarea();
+
+      if (!listName) {
+        result.textContent = 'Pon nombre a la lista';
+        return;
+      }
+
+      if (names.length === 0) {
+        result.textContent = 'Añade estudiantes';
+        return;
+      }
+
+      savedClassLists[listName] = names;
+      safeSave('savedClassLists', savedClassLists);
+
+      students = names;
+      remaining = [...students];
+      selectedHistory = [];
+      saveCurrentState();
+
+      updateSavedListsSelect(listName);
+      result.textContent = 'Lista guardada';
+      updateInfo();
+      updateHistory();
+      renderWheel();
+    }
+
+    function loadSelectedList() {
+      const listName = savedListsSelect.value;
+
+      if (!listName || !savedClassLists[listName]) return;
+
+      listNameInput.value = listName;
+      students = [...savedClassLists[listName]];
+      remaining = [...students];
+      selectedHistory = [];
+      input.value = students.join('\n');
+      saveCurrentState();
+
+      sourceNote.textContent = 'Fuente: Lista local';
+      result.textContent = listName;
+      updateInfo();
+      updateHistory();
+      renderWheel();
+    }
+
+    function deleteNamedList() {
+      const listName = savedListsSelect.value || listNameInput.value.trim();
+
+      if (!listName || !savedClassLists[listName]) {
+        result.textContent = 'Elige una lista';
+        return;
+      }
+
+      delete savedClassLists[listName];
+      safeSave('savedClassLists', savedClassLists);
+      updateSavedListsSelect();
+      listNameInput.value = '';
+      result.textContent = 'Lista borrada';
+    }
+
+    function updateSavedListsSelect(selectedName = '') {
+      savedListsSelect.innerHTML = '<option value="">Seleccionar una lista guardada...</option>';
+
+      Object.keys(savedClassLists).sort().forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        savedListsSelect.appendChild(option);
+      });
+
+      if (selectedName) {
+        savedListsSelect.value = selectedName;
+      }
+    }
+
+    function saveCurrentRound() {
+      const names = getNamesFromTextarea();
+
+      if (names.length === 0) {
+        result.textContent = 'Añade estudiantes';
+        return;
+      }
+
+      students = names;
+      remaining = [...students];
+      selectedHistory = [];
+      saveCurrentState();
+
+      result.textContent = 'Ronda actualizada';
+      updateInfo();
+      updateHistory();
+      renderWheel();
+    }
+
+    function saveCurrentState() {
+      safeSave('students', students);
+      safeSave('remaining', remaining);
+      safeSave('selectedHistory', selectedHistory);
+    }
+
+    function resetRound() {
+      remaining = [...students];
+      selectedHistory = [];
+      saveCurrentState();
+      result.textContent = 'Ronda reiniciada';
+      updateInfo();
+      updateHistory();
+      renderWheel();
+    }
+
+    function clearCurrentScreen() {
+      students = [];
+      remaining = [];
+      selectedHistory = [];
+      pendingStudent = null;
+      pendingStudentIndex = -1;
+      input.value = '';
+      listNameInput.value = '';
+      savedListsSelect.value = '';
+      localStorage.removeItem('students');
+      localStorage.removeItem('remaining');
+      localStorage.removeItem('selectedHistory');
+      result.textContent = '---';
+      updateInfo();
+      updateHistory();
+      renderWheel();
+    }
+
+    function getAudioContext() {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return null;
+
+      if (!audioCtx || audioCtx.state === 'closed') {
+        audioCtx = new AudioContext();
+      }
+
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      return audioCtx;
+    }
+
+    function playTone(frequency, duration = 0.06, type = 'square', volume = 0.055, delay = 0) {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      const oscillator = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const start = ctx.currentTime + delay;
+
+      oscillator.type = type;
+      oscillator.frequency.setValueAtTime(frequency, start);
+      gain.gain.setValueAtTime(volume, start);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+
+      oscillator.connect(gain);
+      gain.connect(ctx.destination);
+      oscillator.start(start);
+      oscillator.stop(start + duration + 0.02);
+    }
+
+    function playRouletteSound(duration = 2950) {
+      const start = performance.now();
+      let interval = 22;
+
+      function tick() {
+        const elapsed = performance.now() - start;
+
+        playTone(
+          720 + Math.random() * 240,
+          0.028,
+          'square',
+          0.05
+        );
+
+        const progress = Math.min(elapsed / duration, 1);
+        interval = 18 + (progress * 38);
+
+        if (elapsed < duration) {
+          setTimeout(tick, interval);
+        }
+      }
+
+      tick();
+    }
+
+    function playWinSound() {
+      [523.25, 659.25, 783.99, 1046.5].forEach((freq, index) => {
+        playTone(freq, 0.18, 'sine', 0.09, index * 0.1);
+      });
+    }
+
+    function playRemoveSound() {
+      [392, 330, 262].forEach((freq, index) => {
+        playTone(freq, 0.16, 'triangle', 0.075, index * 0.09);
+      });
+    }
+
+    function playKeepSound() {
+      playTone(650, 0.16, 'sine', 0.07);
+    }
+
+    function pickStudent() {
+      if (spinning) return;
+
+      if (students.length === 0) {
+        result.textContent = 'Añade estudiantes';
+        return;
+      }
+
+      if (remaining.length === 0) {
+        result.textContent = 'Ronda completa';
+        info.textContent = 'Todos los estudiantes han sido seleccionados. Pulsa “Reiniciar ronda”.';
+        return;
+      }
+
+      spinning = true;
+      pendingStudent = null;
+      pendingStudentIndex = -1;
+      result.textContent = 'Girando...';
+      wheel.classList.add('spin-glow');
+
+      playRouletteSound(2950);
+
+      currentRotation += 1440 + Math.floor(Math.random() * 720);
+      wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+      setTimeout(() => {
+        const slice = 360 / remaining.length;
+        const normalizedRotation = ((currentRotation % 360) + 360) % 360;
+        const pointerAngleOnWheel = (360 - normalizedRotation) % 360;
+        const selectedIndex = Math.floor(pointerAngleOnWheel / slice) % remaining.length;
+        const selected = remaining[selectedIndex];
+
+        pendingStudent = selected;
+        pendingStudentIndex = selectedIndex;
+
+        result.textContent = selected;
+        resultBox.classList.remove('result-pop');
+        void resultBox.offsetWidth;
+        resultBox.classList.add('result-pop');
+        playWinSound();
+        showDecisionModal(selected);
+
+        wheel.classList.remove('spin-glow');
+        spinning = false;
+      }, 3000);
+    }
+
+    function showDecisionModal(student) {
+      decisionStudent.textContent = student;
+      decisionModal.style.display = 'flex';
+    }
+
+    function keepStudent() {
+      if (!pendingStudent) return;
+
+      playKeepSound();
+      selectedHistory.push(pendingStudent);
+      safeSave('selectedHistory', selectedHistory);
+
+      pendingStudent = null;
+      pendingStudentIndex = -1;
+      decisionModal.style.display = 'none';
+      updateInfo();
+      updateHistory();
+      renderWheel();
+    }
+
+    function removeStudent() {
+      if (!pendingStudent) return;
+
+      const studentToRemove = pendingStudent;
+      const indexToRemove = pendingStudentIndex;
+
+      playRemoveSound();
+      if (indexToRemove >= 0 && remaining[indexToRemove] === studentToRemove) {
+        remaining.splice(indexToRemove, 1);
+      } else {
+        const fallbackIndex = remaining.indexOf(studentToRemove);
+        if (fallbackIndex >= 0) {
+          remaining.splice(fallbackIndex, 1);
+        }
+      }
+
+      selectedHistory.push(studentToRemove);
+      saveCurrentState();
+
+      pendingStudent = null;
+      pendingStudentIndex = -1;
+      decisionModal.style.display = 'none';
+      updateInfo();
+      updateHistory();
+      renderWheel();
+    }
+
+    function updateInfo() {
+      if (students.length === 0) {
+        info.textContent = 'No hay lista cargada todavía.';
+      } else {
+        info.textContent = `${remaining.length} de ${students.length} estudiantes quedan por salir en esta ronda.`;
+      }
+    }
+
+    function updateHistory() {
+      historyList.innerHTML = '';
+
+      selectedHistory.forEach(name => {
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.textContent = name;
+        historyList.appendChild(chip);
+      });
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && fullscreenOverlay.classList.contains('active')) {
+        closeFullscreen();
+      }
+    });
+
+    function renderWheel() {
+      const logo = document.createElement('img');
+      logo.className = 'wheel-logo';
+      logo.src = './logo.png';
+      logo.alt = 'Logo Miguel Iglesias';
+
+      wheel.innerHTML = '';
+      wheel.appendChild(logo);
+
+      const activeNames = remaining;
+
+      if (activeNames.length === 0) {
+        wheel.style.background = 'conic-gradient(#0ea5e9 0deg 45deg, #ffffff 45deg 90deg, #1d4ed8 90deg 135deg, #ffffff 135deg 180deg, #0ea5e9 180deg 225deg, #ffffff 225deg 270deg, #1d4ed8 270deg 315deg, #ffffff 315deg 360deg)';
+        return;
+      }
+
+      const colors = ['#bae6fd', '#ffffff', '#7dd3fc', '#dbeafe', '#38bdf8', '#eff6ff'];
+      const slice = 360 / activeNames.length;
+      const gradientParts = activeNames.map((_, index) => {
+        const start = index * slice;
+        const end = (index + 1) * slice;
+        return `${colors[index % colors.length]} ${start}deg ${end}deg`;
+      });
+
+      wheel.style.background = `conic-gradient(${gradientParts.join(', ')})`;
+
+      activeNames.forEach((name, index) => {
+        const label = document.createElement('div');
+        label.className = 'wheel-name';
+        label.textContent = shortWheelName(name);
+
+        const angle = index * slice + slice / 2;
+        const isFullscreen = fullscreenOverlay.classList.contains('active');
+        const radius = isFullscreen
+          ? Math.min(190, window.innerWidth * 0.28)
+          : (window.innerWidth <= 760 ? 104 : 124);
+        const radians = (angle - 90) * Math.PI / 180;
+        const x = Math.cos(radians) * radius;
+        const y = Math.sin(radians) * radius;
+
+        const baseFontSize = isFullscreen
+          ? (activeNames.length > 24 ? 0.48 : activeNames.length > 16 ? 0.56 : 0.68)
+          : (activeNames.length > 24 ? 0.34 : activeNames.length > 18 ? 0.38 : activeNames.length > 12 ? 0.46 : 0.56);
+
+        const fontSize = Math.max(0.28, Math.min(1.1, baseFontSize * wheelNameScale));
+        label.style.fontSize = fontSize + 'rem';
+        label.style.transform = `translate(${x}px, ${y}px) translate(0, -50%) rotate(${angle + 90}deg)`;
+
+        wheel.appendChild(label);
+      });
+    }
+  </script>
+</body>
+</html>
