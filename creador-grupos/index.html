@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creador de Grupos | Clases de Bolsillo</title>
+  <link rel="icon" href="./logo.png" />
+
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --bg-1: #f8fafc;
+      --bg-2: #e0f2fe;
+      --card: rgba(255, 255, 255, 0.96);
+      --panel: #f8fafc;
+      --text: #1f2937;
+      --muted: #475569;
+      --title: #0f172a;
+      --primary: #0284c7;
+      --primary-2: #2563eb;
+      --border: #dbeafe;
+      --soft: #e0f2fe;
+      --soft-text: #075985;
+      --danger: #fee2e2;
+      --danger-text: #991b1b;
+      --success: #dcfce7;
+      --success-text: #166534;
+      --warning: #fef3c7;
+      --warning-text: #92400e;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(14, 165, 233, 0.22), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(79, 70, 229, 0.18), transparent 35%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2));
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 10px;
+      transition: background 0.35s ease, color 0.35s ease;
+    }
+
+    body.dark-mode {
+      --bg-1: #020617;
+      --bg-2: #0f172a;
+      --card: rgba(15, 23, 42, 0.96);
+      --panel: #111827;
+      --text: #e5e7eb;
+      --muted: #cbd5e1;
+      --title: #f8fafc;
+      --border: #334155;
+      --soft: #082f49;
+      --soft-text: #e0f2fe;
+      --danger: #3f1d1d;
+      --danger-text: #fecaca;
+      --success: #052e16;
+      --success-text: #bbf7d0;
+      --warning: #3b2f09;
+      --warning-text: #fde68a;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1040px;
+      background: var(--card);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.14);
+      border: 1px solid rgba(14, 165, 233, 0.25);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .app.fullscreen-active {
+      max-width: none;
+      min-height: 100vh;
+      border-radius: 0;
+    }
+
+    .app::before {
+      content: "";
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: rgba(14, 165, 233, 0.08);
+      right: -100px;
+      top: -100px;
+      z-index: 0;
+    }
+
+    .content { position: relative; z-index: 1; }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .home-button,
+    .small-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      background: #dbeafe;
+      color: #075985;
+      border: 1px solid #93c5fd;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.92rem;
+      box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
+      transition: transform .15s ease, background .15s ease;
+      cursor: pointer;
+    }
+
+    .home-button:hover,
+    .small-action:hover { transform: translateY(-2px); background: #bfdbfe; }
+
+    .top-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .brand { display: flex; justify-content: center; margin-bottom: 8px; }
+
+    .logo {
+      width: 82px;
+      height: 82px;
+      object-fit: contain;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.16);
+      padding: 4px;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 6px 0 4px;
+      font-size: 1.8rem;
+      color: var(--title);
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      margin: 0 auto 14px;
+      font-size: 0.92rem;
+      max-width: 720px;
+      line-height: 1.45;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .panel,
+    .stage {
+      background: var(--panel);
+      border-radius: 20px;
+      padding: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .stage { background: linear-gradient(180deg, rgba(255,255,255,0.9), var(--panel)); }
+    .dark-mode .stage { background: linear-gradient(180deg, #111827, #0f172a); }
+
+    .panel-title {
+      font-weight: 900;
+      color: var(--soft-text);
+      margin-bottom: 10px;
+    }
+
+    .field { margin-bottom: 12px; }
+
+    label {
+      display: block;
+      font-size: 0.86rem;
+      font-weight: 900;
+      color: var(--soft-text);
+      margin-bottom: 6px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 2px solid #bae6fd;
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-size: 1rem;
+      outline: none;
+      background: white;
+      color: #0f172a;
+    }
+
+    .dark-mode input,
+    .dark-mode select,
+    .dark-mode textarea {
+      background: #020617;
+      color: #e5e7eb;
+      border-color: #334155;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #0ea5e9;
+      box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
+    }
+
+    textarea { min-height: 150px; resize: vertical; }
+
+    .preset-grid,
+    .bottom-buttons,
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .preset-grid { grid-template-columns: repeat(3, 1fr); }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.12);
+    }
+
+    button:disabled { opacity: 0.55; cursor: not-allowed; }
+    button:active:not(:disabled) { transform: scale(0.98); }
+
+    .primary {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: white;
+      font-size: 1.08rem;
+      padding: 15px 18px;
+      margin-top: 12px;
+    }
+
+    .secondary { background: var(--soft); color: var(--soft-text); }
+    .danger { background: var(--danger); color: var(--danger-text); }
+    .success { background: var(--success); color: var(--success-text); }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .result-header h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: var(--soft-text);
+    }
+
+    .info-pill {
+      background: var(--soft);
+      color: var(--soft-text);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .groups-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+    }
+
+    .group-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      min-height: 120px;
+      animation: groupPop 0.4s ease both;
+    }
+
+    @keyframes groupPop {
+      from { opacity: 0; transform: translateY(10px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .group-card h3 {
+      margin: 0 0 10px;
+      color: var(--title);
+      font-size: 1rem;
+    }
+
+    .group-card ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .empty-state {
+      border: 2px dashed #38bdf8;
+      border-radius: 18px;
+      padding: 32px 18px;
+      text-align: center;
+      background: #ecfeff;
+      color: #475569;
+      font-weight: 800;
+      line-height: 1.45;
+      grid-column: 1 / -1;
+    }
+
+    .dark-mode .empty-state { background: #082f49; color: #cbd5e1; }
+
+    .status {
+      margin-top: 12px;
+      border-radius: 16px;
+      padding: 10px 12px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      display: none;
+    }
+
+    .status.show { display: block; }
+    .status.ok { background: var(--success); color: var(--success-text); }
+    .status.warn { background: var(--warning); color: var(--warning-text); }
+    .status.error { background: var(--danger); color: var(--danger-text); }
+
+    .footer {
+      text-align: center;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .manual-box {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 820px) {
+      .layout { grid-template-columns: 1fr; }
+      .preset-grid,
+      .option-grid,
+      .bottom-buttons { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app" id="appShell">
+    <div class="content">
+      <div class="topbar">
+        <a class="home-button" href="../">⬅ Volver al menú</a>
+        <div class="top-actions">
+          <button class="small-action" id="fullscreenBtn" type="button">⛶ Pantalla completa</button>
+          <button class="small-action" id="darkModeBtn" type="button">🌙 Modo oscuro</button>
+        </div>
+      </div>
+
+      <div class="brand">
+        <img class="logo" src="./logo.png" alt="Logo Miguel Iglesias" />
+      </div>
+
+      <h1>Creador de grupos</h1>
+      <p class="subtitle">
+        Crea parejas y grupos colaborativos conectados a la base de datos de Clases de Bolsillo.
+      </p>
+
+      <section class="layout">
+        <div class="panel">
+          <div class="panel-title">Clase y estudiantes</div>
+
+          <div class="field">
+            <label for="classSelect">Seleccionar clase</label>
+            <select id="classSelect">
+              <option value="">Cargando clases...</option>
+            </select>
+          </div>
+
+          <div class="option-grid">
+            <button class="secondary" id="reloadClassesBtn" type="button">🔄 Recargar clases</button>
+            <button class="secondary" id="reloadStudentsBtn" type="button">👥 Recargar estudiantes</button>
+          </div>
+
+          <div class="field" style="margin-top:14px;">
+            <label for="studentInput">Estudiantes de la clase</label>
+            <textarea id="studentInput" placeholder="Selecciona una clase para cargar estudiantes desde StudentLists."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="projectNameInput">Nombre del proyecto / actividad</label>
+            <input id="projectNameInput" type="text" placeholder="Ejemplo: Proyecto video final" />
+          </div>
+
+          <div class="manual-box">
+            <div class="panel-title">Tipo de grupos</div>
+            <div class="preset-grid">
+              <button class="secondary" data-size="2" type="button">Parejas</button>
+              <button class="secondary" data-size="3" type="button">Grupos de 3</button>
+              <button class="secondary" data-size="4" type="button">Grupos de 4</button>
+              <button class="secondary" data-size="5" type="button">Grupos de 5</button>
+              <button class="secondary" data-random="true" type="button">🎲 Aleatorio</button>
+              <button class="secondary" id="customModeBtn" type="button">⚙️ Manual</button>
+            </div>
+          </div>
+
+          <div id="manualOptions" class="manual-box hidden">
+            <div class="panel-title">Configuración manual</div>
+            <div class="option-grid">
+              <div>
+                <label for="modeSelect">Modo</label>
+                <select id="modeSelect">
+                  <option value="number">Número de grupos</option>
+                  <option value="size">Tamaño por grupo</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="groupValue">Cantidad</label>
+                <input id="groupValue" type="number" min="1" value="4" />
+              </div>
+            </div>
+          </div>
+
+          <button class="primary" id="createGroupsBtn" type="button">👥 Crear grupos</button>
+
+          <div class="bottom-buttons">
+            <button class="secondary" id="shuffleAgainBtn" type="button">🔀 Mezclar otra vez</button>
+            <button class="success" id="saveGroupsBtn" type="button">💾 Guardar historial</button>
+            <button class="secondary" id="copyGroupsBtn" type="button">📋 Copiar grupos</button>
+            <button class="danger" id="clearCurrentBtn" type="button">🗑️ Borrar pantalla</button>
+          </div>
+
+          <div id="statusBox" class="status"></div>
+        </div>
+
+        <div class="stage">
+          <div class="result-header">
+            <h2>Grupos generados</h2>
+            <span class="info-pill" id="groupSummary">0 estudiantes</span>
+          </div>
+
+          <div id="groupsContainer" class="groups-container">
+            <div class="empty-state">
+              Selecciona una clase y pulsa “Crear grupos”.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">Clases de Bolsillo · La Caja de Herramientas del Maestro</div>
+    </div>
+  </main>
+
+  <script>
+    const USER_ID = 'MIGUEL';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyysudqQSafy_m38E2p267y_HBMRduy1SN478w7DxiW81_drA4yuxbpfkfzcqClgCzMqg/exec';
+
+    let classes = [];
+    let selectedClass = null;
+    let students = [];
+    let lastGroups = [];
+    let lastMethod = 'Manual';
+    let lastGroupConfig = { mode: 'number', value: 4 };
+    let audioCtx = null;
+
+    const appShell = document.getElementById('appShell');
+    const classSelect = document.getElementById('classSelect');
+    const input = document.getElementById('studentInput');
+    const projectNameInput = document.getElementById('projectNameInput');
+    const modeSelect = document.getElementById('modeSelect');
+    const groupValue = document.getElementById('groupValue');
+    const manualOptions = document.getElementById('manualOptions');
+    const groupsContainer = document.getElementById('groupsContainer');
+    const groupSummary = document.getElementById('groupSummary');
+    const statusBox = document.getElementById('statusBox');
+    const darkModeBtn = document.getElementById('darkModeBtn');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+    document.addEventListener('DOMContentLoaded', initApp);
+
+    function initApp() {
+      bindEvents();
+      restorePreferences();
+      loadClasses();
+    }
+
+    function bindEvents() {
+      classSelect.addEventListener('change', handleClassChange);
+      document.getElementById('reloadClassesBtn').addEventListener('click', loadClasses);
+      document.getElementById('reloadStudentsBtn').addEventListener('click', loadStudentsForSelectedClass);
+      document.getElementById('createGroupsBtn').addEventListener('click', createGroupsFromCurrentConfig);
+      document.getElementById('shuffleAgainBtn').addEventListener('click', createGroupsFromCurrentConfig);
+      document.getElementById('saveGroupsBtn').addEventListener('click', saveCurrentGroups);
+      document.getElementById('copyGroupsBtn').addEventListener('click', copyGroupsToClipboard);
+      document.getElementById('clearCurrentBtn').addEventListener('click', clearCurrentScreen);
+      darkModeBtn.addEventListener('click', toggleDarkMode);
+      fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+      document.querySelectorAll('[data-size]').forEach(button => {
+        button.addEventListener('click', () => {
+          const size = parseInt(button.dataset.size, 10);
+          setPresetBySize(size);
+        });
+      });
+
+      document.querySelector('[data-random="true"]').addEventListener('click', setRandomPreset);
+      document.getElementById('customModeBtn').addEventListener('click', () => {
+        manualOptions.classList.toggle('hidden');
+        lastMethod = 'Manual';
+        showStatus('Modo manual activado.', 'ok');
+      });
+    }
+
+    function restorePreferences() {
+      if (safeLoad('groupMakerDarkMode', false)) {
+        document.body.classList.add('dark-mode');
+        darkModeBtn.textContent = '☀️ Modo claro';
+      }
+    }
+
+    function safeLoad(key, fallback) {
+      try {
+        const value = JSON.parse(localStorage.getItem(key));
+        return value === null ? fallback : value;
+      } catch (error) {
+        return fallback;
+      }
+    }
+
+    function safeSave(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    async function apiCall(action, payload = {}) {
+      const body = {
+        action,
+        userId: USER_ID,
+        userID: USER_ID,
+        UserID: USER_ID,
+        ...payload
+      };
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(body)
+        });
+
+        const text = await response.text();
+        return parseApiResponse(text);
+      } catch (postError) {
+        const params = new URLSearchParams();
+        params.set('action', action);
+        params.set('userId', USER_ID);
+        params.set('userID', USER_ID);
+        params.set('UserID', USER_ID);
+
+        Object.entries(payload).forEach(([key, value]) => {
+          params.set(key, typeof value === 'string' ? value : JSON.stringify(value));
+        });
+
+        const response = await fetch(`${SCRIPT_URL}?${params.toString()}`);
+        const text = await response.text();
+        return parseApiResponse(text);
+      }
+    }
+
+    function parseApiResponse(text) {
+      try {
+        const data = JSON.parse(text);
+
+        if (data && data.status === 'error') {
+          throw new Error(data.message || 'La API devolvió un error.');
+        }
+
+        return data;
+      } catch (error) {
+        throw new Error('Respuesta no válida de Apps Script: ' + text.slice(0, 180));
+      }
+    }
+
+    async function loadClasses() {
+      setBusy(true);
+      showStatus('Cargando clases desde la base de datos...', 'warn');
+      classSelect.innerHTML = '<option value="">Cargando clases...</option>';
+
+      try {
+        const data = await apiCall('getClasses');
+        classes = Array.isArray(data.classes) ? data.classes : [];
+
+        renderClassOptions();
+        renderEmptyState(classes.length ? 'Selecciona una clase para cargar estudiantes.' : 'No hay clases activas para este usuario.');
+        showStatus(`Clases cargadas: ${classes.length}.`, classes.length ? 'ok' : 'warn');
+      } catch (error) {
+        classes = [];
+        renderEmptyState('No se pudieron cargar las clases. Revisa Apps Script y el despliegue.');
+        classSelect.innerHTML = '<option value="">Error al cargar clases</option>';
+        showStatus(error.message, 'error');
+      } finally {
+        setBusy(false);
+        updateSummary();
+      }
+    }
+
+    function renderClassOptions() {
+      classSelect.innerHTML = '<option value="">Seleccionar clase...</option>';
+
+      classes.forEach(classItem => {
+        const option = document.createElement('option');
+        option.value = String(classItem.classId || '').trim();
+        option.textContent = classItem.displayName || `${classItem.course || ''} · ${classItem.section || ''} · ${classItem.schoolYear || ''}`;
+        classSelect.appendChild(option);
+      });
+    }
+
+    async function handleClassChange() {
+      const classId = classSelect.value;
+      selectedClass = classes.find(item => String(item.classId || '').trim() === String(classId).trim()) || null;
+      lastGroups = [];
+      renderEmptyState('Cargando estudiantes...');
+      await loadStudentsForSelectedClass();
+    }
+
+    async function loadStudentsForSelectedClass() {
+      const classId = classSelect.value;
+
+      if (!classId) {
+        students = [];
+        input.value = '';
+        renderEmptyState('Selecciona una clase para cargar estudiantes.');
+        updateSummary();
+        return;
+      }
+
+      setBusy(true);
+      showStatus('Cargando estudiantes desde StudentLists...', 'warn');
+
+      try {
+        const data = await apiCall('getStudents', { classId });
+        const rawStudents = Array.isArray(data.students) ? data.students : [];
+
+        students = rawStudents
+          .map(student => String(student.studentName || '').trim())
+          .filter(Boolean)
+          .filter((name, index, arr) => arr.indexOf(name) === index);
+
+        input.value = students.join('\n');
+        lastGroups = [];
+
+        if (students.length > 0) {
+          renderEmptyState(`Clase cargada con ${students.length} estudiantes. Pulsa “Crear grupos”.`);
+          showStatus(`Estudiantes cargados: ${students.length}.`, 'ok');
+        } else {
+          renderEmptyState('Esta clase no tiene estudiantes activos en StudentLists.');
+          showStatus('No se encontraron estudiantes activos para esta clase.', 'warn');
+        }
+      } catch (error) {
+        students = [];
+        input.value = '';
+        renderEmptyState('No se pudieron cargar los estudiantes.');
+        showStatus(error.message, 'error');
+      } finally {
+        setBusy(false);
+        updateSummary();
+      }
+    }
+
+    function getNamesFromTextarea() {
+      return input.value
+        .split('\n')
+        .map(name => name.trim())
+        .filter(name => name.length > 0)
+        .filter((name, index, arr) => arr.indexOf(name) === index);
+    }
+
+    function setPresetBySize(size) {
+      manualOptions.classList.add('hidden');
+      lastGroupConfig = { mode: 'size', value: size };
+      lastMethod = size === 2 ? 'Parejas' : `Grupos de ${size}`;
+      modeSelect.value = 'size';
+      groupValue.value = size;
+      showStatus(`${lastMethod} seleccionado.`, 'ok');
+      createGroupsFromCurrentConfig();
+    }
+
+    function setRandomPreset() {
+      const names = getNamesFromTextarea();
+
+      if (names.length < 2) {
+        renderEmptyState('Añade o carga al menos dos estudiantes.');
+        updateSummary();
+        return;
+      }
+
+      const possibleSizes = [2, 3, 4, 5].filter(size => size <= names.length);
+      const randomSize = possibleSizes[Math.floor(Math.random() * possibleSizes.length)] || 2;
+
+      manualOptions.classList.add('hidden');
+      lastGroupConfig = { mode: 'size', value: randomSize };
+      lastMethod = `Aleatorio · tamaño ${randomSize}`;
+      modeSelect.value = 'size';
+      groupValue.value = randomSize;
+      showStatus(`Modo aleatorio seleccionado: grupos de ${randomSize}.`, 'ok');
+      createGroupsFromCurrentConfig();
+    }
+
+    function createGroupsFromCurrentConfig() {
+      const config = manualOptions.classList.contains('hidden') ? lastGroupConfig : {
+        mode: modeSelect.value,
+        value: parseInt(groupValue.value, 10)
+      };
+
+      if (!manualOptions.classList.contains('hidden')) {
+        lastMethod = config.mode === 'number' ? `Manual · ${config.value} grupos` : `Manual · tamaño ${config.value}`;
+      }
+
+      createGroups(config.mode, config.value);
+    }
+
+    function createGroups(mode, value) {
+      students = getNamesFromTextarea();
+
+      if (students.length < 2) {
+        renderEmptyState('Añade o carga al menos dos estudiantes.');
+        updateSummary();
+        return;
+      }
+
+      if (!value || value < 1) {
+        renderEmptyState('Introduce una cantidad válida.');
+        updateSummary();
+        return;
+      }
+
+      const shuffled = shuffleArray([...students]);
+      let groups = [];
+
+      if (mode === 'number') {
+        const numberOfGroups = Math.min(value, shuffled.length);
+        groups = Array.from({ length: numberOfGroups }, () => []);
+
+        shuffled.forEach((student, index) => {
+          groups[index % numberOfGroups].push(student);
+        });
+      } else {
+        const groupSize = Math.min(value, shuffled.length);
+        for (let i = 0; i < shuffled.length; i += groupSize) {
+          groups.push(shuffled.slice(i, i + groupSize));
+        }
+      }
+
+      lastGroups = groups;
+      lastGroupConfig = { mode, value };
+      renderGroups(groups);
+      playSuccessSound();
+      showStatus('Grupos generados. Puedes guardarlos en GroupHistory.', 'ok');
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function renderGroups(groups) {
+      groupsContainer.innerHTML = '';
+
+      groups.forEach((group, index) => {
+        const card = document.createElement('article');
+        card.className = 'group-card';
+        card.style.animationDelay = `${index * 0.04}s`;
+
+        const title = document.createElement('h3');
+        title.textContent = `Grupo ${index + 1}`;
+
+        const list = document.createElement('ul');
+        group.forEach(student => {
+          const item = document.createElement('li');
+          item.textContent = student;
+          list.appendChild(item);
+        });
+
+        card.appendChild(title);
+        card.appendChild(list);
+        groupsContainer.appendChild(card);
+      });
+
+      updateSummary(groups);
+    }
+
+    function renderEmptyState(message) {
+      groupsContainer.innerHTML = `<div class="empty-state">${escapeHTML(message)}</div>`;
+    }
+
+    function updateSummary(groups = lastGroups) {
+      const names = getNamesFromTextarea();
+      const totalStudents = names.length || students.length;
+      const totalGroups = groups.length || 0;
+
+      groupSummary.textContent = totalGroups > 0
+        ? `${totalStudents} estudiantes · ${totalGroups} grupos`
+        : `${totalStudents} estudiantes`;
+    }
+
+    async function saveCurrentGroups() {
+      if (!lastGroups.length) {
+        showStatus('Primero genera grupos antes de guardar.', 'warn');
+        return;
+      }
+
+      const classId = classSelect.value || '';
+
+      if (!classId) {
+        showStatus('Selecciona una clase antes de guardar en GroupHistory.', 'warn');
+        return;
+      }
+
+      const baseProjectName = projectNameInput.value.trim();
+
+      if (!baseProjectName) {
+        showStatus('Escribe un nombre de proyecto o actividad antes de guardar.', 'warn');
+        return;
+      }
+
+      const projectName = buildProjectName(baseProjectName);
+
+      const payload = {
+        classId,
+        activity: 'GroupCreated',
+        projectName,
+        groups: JSON.stringify(lastGroups)
+      };
+
+      setBusy(true);
+      showStatus('Guardando grupos en GroupHistory...', 'warn');
+
+      try {
+        const result = await apiCall('saveGroupHistory', payload);
+
+        if (result.status !== 'success') {
+          throw new Error(result.message || 'No se pudo guardar.');
+        }
+
+        showStatus(`Grupos guardados: ${projectName}`, 'ok');
+        playSuccessSound();
+      } catch (error) {
+        showStatus('No se pudo guardar: ' + error.message, 'error');
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    function buildProjectName(baseProjectName) {
+      const section = selectedClass && selectedClass.section ? selectedClass.section : 'Sin periodo';
+      const date = formatDateForProjectName(new Date());
+      return `${section} · ${baseProjectName} · ${lastMethod} · ${date}`;
+    }
+
+    function formatDateForProjectName(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    async function copyGroupsToClipboard() {
+      if (!lastGroups.length) {
+        showStatus('No hay grupos para copiar.', 'warn');
+        return;
+      }
+
+      const text = buildGroupsText();
+
+      try {
+        await navigator.clipboard.writeText(text);
+        showStatus('Grupos copiados al portapapeles.', 'ok');
+      } catch (error) {
+        showStatus('No se pudo copiar automáticamente. Puedes seleccionar los grupos manualmente.', 'error');
+      }
+    }
+
+    function buildGroupsText() {
+      const classLabel = selectedClass
+        ? selectedClass.displayName
+        : 'Clase no seleccionada';
+
+      const projectLabel = projectNameInput.value.trim()
+        ? `Proyecto: ${buildProjectName(projectNameInput.value.trim())}`
+        : 'Proyecto: sin nombre';
+
+      const lines = [`Creador de grupos · ${classLabel}`, projectLabel, `Método: ${lastMethod}`, ''];
+
+      lastGroups.forEach((group, index) => {
+        lines.push(`Grupo ${index + 1}`);
+        group.forEach(student => lines.push(`- ${student}`));
+        lines.push('');
+      });
+
+      return lines.join('\n');
+    }
+
+    function clearCurrentScreen() {
+      lastGroups = [];
+      renderEmptyState('Pantalla limpia. Selecciona o recarga una clase para continuar.');
+      updateSummary([]);
+      showStatus('Pantalla borrada. La base de datos no se ha modificado.', 'ok');
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      darkModeBtn.textContent = isDark ? '☀️ Modo claro' : '🌙 Modo oscuro';
+      safeSave('groupMakerDarkMode', isDark);
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        appShell.requestFullscreen?.();
+      } else {
+        document.exitFullscreen?.();
+      }
+    }
+
+    document.addEventListener('fullscreenchange', () => {
+      const isFullscreen = Boolean(document.fullscreenElement);
+      appShell.classList.toggle('fullscreen-active', isFullscreen);
+      fullscreenBtn.textContent = isFullscreen ? '↙ Salir de pantalla completa' : '⛶ Pantalla completa';
+    });
+
+    function setBusy(isBusy) {
+      document.querySelectorAll('button, select').forEach(element => {
+        element.disabled = isBusy;
+      });
+    }
+
+    function showStatus(message, type = 'ok') {
+      statusBox.textContent = message;
+      statusBox.className = `status show ${type}`;
+    }
+
+    function escapeHTML(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function getAudioContext() {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return null;
+
+      if (!audioCtx || audioCtx.state === 'closed') {
+        audioCtx = new AudioContext();
+      }
+
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      return audioCtx;
+    }
+
+    function playTone(frequency, duration = 0.1, type = 'sine', volume = 0.06, delay = 0) {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      const oscillator = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const start = ctx.currentTime + delay;
+
+      oscillator.type = type;
+      oscillator.frequency.setValueAtTime(frequency, start);
+      gain.gain.setValueAtTime(volume, start);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+
+      oscillator.connect(gain);
+      gain.connect(ctx.destination);
+      oscillator.start(start);
+      oscillator.stop(start + duration + 0.02);
+    }
+
+    function playSuccessSound() {
+      [523.25, 659.25, 783.99].forEach((freq, index) => {
+        playTone(freq, 0.16, 'sine', 0.075, index * 0.1);
+      });
+    }
+  </script>
+</body>
+</html>
