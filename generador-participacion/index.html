@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="apple-touch-icon" href="../favicon.png">
+<title>Generador de Participación | Clases de Bolsillo</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top left,rgba(14,165,233,.22),transparent 35%),radial-gradient(circle at bottom right,rgba(79,70,229,.18),transparent 35%),linear-gradient(135deg,#f8fafc,#e0f2fe);color:#1f2937;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:10px}
+body.dark-mode{background:radial-gradient(circle at top left,rgba(56,189,248,.18),transparent 35%),radial-gradient(circle at bottom right,rgba(99,102,241,.16),transparent 35%),linear-gradient(135deg,#020617,#0f172a);color:#e5e7eb}
+.app{width:100%;max-width:1120px;background:rgba(255,255,255,.96);border-radius:24px;padding:18px;box-shadow:0 20px 45px rgba(15,23,42,.14);border:1px solid rgba(14,165,233,.25);overflow:hidden;position:relative}
+.dark-mode .app{background:rgba(15,23,42,.96);border-color:rgba(56,189,248,.25);box-shadow:0 20px 45px rgba(0,0,0,.35)}
+.app:before{content:"";position:absolute;width:320px;height:320px;border-radius:50%;background:rgba(14,165,233,.08);right:-110px;top:-110px;z-index:0}
+.content{position:relative;z-index:1}
+.home-button{display:inline-flex;align-items:center;gap:8px;text-decoration:none;background:#dbeafe;color:#075985;border:1px solid #93c5fd;padding:10px 16px;border-radius:999px;font-weight:800;font-size:.92rem;margin-bottom:16px;box-shadow:0 6px 14px rgba(15,23,42,.08);transition:.15s}
+.home-button:hover{transform:translateY(-2px);background:#bfdbfe}
+.brand{display:flex;justify-content:center;margin-bottom:8px}
+.logo{width:82px;height:82px;object-fit:contain;border-radius:50%;background:white;box-shadow:0 10px 22px rgba(15,23,42,.16);padding:4px}
+h1{text-align:center;margin:6px 0 4px;font-size:1.75rem;color:#0f172a;letter-spacing:-.5px}
+.dark-mode h1{color:#f8fafc}
+.subtitle{text-align:center;color:#475569;margin-bottom:14px;font-size:.92rem}
+.dark-mode .subtitle,.dark-mode .footer,.dark-mode .small-note{color:#cbd5e1}
+.dark-toggle-wrap{display:flex;justify-content:center;margin-bottom:12px}
+.layout{display:grid;grid-template-columns:.95fr 1.05fr;gap:14px;align-items:start}
+.panel,.stage{background:#f8fafc;border-radius:20px;padding:14px;border:1px solid #dbeafe}
+.dark-mode .panel,.dark-mode .stage,.dark-mode .student-card,.dark-mode .history-card{background:#111827;border-color:#334155}
+.panel-title{font-weight:bold;color:#075985;margin-bottom:10px}
+.dark-mode .panel-title,.dark-mode .student-name,.dark-mode .history-card h3{color:#f8fafc}
+input,textarea,select{width:100%;border:2px solid #bae6fd;border-radius:16px;padding:12px 14px;font-size:1rem;outline:none;background:white;color:#0f172a}
+input:focus,textarea:focus,select:focus{border-color:#0ea5e9;box-shadow:0 0 0 4px rgba(14,165,233,.15)}
+textarea{min-height:132px;resize:vertical}
+button{border:none;border-radius:999px;padding:12px 16px;font-size:.95rem;font-weight:800;cursor:pointer;transition:.15s}
+button:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(15,23,42,.12)}
+button:active{transform:scale(.98)}
+.primary{width:100%;background:linear-gradient(135deg,#0284c7,#2563eb);color:white;font-size:1.08rem;padding:15px 18px;margin-top:12px}
+.secondary{background:#e0f2fe;color:#075985}.danger{background:#fee2e2;color:#991b1b}.success{background:#dcfce7;color:#166534}
+.button-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.type-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
+.type-btn{background:white;border:1px solid #dbeafe;color:#0f172a;border-radius:18px;padding:13px 10px;font-size:.9rem;font-weight:900}
+.type-btn.selected{background:linear-gradient(135deg,#0284c7,#2563eb);color:white;border-color:#0284c7;box-shadow:0 10px 20px rgba(37,99,235,.2)}
+.dark-mode .type-btn{background:#0f172a;border-color:#334155;color:#e5e7eb}
+.stage{background:linear-gradient(180deg,#fff,#f0f9ff)}
+.dark-mode .stage{background:linear-gradient(180deg,#111827,#0f172a)}
+.student-card{background:white;border:1px solid #dbeafe;border-radius:24px;padding:28px;text-align:center;box-shadow:0 14px 28px rgba(15,23,42,.08);min-height:270px;display:flex;flex-direction:column;justify-content:center}
+.student-card.pop{animation:pop .65s ease}
+@keyframes pop{0%{transform:scale(1)}35%{transform:scale(1.045);box-shadow:0 0 0 8px rgba(56,189,248,.18)}100%{transform:scale(1)}}
+.student-icon{font-size:3.4rem;margin-bottom:12px}
+.student-label{color:#64748b;font-size:.9rem;font-weight:900;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
+.student-name{font-size:2.05rem;font-weight:900;color:#0f172a;line-height:1.15}
+.challenge{margin-top:14px;color:#075985;font-weight:900;font-size:1.05rem}
+.dark-mode .challenge{color:#93c5fd}
+.small-note{color:#64748b;font-size:.85rem;line-height:1.45;margin-top:8px;word-break:break-word}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.stat{background:#e0f2fe;color:#075985;border-radius:18px;padding:12px;text-align:center;font-weight:900}
+.stat span{display:block;font-size:1.4rem}
+.history{margin-top:14px;display:grid;gap:10px;max-height:300px;overflow-y:auto;padding-right:4px}
+.history-card{background:white;border:1px solid #dbeafe;border-radius:16px;padding:12px;animation:in .35s ease both}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.history-card h3{margin:0 0 6px;color:#0f172a;font-size:.95rem}.history-card p{margin:0;color:#475569;line-height:1.35;font-size:.9rem}.dark-mode .history-card p{color:#cbd5e1}
+.pill{display:inline-flex;align-items:center;justify-content:center;background:#e0f2fe;color:#075985;border-radius:999px;padding:8px 12px;font-size:.85rem;font-weight:900;margin:6px 4px}
+.footer{text-align:center;margin-top:18px;color:#64748b;font-size:.85rem}
+@media(max-width:820px){.layout{grid-template-columns:1fr}.button-row,.type-grid,.stats{grid-template-columns:1fr}.student-name{font-size:1.55rem}}
+</style>
+</head>
+<body>
+<main class="app">
+<a class="home-button" href="../">⬅ Volver al menú</a>
+<div class="content">
+<div class="brand"><img class="logo" src="./logo.png" alt="Logo Miguel Iglesias" /></div>
+<h1>Generador de participación</h1>
+<p class="subtitle">Selecciona estudiantes, propone roles y registra participación de forma justa y visual.</p>
+<div class="dark-toggle-wrap"><button class="secondary" id="darkModeBtn" style="padding:8px 14px;font-size:.85rem;">🌙 Modo oscuro</button></div>
+
+<section class="layout">
+<div class="panel">
+<div class="panel-title">Clase desde la base de datos</div>
+<select id="classSelect">
+  <option value="">Cargando clases...</option>
+</select>
+
+<div class="button-row">
+  <button class="secondary" id="reloadClassesBtn">🔄 Recargar clases</button>
+  <button class="secondary" id="reloadStudentsBtn">👥 Cargar estudiantes</button>
+</div>
+
+<div class="panel-title" style="margin-top:16px;">Mis listas locales</div>
+<select id="savedListsSelect">
+  <option value="">Selecciona una lista guardada...</option>
+</select>
+
+<div class="button-row">
+  <button class="secondary" id="newListBtn">➕ Nueva lista</button>
+  <button class="danger" id="deleteListBtn">🗑️ Borrar lista</button>
+</div>
+
+<div class="panel-title" style="margin-top:16px;">Lista de clase</div>
+<input id="listName" placeholder="Nombre de la lista o clase" />
+<textarea id="studentList" placeholder="Selecciona una clase para cargar estudiantes desde StudentLists o pega nombres manualmente, uno por línea..."></textarea>
+<div class="button-row"><button class="secondary" id="loadSampleBtn">✨ Lista ejemplo</button><button class="secondary" id="saveLocalBtn">💾 Guardar local</button></div>
+<div class="button-row"><button class="secondary" id="loadLocalBtn">📂 Cargar local</button><button class="danger" id="clearListBtn">🧹 Limpiar lista</button></div>
+
+<div class="panel-title" style="margin-top:16px;">Modo de selección</div>
+<select id="selectionMode">
+<option value="balanced">🎯 Equilibrado: prioriza quienes participaron menos</option>
+<option value="random">🎲 Aleatorio total</option>
+<option value="noRepeat">🔁 Sin repetir hasta completar ronda</option>
+</select>
+
+<div class="panel-title" style="margin-top:16px;">Tipo de participación</div>
+<div class="type-grid">
+<button class="type-btn selected" data-type="Responder">💬 Responder</button>
+<button class="type-btn" data-type="Leer">📖 Leer</button>
+<button class="type-btn" data-type="Explicar">🧠 Explicar</button>
+<button class="type-btn" data-type="Preguntar">❓ Preguntar</button>
+<button class="type-btn" data-type="Ayudar">🤝 Ayudar</button>
+<button class="type-btn" data-type="Liderar">⭐ Liderar</button>
+</div>
+
+<button class="primary" id="pickBtn">🎯 Elegir participante</button>
+<div class="button-row"><button class="success" id="registerBtn">✅ Registrar</button><button class="secondary" id="skipBtn">⏭️ Pasar turno</button></div>
+<button class="secondary" id="newRoundBtn" style="width:100%;margin-top:10px;">🔄 Iniciar nueva ronda</button>
+</div>
+
+<div class="stage">
+<div class="student-card" id="studentCard">
+<div class="student-icon" id="studentIcon">🎯</div>
+<div class="student-label">Participante seleccionado</div>
+<div class="student-name" id="studentName">Pulsa “Elegir participante”</div>
+<div class="challenge" id="challengeText">Elige un tipo de participación para empezar.</div>
+<div class="small-note" id="roundNote">La app intentará repartir oportunidades de forma justa.</div>
+</div>
+
+<div class="stats">
+<div class="stat"><span id="totalStudents">0</span> estudiantes</div>
+<div class="stat"><span id="totalTurns">0</span> registros</div>
+<div class="stat"><span id="leastCount">0</span> mínimo</div>
+</div>
+
+<div style="margin-top:14px;"><span class="pill" id="currentTypePill">Tipo: Responder</span><span class="pill" id="modePill">Modo: Equilibrado</span><span class="pill" id="dbPill">Base de datos: lista</span></div>
+<div class="history" id="historyList"></div>
+<div class="button-row"><button class="secondary" id="copyHistoryBtn">📋 Copiar historial</button><button class="danger" id="clearHistoryBtn">🗑️ Borrar historial</button></div>
+</div>
+</section>
+<div class="footer">Creado para clase por Miguel Iglesias · Clases de Bolsillo</div>
+</div>
+</main>
+
+<script>
+const USER_ID = "MIGUEL";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyysudqQSafy_m38E2p267y_HBMRduy1SN478w7DxiW81_drA4yuxbpfkfzcqClgCzMqg/exec";
+
+let selectedType = "Responder";
+let currentStudent = "";
+let history = [];
+let counts = {};
+let usedThisRound = [];
+let audioCtx = null;
+
+let classes = [];
+let selectedClass = null;
+let studentRecords = [];
+let studentIdByName = {};
+
+const classSelect = document.getElementById("classSelect");
+const studentList = document.getElementById("studentList");
+const listName = document.getElementById("listName");
+const savedListsSelect = document.getElementById("savedListsSelect");
+const selectionMode = document.getElementById("selectionMode");
+const studentName = document.getElementById("studentName");
+const studentIcon = document.getElementById("studentIcon");
+const challengeText = document.getElementById("challengeText");
+const roundNote = document.getElementById("roundNote");
+const studentCard = document.getElementById("studentCard");
+const historyList = document.getElementById("historyList");
+const totalStudents = document.getElementById("totalStudents");
+const totalTurns = document.getElementById("totalTurns");
+const leastCount = document.getElementById("leastCount");
+const currentTypePill = document.getElementById("currentTypePill");
+const modePill = document.getElementById("modePill");
+const dbPill = document.getElementById("dbPill");
+const darkModeBtn = document.getElementById("darkModeBtn");
+
+document.addEventListener("DOMContentLoaded", initApp);
+
+function initApp() {
+  document.getElementById("pickBtn").addEventListener("click", pickStudent);
+  document.getElementById("registerBtn").addEventListener("click", registerParticipation);
+  document.getElementById("skipBtn").addEventListener("click", skipTurn);
+  document.getElementById("loadSampleBtn").addEventListener("click", loadSample);
+  document.getElementById("saveLocalBtn").addEventListener("click", saveLocal);
+  document.getElementById("loadLocalBtn").addEventListener("click", () => loadLocal(true));
+  document.getElementById("clearListBtn").addEventListener("click", clearList);
+  document.getElementById("copyHistoryBtn").addEventListener("click", copyHistory);
+  document.getElementById("clearHistoryBtn").addEventListener("click", clearHistory);
+  document.getElementById("newListBtn").addEventListener("click", newList);
+  document.getElementById("deleteListBtn").addEventListener("click", deleteList);
+  document.getElementById("newRoundBtn").addEventListener("click", startNewRound);
+  document.getElementById("reloadClassesBtn").addEventListener("click", loadClassesFromDatabase);
+  document.getElementById("reloadStudentsBtn").addEventListener("click", loadStudentsForSelectedClass);
+
+  savedListsSelect.addEventListener("change", loadSelectedList);
+  classSelect.addEventListener("change", handleClassChange);
+  darkModeBtn.addEventListener("click", toggleDarkMode);
+  selectionMode.addEventListener("change", updateModePill);
+  studentList.addEventListener("input", () => {
+    rebuildStudentMapFromTextarea();
+    updateStats();
+  });
+
+  document.querySelectorAll(".type-btn").forEach(btn => {
+    btn.addEventListener("click", () => selectType(btn));
+  });
+
+  if (safeLoad("participationDarkMode", false)) {
+    document.body.classList.add("dark-mode");
+    darkModeBtn.textContent = "☀️ Modo claro";
+  }
+
+  refreshSavedLists();
+  loadLastList(false);
+  updateStats();
+  renderHistory();
+  loadClassesFromDatabase();
+}
+
+async function apiCall(action, payload = {}) {
+  const data = {
+    action,
+    userId: USER_ID,
+    userID: USER_ID,
+    UserID: USER_ID,
+    ...payload
+  };
+
+  // Apps Script + GitHub Pages a veces bloquea fetch por CORS/redirección.
+  // JSONP usa doGet(callback=...) y evita ese bloqueo.
+  return jsonpCall(data);
+}
+
+function jsonpCall(data) {
+  return new Promise((resolve, reject) => {
+    const callbackName = "cb_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+    const params = new URLSearchParams();
+
+    Object.entries(data).forEach(([key, value]) => {
+      params.set(key, typeof value === "string" ? value : JSON.stringify(value));
+    });
+
+    params.set("callback", callbackName);
+
+    const script = document.createElement("script");
+    script.src = `${SCRIPT_URL}?${params.toString()}`;
+
+    const timeout = setTimeout(() => {
+      cleanup();
+      reject(new Error("Tiempo agotado al conectar con Apps Script."));
+    }, 15000);
+
+    function cleanup() {
+      clearTimeout(timeout);
+      delete window[callbackName];
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    }
+
+    window[callbackName] = function(response) {
+      cleanup();
+
+      if (response && response.status === "error") {
+        reject(new Error(response.message || "La API devolvió un error."));
+        return;
+      }
+
+      resolve(response);
+    };
+
+    script.onerror = function() {
+      cleanup();
+      reject(new Error("No se pudo conectar con Apps Script."));
+    };
+
+    document.body.appendChild(script);
+  });
+}
+
+function parseApiResponse(text) {
+  try {
+    const data = JSON.parse(text);
+
+    if (data && data.status === "error") {
+      throw new Error(data.message || "La API devolvió un error.");
+    }
+
+    return data;
+  } catch (error) {
+    throw new Error("Respuesta no válida de Apps Script: " + text.slice(0, 160));
+  }
+}
+
+async function loadClassesFromDatabase() {
+  setDatabasePill("Cargando clases...", "warn");
+  classSelect.innerHTML = '<option value="">Cargando clases...</option>';
+
+  try {
+    const data = await apiCall("getClasses");
+    classes = Array.isArray(data.classes) ? data.classes : [];
+
+    classSelect.innerHTML = '<option value="">Seleccionar clase desde la base de datos...</option>';
+
+    classes.forEach(classItem => {
+      const option = document.createElement("option");
+      option.value = String(classItem.classId || "").trim();
+      option.textContent = classItem.displayName || `${classItem.course || ""} · ${classItem.section || ""} · ${classItem.schoolYear || ""}`;
+      classSelect.appendChild(option);
+    });
+
+    setDatabasePill(`Clases: ${classes.length}`, "ok");
+  } catch (error) {
+    classSelect.innerHTML = '<option value="">Error al cargar clases</option>';
+    setDatabasePill("Error al cargar clases", "error");
+    showMessage("No se pudieron cargar clases", "⚠️", error.message);
+  }
+}
+
+async function handleClassChange() {
+  const classId = classSelect.value;
+  selectedClass = classes.find(item => String(item.classId || "").trim() === String(classId).trim()) || null;
+  await loadStudentsForSelectedClass();
+}
+
+async function loadStudentsForSelectedClass() {
+  const classId = classSelect.value;
+
+  if (!classId) {
+    showMessage("Selecciona una clase", "👥", "Elige una clase para cargar estudiantes desde StudentLists.");
+    return;
+  }
+
+  setDatabasePill("Cargando estudiantes...", "warn");
+
+  try {
+    const data = await apiCall("getStudents", { classId });
+    studentRecords = Array.isArray(data.students) ? data.students : [];
+
+    const names = studentRecords
+      .map(student => String(student.studentName || "").trim())
+      .filter(Boolean)
+      .filter((name, index, arr) => arr.indexOf(name) === index);
+
+    studentList.value = names.join("\n");
+
+    const classLabel = selectedClass
+      ? selectedClass.displayName
+      : classId;
+
+    listName.value = classLabel;
+    studentIdByName = {};
+    studentRecords.forEach(student => {
+      const name = String(student.studentName || "").trim();
+      if (name) studentIdByName[normalizeName(name)] = String(student.studentId || "").trim();
+    });
+
+    counts = {};
+    usedThisRound = [];
+    currentStudent = "";
+    history = [];
+
+    saveLocal();
+    updateStats();
+    renderHistory();
+    setDatabasePill(`Estudiantes: ${names.length}`, "ok");
+    showMessage("Clase cargada", "👥", `${classLabel} · ${names.length} estudiantes disponibles.`);
+  } catch (error) {
+    setDatabasePill("Error al cargar estudiantes", "error");
+    showMessage("No se pudieron cargar estudiantes", "⚠️", error.message);
+  }
+}
+
+function setDatabasePill(message, type = "ok") {
+  dbPill.textContent = `Base de datos: ${message}`;
+
+  if (type === "error") {
+    dbPill.style.background = "#fee2e2";
+    dbPill.style.color = "#991b1b";
+  } else if (type === "warn") {
+    dbPill.style.background = "#fef3c7";
+    dbPill.style.color = "#92400e";
+  } else {
+    dbPill.style.background = "#e0f2fe";
+    dbPill.style.color = "#075985";
+  }
+}
+
+function getStudents() {
+  return studentList.value
+    .split("\n")
+    .map(s => s.trim())
+    .filter(Boolean)
+    .filter((name, index, arr) => arr.indexOf(name) === index);
+}
+
+function rebuildStudentMapFromTextarea() {
+  const names = getStudents();
+  names.forEach(name => {
+    const key = normalizeName(name);
+    if (!studentIdByName[key]) {
+      const record = studentRecords.find(item => normalizeName(item.studentName) === key);
+      if (record) studentIdByName[key] = String(record.studentId || "").trim();
+    }
+  });
+}
+
+function pickStudent() {
+  const students = getStudents();
+
+  if (!students.length) {
+    showMessage("Añade una lista primero.", "⚠️", "Carga una clase o pega nombres uno por línea para empezar.");
+    return;
+  }
+
+  const mode = selectionMode.value;
+  let chosen;
+
+  if (mode === "random") {
+    chosen = students[Math.floor(Math.random() * students.length)];
+  } else if (mode === "noRepeat") {
+    const available = students.filter(s => !usedThisRound.includes(s));
+
+    if (!available.length) {
+      showParticipationComplete();
+      return;
+    }
+
+    chosen = available[Math.floor(Math.random() * available.length)];
+    usedThisRound.push(chosen);
+  } else {
+    students.forEach(s => { if (counts[s] === undefined) counts[s] = 0; });
+    const min = Math.min(...students.map(s => counts[s] || 0));
+    const pool = students.filter(s => (counts[s] || 0) === min);
+    chosen = pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  currentStudent = chosen;
+  studentIcon.textContent = "🎯";
+  studentName.textContent = chosen;
+  challengeText.textContent = getChallenge(selectedType);
+  roundNote.textContent = `Sugerencia: ${chosen} participa como: ${selectedType}.`;
+  popCard();
+  playMagicSound();
+  updateStats();
+}
+
+async function registerParticipation() {
+  if (!currentStudent) {
+    showMessage("Primero elige un participante.", "🎯", "Pulsa “Elegir participante” antes de registrar.");
+    return;
+  }
+
+  counts[currentStudent] = (counts[currentStudent] || 0) + 1;
+
+  const item = {
+    student: currentStudent,
+    studentId: studentIdByName[normalizeName(currentStudent)] || "",
+    type: selectedType,
+    challenge: challengeText.textContent,
+    time: new Date().toLocaleString(),
+    classId: selectedClass ? selectedClass.classId : classSelect.value || "",
+    list: listName.value || "Sin nombre"
+  };
+
+  history.unshift(item);
+  saveState();
+
+  showMessage(currentStudent, "✅", `Participación registrada localmente: ${selectedType}`);
+  currentStudent = "";
+  renderHistory();
+  updateStats();
+  playSuccessSound();
+
+  await saveParticipationToDatabase(item);
+}
+
+async function saveParticipationToDatabase(item) {
+  const classId = item.classId || "";
+  const studentId = item.studentId || "";
+  const studentNameValue = item.student || "";
+  const activityType = item.type || "Participación";
+  const notes = item.challenge || "";
+
+  if (!classId) {
+    setDatabasePill("sin ClassID", "warn");
+    return;
+  }
+
+  try {
+    const result = await apiCall("saveParticipationLog", {
+      classId,
+      studentId,
+      studentName: studentNameValue,
+      activityType,
+      notes
+    });
+
+    if (result.status !== "success") {
+      throw new Error(result.message || "No se pudo guardar en ParticipationLog.");
+    }
+
+    setDatabasePill("participación guardada", "ok");
+  } catch (error) {
+    setDatabasePill("pendiente de Apps Script", "warn");
+    showMessage("Guardado local completo", "💾", "Para guardar también en ParticipationLog falta añadir saveParticipationLog al Apps Script.");
+  }
+}
+
+function skipTurn() {
+  if (!currentStudent) {
+    showMessage("No hay participante seleccionado.", "⏭️", "Elige estudiante primero.");
+    return;
+  }
+
+  showMessage("Turno pasado", "⏭️", `${currentStudent} puede participar más tarde.`);
+  currentStudent = "";
+  playSoftClick();
+}
+
+function selectType(btn) {
+  selectedType = btn.dataset.type;
+  document.querySelectorAll(".type-btn").forEach(b => b.classList.remove("selected"));
+  btn.classList.add("selected");
+  currentTypePill.textContent = `Tipo: ${selectedType}`;
+
+  if (currentStudent) {
+    challengeText.textContent = getChallenge(selectedType);
+  }
+
+  playSoftClick();
+}
+
+function getChallenge(type) {
+  const bank = {
+    Responder: ["Responde con una idea completa.", "Da una respuesta y justifica tu opinión.", "Comparte una respuesta breve con evidencia."],
+    Leer: ["Lee la pregunta o instrucción en voz alta.", "Lee una frase y explica una palabra clave.", "Lee el ejemplo con buena pronunciación."],
+    Explicar: ["Explica el concepto con tus propias palabras.", "Enseña el paso principal a la clase.", "Da un ejemplo y explica por qué funciona."],
+    Preguntar: ["Haz una pregunta que ayude a la clase.", "Pregunta algo que todavía no esté claro.", "Crea una pregunta para otro compañero."],
+    Ayudar: ["Ayuda a un compañero a empezar.", "Comparte una pista sin decir la respuesta.", "Apoya a tu grupo con una idea útil."],
+    Liderar: ["Dirige la primera parte de la actividad.", "Resume lo que dijo tu grupo.", "Elige el siguiente paso del equipo."]
+  };
+
+  const items = bank[type] || bank.Responder;
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function renderHistory() {
+  historyList.innerHTML = "";
+
+  if (!history.length) {
+    historyList.innerHTML = '<div class="history-card"><h3>Sin registros todavía</h3><p>Cuando registres participaciones aparecerán aquí.</p></div>';
+    return;
+  }
+
+  history.slice(0, 40).forEach((item, index) => {
+    const card = document.createElement("article");
+    card.className = "history-card";
+    card.style.animationDelay = `${index * .03}s`;
+    card.innerHTML = `<h3>${escapeHTML(item.student)} · ${escapeHTML(item.type)}</h3><p>${escapeHTML(item.challenge)}</p><p style="font-size:.78rem;margin-top:6px;color:#64748b;">${escapeHTML(item.time)}</p>`;
+    historyList.appendChild(card);
+  });
+}
+
+function updateStats() {
+  const students = getStudents();
+  totalStudents.textContent = students.length;
+  totalTurns.textContent = history.length;
+
+  if (!students.length) {
+    leastCount.textContent = 0;
+  } else {
+    students.forEach(s => { if (counts[s] === undefined) counts[s] = 0; });
+    leastCount.textContent = Math.min(...students.map(s => counts[s] || 0));
+  }
+
+  updateModePill();
+}
+
+function updateModePill() {
+  const labels = { balanced: "Equilibrado", random: "Aleatorio", noRepeat: "Sin repetir" };
+  modePill.textContent = `Modo: ${labels[selectionMode.value] || "Equilibrado"}`;
+}
+
+function loadSample() {
+  classSelect.value = "";
+  selectedClass = null;
+  studentRecords = [];
+  studentIdByName = {};
+
+  listName.value = "Spanish 1/2 · Period 2";
+  studentList.value = ["Ana García", "Ben Johnson", "Camila Torres", "Diego Pérez", "Emily Smith", "Gabriel Ruiz", "Isabella Flores", "Jason Lee", "Lucía Morales", "Mateo Sánchez", "Natalie Brown", "Sofía Rivera"].join("\n");
+  counts = {};
+  usedThisRound = [];
+  history = [];
+  saveLocal();
+  updateStats();
+  renderHistory();
+  playSoftClick();
+  setDatabasePill("modo local", "warn");
+}
+
+function saveLocal() {
+  const name = listName.value.trim();
+
+  if (!name) {
+    showMessage("Pon nombre a la lista", "💾", "Ejemplo: Spanish 1/2 · Period 2");
+    return;
+  }
+
+  const lists = safeLoad("participationSavedLists", {});
+  lists[name] = {
+    name,
+    students: studentList.value,
+    counts,
+    history,
+    usedThisRound,
+    classId: selectedClass ? selectedClass.classId : classSelect.value || "",
+    studentRecords,
+    updatedAt: new Date().toLocaleString()
+  };
+
+  safeSave("participationSavedLists", lists);
+  safeSave("participationLastList", name);
+  refreshSavedLists();
+  savedListsSelect.value = name;
+  showMessage("Lista guardada", "💾", `${name} quedó guardada en este navegador.`);
+  playSoftClick();
+}
+
+function loadLastList(show) {
+  const last = safeLoad("participationLastList", "");
+
+  if (last) {
+    savedListsSelect.value = last;
+    loadSelectedList(show);
+  }
+}
+
+function refreshSavedLists() {
+  const lists = safeLoad("participationSavedLists", {});
+  savedListsSelect.innerHTML = '<option value="">Selecciona una lista guardada...</option>';
+
+  Object.keys(lists).sort().forEach(name => {
+    const option = document.createElement("option");
+    option.value = name;
+    option.textContent = name;
+    savedListsSelect.appendChild(option);
+  });
+}
+
+function loadSelectedList(show = true) {
+  const name = savedListsSelect.value;
+
+  if (!name) return;
+
+  const lists = safeLoad("participationSavedLists", {});
+  const item = lists[name];
+
+  if (!item) return;
+
+  listName.value = item.name || name;
+  studentList.value = item.students || "";
+  counts = item.counts || {};
+  history = item.history || [];
+  usedThisRound = item.usedThisRound || [];
+  studentRecords = item.studentRecords || [];
+  studentIdByName = {};
+
+  studentRecords.forEach(student => {
+    const nameValue = String(student.studentName || "").trim();
+    if (nameValue) studentIdByName[normalizeName(nameValue)] = String(student.studentId || "").trim();
+  });
+
+  const classId = item.classId || "";
+
+  if (classId) {
+    classSelect.value = classId;
+    selectedClass = classes.find(classItem => String(classItem.classId || "").trim() === String(classId).trim()) || selectedClass;
+  }
+
+  safeSave("participationLastList", name);
+  updateStats();
+  renderHistory();
+
+  if (show) {
+    showMessage("Lista cargada", "📂", `${name} está lista para usar.`);
+  }
+}
+
+function newList() {
+  listName.value = "";
+  studentList.value = "";
+  counts = {};
+  history = [];
+  usedThisRound = [];
+  currentStudent = "";
+  selectedClass = null;
+  studentRecords = [];
+  studentIdByName = {};
+  classSelect.value = "";
+  savedListsSelect.value = "";
+  renderHistory();
+  updateStats();
+  showMessage("Nueva lista", "➕", "Escribe un nombre y pega estudiantes o carga una clase.");
+  setDatabasePill("modo local", "warn");
+}
+
+function deleteList() {
+  const name = savedListsSelect.value || listName.value.trim();
+
+  if (!name) {
+    showMessage("No hay lista seleccionada", "🗑️", "Selecciona una lista para borrarla.");
+    return;
+  }
+
+  const lists = safeLoad("participationSavedLists", {});
+  delete lists[name];
+  safeSave("participationSavedLists", lists);
+  safeSave("participationLastList", "");
+
+  refreshSavedLists();
+  newList();
+  showMessage("Lista borrada", "🗑️", `${name} fue eliminada de este navegador.`);
+}
+
+function startNewRound() {
+  usedThisRound = [];
+  currentStudent = "";
+  saveState();
+  showMessage("Nueva ronda lista", "🔄", "Todos pueden volver a participar.");
+  playSoftClick();
+}
+
+function showParticipationComplete() {
+  currentStudent = "";
+  studentIcon.textContent = "🎉";
+  studentName.textContent = "Participación completa";
+  challengeText.textContent = "Todos los estudiantes de esta lista ya participaron en esta ronda.";
+  roundNote.textContent = "Pulsa “Iniciar nueva ronda” para empezar otra vuelta.";
+  popCard();
+  playSuccessSound();
+}
+
+function saveState() {
+  const name = listName.value.trim();
+
+  if (!name) return;
+
+  const lists = safeLoad("participationSavedLists", {});
+  lists[name] = {
+    name,
+    students: studentList.value,
+    counts,
+    history,
+    usedThisRound,
+    classId: selectedClass ? selectedClass.classId : classSelect.value || "",
+    studentRecords,
+    updatedAt: new Date().toLocaleString()
+  };
+
+  safeSave("participationSavedLists", lists);
+  safeSave("participationLastList", name);
+}
+
+function loadLocal(show) {
+  loadLastList(show);
+}
+
+function clearList() {
+  studentList.value = "";
+  counts = {};
+  usedThisRound = [];
+  currentStudent = "";
+  updateStats();
+  showMessage("Lista limpia", "🧹", "El nombre se conserva. Puedes pegar nuevos estudiantes.");
+}
+
+function copyHistory() {
+  if (!history.length) {
+    showMessage("No hay historial", "📋", "Registra participaciones primero.");
+    return;
+  }
+
+  const text = history
+    .map((item, i) => `${i + 1}. ${item.student} · ${item.type}\n${item.challenge}\n${item.time}`)
+    .join("\n\n");
+
+  navigator.clipboard.writeText(text).then(() => {
+    showMessage("Historial copiado", "📋", "Listo para pegar en otro documento.");
+    playSoftClick();
+  });
+}
+
+function clearHistory() {
+  history = [];
+  counts = {};
+  usedThisRound = [];
+  saveState();
+  renderHistory();
+  updateStats();
+  showMessage("Historial borrado", "🗑️", "La lista se conserva, pero los registros se borraron.");
+  playSoftClick();
+}
+
+function showMessage(message, icon, note) {
+  studentIcon.textContent = icon;
+  studentName.textContent = message;
+  challengeText.textContent = note || "";
+  roundNote.textContent = "";
+  popCard();
+}
+
+function popCard() {
+  studentCard.classList.remove("pop");
+  void studentCard.offsetWidth;
+  studentCard.classList.add("pop");
+}
+
+function toggleDarkMode() {
+  document.body.classList.toggle("dark-mode");
+  const isDark = document.body.classList.contains("dark-mode");
+  darkModeBtn.textContent = isDark ? "☀️ Modo claro" : "🌙 Modo oscuro";
+  safeSave("participationDarkMode", isDark);
+}
+
+function normalizeName(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function safeLoad(key, fallback) {
+  try {
+    return JSON.parse(localStorage.getItem(key)) ?? fallback;
+  } catch (e) {
+    return fallback;
+  }
+}
+
+function safeSave(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+function escapeHTML(text) {
+  return String(text)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function getAudioContext() {
+  const AC = window.AudioContext || window.webkitAudioContext;
+
+  if (!AC) return null;
+
+  if (!audioCtx || audioCtx.state === "closed") {
+    audioCtx = new AC();
+  }
+
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+
+  return audioCtx;
+}
+
+function playTone(frequency, duration = .08, type = "sine", volume = .06, delay = 0) {
+  const ctx = getAudioContext();
+
+  if (!ctx) return;
+
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  const start = ctx.currentTime + delay;
+
+  osc.type = type;
+  osc.frequency.setValueAtTime(frequency, start);
+  gain.gain.setValueAtTime(volume, start);
+  gain.gain.exponentialRampToValueAtTime(.001, start + duration);
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(start);
+  osc.stop(start + duration + .02);
+}
+
+function playSoftClick() {
+  playTone(620, .08, "sine", .04);
+}
+
+function playMagicSound() {
+  [523.25, 659.25, 783.99].forEach((f, i) => playTone(f, .14, "sine", .065, i * .09));
+}
+
+function playSuccessSound() {
+  [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => playTone(f, .16, "sine", .075, i * .09));
+}
+</script>
+</body>
+</html>
