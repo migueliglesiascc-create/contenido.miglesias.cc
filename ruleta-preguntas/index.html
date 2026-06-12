@@ -116,7 +116,231 @@
   margin-top:14px;
 }
 
-</style></head><body><main class="app"><a class="home-button" href="../">⬅ Volver al menú</a><div class="content"><div class="brand"><img class="logo" src="./logo.png" alt="Logo Miguel Iglesias"/></div><h1>Ruleta de preguntas</h1><p class="subtitle">Crea, edita y guarda preguntas para conversación, debate, escritura o repaso.</p><div class="dark-toggle-wrap"><button class="secondary" id="darkModeBtn" style="padding:8px 14px;font-size:.85rem">🌙 Modo oscuro</button></div><section class="layout"><div class="panel"><div class="panel-title">Sets de preguntas</div><input id="setNameInput" type="text" placeholder="Nombre del set: AP Spanish Debate"/><select id="savedSetsSelect" style="margin-top:10px"><option value="">Seleccionar set guardado...</option></select><div class="mini-buttons"><button class="secondary" id="saveSetBtn">💾 Guardar local</button><button class="danger" id="deleteSetBtn">🗑️ Borrar local</button></div><div class="mini-buttons"><button class="secondary" id="saveDbSetBtn">☁️ Guardar en base</button><button class="secondary" id="loadDbSetsBtn">📥 Cargar bancos</button></div><button class="danger" id="deleteDbSetBtn" style="width:100%;margin-top:10px">🗑️ Borrar banco de base</button><div class="db-status" id="dbStatus">Base de datos: lista</div><div class="panel-title" style="margin-top:14px">Tema</div><input id="aiTopicInput" type="text" placeholder="Tema: tecnología, familia, inmigración, comida, identidad..."/><select id="suggestionCategory" style="margin-top:10px"><option value="conversation">🗣️ Conversación</option><option value="ap">🇪🇸 AP Spanish</option><option value="debate">🎭 Debate</option><option value="fun">😂 Divertidas</option><option value="critical">🧠 Pensamiento crítico</option><option value="culture">🌎 Cultura</option></select><button class="magic primary" id="suggestQuestionsBtn">💡 Sugerir preguntas</button><div class="panel-title" style="margin-top:14px">Modo de selección</div><select id="selectionMode"><option value="wheel">🎡 Ruleta clásica</option><option value="cards">🃏 Cartas mágicas</option><option value="box">🎁 Cajas sorpresa</option><option value="arcade">🎰 Máquina arcade</option><option value="dart">🎯 Diana numerada</option><option value="dice">🎲 Dado real</option><option value="globe">🌎 Globo cultural</option><option value="surprise">✨ Modo sorpresa</option></select><div class="panel-title" style="margin-top:14px">Visualización</div><select id="visualMode"><option value="auto">⭐ Auto: visible si hay 8 o menos</option><option value="showcase">👀 Mostrar preguntas visibles</option><option value="compact">🔢 Compacto: P1, P2, P3...</option></select><div class="panel-title" style="margin-top:14px">Añadir pregunta</div><textarea id="newQuestionInput" placeholder="Escribe una pregunta nueva..."></textarea><button class="secondary primary" id="addQuestionBtn">➕ Añadir pregunta</button><div class="panel-title" style="margin-top:14px">Preguntas editables</div><div id="questionList" class="question-list"></div><div class="bottom-buttons"><button class="secondary hidden" id="resetDefaultBtn">🔄 Ejemplo base</button><button class="danger" id="clearQuestionsBtn">🗑️ Borrar preguntas</button></div></div><div class="stage"><div id="pointer" class="pointer"></div><div id="wheelWrap" class="wheel-wrap"><div id="wheel" class="wheel"><img class="wheel-logo" src="./logo.png" alt="Logo Miguel Iglesias"/></div></div><div id="modeShowcase" class="mode-showcase"><div id="modeIcon" class="mode-icon">🃏</div><div id="modeText" class="mode-text">Seleccionando pregunta...</div></div><button class="primary start-button" id="spinBtn">🎡 COMENZAR</button><div id="wheelLegend" class="wheel-legend"></div><section class="result-box" id="resultBox"><div class="result-label">Pregunta seleccionada:</div><div id="resultQuestion" class="result-question">---</div></section><div class="bottom-buttons"><button class="secondary" id="keepQuestionBtn">✅ Mantener</button><button class="danger" id="removeQuestionBtn">✔️ Sacar temporalmente</button></div></div></section><div class="footer">Creado para clase por Miguel Iglesias</div></div></main><script>
+
+/* ===== CLASES DE BOLSILLO · NEON GAME UI V5 ===== */
+body{
+  background:
+    radial-gradient(circle at 18% 10%,rgba(168,85,247,.30),transparent 30%),
+    radial-gradient(circle at 82% 16%,rgba(14,165,233,.24),transparent 28%),
+    radial-gradient(circle at 50% 100%,rgba(236,72,153,.18),transparent 34%),
+    linear-gradient(135deg,#020617,#060818 48%,#0b1026);
+  color:#f8fafc;
+}
+.app{
+  max-width:1180px;
+  background:rgba(5,10,28,.92);
+  border:1px solid rgba(168,85,247,.45);
+  box-shadow:0 0 0 1px rgba(14,165,233,.12),0 28px 80px rgba(0,0,0,.42),0 0 45px rgba(168,85,247,.22);
+}
+.app:before{
+  width:340px;height:340px;
+  background:radial-gradient(circle,rgba(34,211,238,.18),transparent 62%);
+  right:-130px;top:-130px;
+}
+.home-button,.secondary{
+  background:rgba(15,23,42,.78);
+  color:#f8fafc;
+  border:1px solid rgba(168,85,247,.65);
+  box-shadow:0 0 16px rgba(168,85,247,.16);
+}
+.home-button:hover,.secondary:hover{background:rgba(30,41,59,.9)}
+.logo{box-shadow:0 0 24px rgba(34,211,238,.42);border:2px solid rgba(34,211,238,.35)}
+h1{
+  color:#fff;
+  font-size:2.1rem;
+  text-shadow:0 0 24px rgba(34,211,238,.25);
+}
+.subtitle{
+  color:#67e8f9;
+  font-weight:800;
+  font-style:italic;
+}
+.layout{grid-template-columns:.88fr 1.12fr;gap:16px}
+.panel,.stage{
+  background:linear-gradient(180deg,rgba(10,18,42,.92),rgba(5,10,28,.94));
+  border:1px solid rgba(99,102,241,.45);
+  box-shadow:0 18px 45px rgba(0,0,0,.28), inset 0 0 0 1px rgba(34,211,238,.08);
+}
+.panel-title{
+  color:#22d3ee;
+  font-size:1.05rem;
+  letter-spacing:.02em;
+}
+input,select,textarea{
+  background:rgba(248,250,252,.96);
+  border:2px solid rgba(125,211,252,.55);
+}
+.primary{
+  background:linear-gradient(135deg,#ec4899,#7c3aed 48%,#2563eb);
+  box-shadow:0 16px 34px rgba(124,58,237,.34),0 0 20px rgba(236,72,153,.18);
+}
+.magic{
+  background:linear-gradient(135deg,#ec4899,#7c3aed);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.18);
+}
+.danger{background:linear-gradient(135deg,#991b1b,#ef4444);color:white}
+.db-status{
+  background:rgba(8,47,73,.8)!important;
+  color:#bae6fd!important;
+  border:1px solid rgba(34,211,238,.35);
+}
+.question-item{
+  background:rgba(15,23,42,.82)!important;
+  border-color:rgba(99,102,241,.45)!important;
+}
+.question-item input{background:rgba(2,6,23,.8)!important;color:#f8fafc!important}
+.stage{position:relative;overflow:hidden}
+.stage:before{
+  content:"";
+  position:absolute;inset:10px;
+  border-radius:24px;
+  border:1px solid rgba(168,85,247,.28);
+  box-shadow:inset 0 0 42px rgba(168,85,247,.12);
+  pointer-events:none;
+}
+.mode-showcase{
+  background:
+    radial-gradient(circle at 50% 45%,rgba(14,165,233,.20),transparent 34%),
+    radial-gradient(circle at 50% 50%,rgba(168,85,247,.22),transparent 48%),
+    linear-gradient(135deg,rgba(2,6,23,.92),rgba(15,23,42,.72));
+  border:1px solid rgba(168,85,247,.58);
+  box-shadow:0 0 34px rgba(124,58,237,.24), inset 0 0 40px rgba(14,165,233,.08);
+  min-height:380px;
+}
+.mode-text{
+  color:#fff;
+  font-size:1.35rem;
+  text-shadow:0 0 18px rgba(34,211,238,.28);
+}
+.result-box{
+  background:linear-gradient(180deg,rgba(15,23,42,.92),rgba(2,6,23,.96));
+  border:2px solid rgba(99,102,241,.85);
+  box-shadow:0 0 30px rgba(124,58,237,.22);
+}
+.result-label{
+  display:inline-flex;
+  align-self:center;
+  background:linear-gradient(135deg,#ec4899,#7c3aed);
+  color:white;
+  padding:7px 22px;
+  border-radius:999px;
+  margin-bottom:12px;
+}
+.result-question{color:#fff;font-size:1.45rem;text-shadow:0 0 16px rgba(255,255,255,.1)}
+.wheel{
+  box-shadow:0 20px 46px rgba(0,0,0,.38),0 0 34px rgba(34,211,238,.22),inset 0 0 0 3px #0f172a;
+}
+.wheel-legend{
+  background:rgba(15,23,42,.72);
+  border-color:rgba(34,211,238,.35);
+}
+.legend-item{color:#f8fafc}.legend-number{color:#67e8f9}
+
+/* Globo cultural premium */
+.globe-arena{
+  height:330px!important;
+  position:relative;
+  overflow:visible;
+}
+.culture-globe{
+  position:relative;
+  z-index:4;
+  font-size:8rem!important;
+  animation:cultureSpin 1.2s linear infinite;
+  filter:drop-shadow(0 0 22px rgba(34,211,238,.42)) drop-shadow(0 20px 25px rgba(0,0,0,.38));
+}
+.globe-glow-ring{
+  position:absolute;
+  left:50%;top:50%;
+  width:290px;height:150px;
+  margin-left:-145px;margin-top:-76px;
+  border-radius:50%;
+  border:3px solid rgba(236,72,153,.55);
+  box-shadow:0 0 28px rgba(236,72,153,.35);
+  transform:rotate(-12deg);
+  z-index:2;
+}
+.globe-glow-ring.r2{
+  width:350px;height:190px;
+  margin-left:-175px;margin-top:-96px;
+  border-color:rgba(34,211,238,.45);
+  transform:rotate(16deg);
+}
+.flag-orbit{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  width:330px!important;
+  height:330px!important;
+  margin-left:-165px!important;
+  margin-top:-165px!important;
+  border-radius:50%;
+  animation:orbitFlags 7s linear infinite;
+  z-index:7!important;
+  pointer-events:none;
+}
+.flag-dot{
+  position:absolute!important;
+  width:52px!important;
+  height:52px!important;
+  border-radius:50%;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  background:rgba(255,255,255,.95)!important;
+  border:3px solid #38bdf8!important;
+  box-shadow:0 0 18px rgba(56,189,248,.48),0 8px 18px rgba(0,0,0,.35)!important;
+  z-index:9!important;
+  overflow:hidden;
+}
+.flag-dot.active{
+  transform:scale(1.28)!important;
+  border-color:#facc15!important;
+  box-shadow:0 0 0 7px rgba(250,204,21,.24),0 0 30px rgba(250,204,21,.75)!important;
+}
+.flag-icon{
+  width:38px;height:26px;
+  border-radius:4px;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.18);
+  display:block;
+}
+.flag-mx{background:linear-gradient(90deg,#006847 0 33%,#fff 33% 66%,#ce1126 66% 100%)}
+.flag-es{background:linear-gradient(#aa151b 0 25%,#f1bf00 25% 75%,#aa151b 75% 100%)}
+.flag-ar{background:linear-gradient(#74acdf 0 33%,#fff 33% 66%,#74acdf 66% 100%)}
+.flag-co{background:linear-gradient(#fcd116 0 50%,#003893 50% 75%,#ce1126 75% 100%)}
+.flag-pe{background:linear-gradient(90deg,#d91023 0 33%,#fff 33% 66%,#d91023 66% 100%)}
+.flag-cl{background:linear-gradient(#fff 0 50%,#d52b1e 50% 100%);position:relative}.flag-cl:before{content:"";position:absolute;left:0;top:0;width:50%;height:50%;background:#0039a6}
+.flag-cu{background:repeating-linear-gradient(#002a8f 0 20%,#fff 20% 40%);position:relative}.flag-cu:before{content:"";position:absolute;left:0;top:0;border-top:13px solid transparent;border-bottom:13px solid transparent;border-left:20px solid #cf142b}
+.flag-do{background:linear-gradient(90deg,#002d62 0 42%,#fff 42% 58%,#ce1126 58% 100%)}
+.flag-pr{background:repeating-linear-gradient(#ed0000 0 20%,#fff 20% 40%);position:relative}.flag-pr:before{content:"";position:absolute;left:0;top:0;border-top:13px solid transparent;border-bottom:13px solid transparent;border-left:22px solid #0050f0}
+.flag-uy{background:repeating-linear-gradient(#fff 0 12%,#0038a8 12% 24%);position:relative}.flag-uy:before{content:"";position:absolute;left:0;top:0;width:38%;height:45%;background:#fff176}
+.country-chip{
+  position:relative;
+  z-index:10;
+  margin-top:18px;
+  background:rgba(15,23,42,.94);
+  border:2px solid rgba(250,204,21,.65);
+  color:#facc15;
+  box-shadow:0 0 24px rgba(250,204,21,.25);
+}
+.culture-card{
+  background:rgba(15,23,42,.94)!important;
+  border-color:rgba(236,72,153,.65)!important;
+  color:#fff!important;
+  box-shadow:0 0 28px rgba(236,72,153,.22);
+}
+@keyframes flagPulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.22)}
+}
+
+/* Arcade no vertical jump */
+.slot-reel span{animation:none!important}
+.slot-symbol{transition:transform .12s, filter .12s}
+.slot-symbol.flash{transform:scale(1.25);filter:drop-shadow(0 0 12px rgba(250,204,21,.8))}
+
+</style></head><body><main class="app"><a class="home-button" href="../">⬅ Volver al menú</a><div class="content"><div class="brand"><img class="logo" src="./logo.png" alt="Logo Miguel Iglesias"/></div><h1>Ruleta de Preguntas</h1><p class="subtitle">by Miguel Iglesias · Elige un modo y que comience la magia.</p><div class="dark-toggle-wrap"><button class="secondary" id="darkModeBtn" style="padding:8px 14px;font-size:.85rem">🌙 Modo oscuro</button></div><section class="layout"><div class="panel"><div class="panel-title">Sets de preguntas</div><input id="setNameInput" type="text" placeholder="Nombre del set: AP Spanish Debate"/><select id="savedSetsSelect" style="margin-top:10px"><option value="">Seleccionar set guardado...</option></select><div class="mini-buttons"><button class="secondary" id="saveSetBtn">💾 Guardar local</button><button class="danger" id="deleteSetBtn">🗑️ Borrar local</button></div><div class="mini-buttons"><button class="secondary" id="saveDbSetBtn">☁️ Guardar en base</button><button class="secondary" id="loadDbSetsBtn">📥 Cargar bancos</button></div><button class="danger" id="deleteDbSetBtn" style="width:100%;margin-top:10px">🗑️ Borrar banco de base</button><div class="db-status" id="dbStatus">Base de datos: lista</div><div class="panel-title" style="margin-top:14px">Tema</div><input id="aiTopicInput" type="text" placeholder="Tema: tecnología, familia, inmigración, comida, identidad..."/><select id="suggestionCategory" style="margin-top:10px"><option value="conversation">🗣️ Conversación</option><option value="ap">🇪🇸 AP Spanish</option><option value="debate">🎭 Debate</option><option value="fun">😂 Divertidas</option><option value="critical">🧠 Pensamiento crítico</option><option value="culture">🌎 Cultura</option></select><button class="magic primary" id="suggestQuestionsBtn">✨ Sugerir preguntas</button><div class="panel-title" style="margin-top:14px">Modo de selección</div><select id="selectionMode"><option value="wheel">🎡 Ruleta clásica</option><option value="cards">🃏 Cartas mágicas</option><option value="box">🎁 Cajas sorpresa</option><option value="arcade">🎰 Máquina arcade</option><option value="dart">🎯 Diana numerada</option><option value="dice">🎲 Dado real</option><option value="globe">🌎 Globo cultural</option><option value="surprise">✨ Modo sorpresa</option></select><div class="panel-title" style="margin-top:14px">Visualización</div><select id="visualMode"><option value="auto">⭐ Auto: visible si hay 8 o menos</option><option value="showcase">👀 Mostrar preguntas visibles</option><option value="compact">🔢 Compacto: P1, P2, P3...</option></select><div class="panel-title" style="margin-top:14px">Añadir pregunta</div><textarea id="newQuestionInput" placeholder="Escribe una pregunta nueva..."></textarea><button class="secondary primary" id="addQuestionBtn">➕ Añadir pregunta</button><div class="panel-title" style="margin-top:14px">Preguntas editables</div><div id="questionList" class="question-list"></div><div class="bottom-buttons"><button class="secondary hidden" id="resetDefaultBtn">🔄 Ejemplo base</button><button class="danger" id="clearQuestionsBtn">🗑️ Borrar preguntas</button></div></div><div class="stage"><div id="pointer" class="pointer"></div><div id="wheelWrap" class="wheel-wrap"><div id="wheel" class="wheel"><img class="wheel-logo" src="./logo.png" alt="Logo Miguel Iglesias"/></div></div><div id="modeShowcase" class="mode-showcase"><div id="modeIcon" class="mode-icon">🃏</div><div id="modeText" class="mode-text">Seleccionando pregunta...</div></div><button class="primary start-button" id="spinBtn">🎡 COMENZAR</button><div id="wheelLegend" class="wheel-legend"></div><section class="result-box" id="resultBox"><div class="result-label">Pregunta seleccionada:</div><div id="resultQuestion" class="result-question">---</div></section><div class="bottom-buttons"><button class="secondary" id="keepQuestionBtn">✅ Mantener</button><button class="danger" id="removeQuestionBtn">✔️ Sacar temporalmente</button></div></div></section><div class="footer">Creado para clase por Miguel Iglesias</div></div></main><script>
 const USER_ID="MIGUEL";const SCRIPT_URL="https://script.google.com/macros/s/AKfycbyysudqQSafy_m38E2p267y_HBMRduy1SN478w7DxiW81_drA4yuxbpfkfzcqClgCzMqg/exec";
 const defaultQuestions=['¿Qué harías si pudieras viajar a cualquier país mañana?','¿Cuál es una tradición que te parece interesante?','¿Prefieres trabajar solo o en grupo? ¿Por qué?','¿Qué problema del mundo te gustaría resolver?','¿Qué consejo le darías a un estudiante nuevo?','¿Qué actividad te ayuda más a aprender español?'];const suggestionBank={conversation:['¿Qué lugar te gustaría visitar y por qué?','¿Cuál es tu comida favorita y cuándo la comes?','¿Qué haces normalmente después de la escuela?','¿Prefieres la ciudad o el campo? ¿Por qué?','¿Qué música escuchas cuando quieres relajarte?','¿Qué cualidad valoras más en un amigo?'],ap:['¿Cómo influye la familia en la identidad personal?','¿Qué papel juega la tecnología en la vida cotidiana?','¿Cómo reflejan las celebraciones los valores de una comunidad?','¿Qué desafíos enfrentan los jóvenes en la sociedad actual?','¿Cómo se relacionan el arte y la identidad cultural?','¿Qué impacto tiene la educación en el futuro de una comunidad?'],debate:['¿Deberían prohibirse los teléfonos en clase?','¿Es mejor estudiar en línea o en persona?','¿Las redes sociales conectan o aíslan a las personas?','¿Debería haber menos tarea en la escuela?','¿La inteligencia artificial ayuda o perjudica el aprendizaje?','¿Es más importante la creatividad o la disciplina?'],fun:['¿Preferirías tener alas o respirar bajo el agua?','¿Qué superpoder sería más útil en la escuela?','¿Qué animal sería el mejor maestro?','¿Qué harías si fueras invisible por un día?','¿Qué objeto llevarías a una isla desierta?','¿Qué comida podrías comer todos los días?'],critical:['¿Qué significa ser una persona responsable?','¿Cuándo es importante cambiar de opinión?','¿Qué hace que una idea sea poderosa?','¿Por qué algunas personas tienen miedo al cambio?','¿Cómo sabemos si una fuente de información es confiable?','¿Qué podemos aprender de un error?'],culture:['¿Qué tradición de tu cultura te gustaría compartir?','¿Cómo cambia la comida de una cultura a otra?','¿Por qué es importante proteger las lenguas?','¿Qué celebración representa mejor una comunidad?','¿Cómo se transmite la cultura entre generaciones?','¿Qué podemos aprender al comparar culturas?']};let questions=[],activeQuestions=[],savedSets={},currentRotation=0,spinning=false,selectedQuestion=null,selectedQuestionIndex=-1,audioCtx=null,modeTicker=null;const setNameInput=document.getElementById('setNameInput'),savedSetsSelect=document.getElementById('savedSetsSelect'),aiTopicInput=document.getElementById('aiTopicInput'),suggestionCategory=document.getElementById('suggestionCategory'),newQuestionInput=document.getElementById('newQuestionInput'),selectionMode=document.getElementById('selectionMode'),visualMode=document.getElementById('visualMode'),questionList=document.getElementById('questionList'),wheel=document.getElementById('wheel'),wheelWrap=document.getElementById('wheelWrap'),pointer=document.getElementById('pointer'),modeShowcase=document.getElementById('modeShowcase'),modeIcon=document.getElementById('modeIcon'),modeText=document.getElementById('modeText'),resultQuestion=document.getElementById('resultQuestion'),wheelLegend=document.getElementById('wheelLegend'),resultBox=document.getElementById('resultBox'),darkModeBtn=document.getElementById('darkModeBtn'),dbStatus=document.getElementById('dbStatus');document.addEventListener('DOMContentLoaded',initApp);function initApp(){savedSets=safeLoad('questionWheelSavedSets',{});questions=safeLoad('questionWheelQuestions',defaultQuestions);activeQuestions=safeLoad('questionWheelActiveQuestions',questions);if(!Array.isArray(questions)||questions.length===0){questions=[...defaultQuestions];activeQuestions=[...questions]}document.getElementById('saveSetBtn').addEventListener('click',saveSet);document.getElementById('deleteSetBtn').addEventListener('click',deleteSet);document.getElementById('saveDbSetBtn').addEventListener('click',saveSetToDatabase);document.getElementById('loadDbSetsBtn').addEventListener('click',()=>loadQuestionBanksFromDatabase(true));document.getElementById('deleteDbSetBtn').addEventListener('click',deleteSetFromDatabase);savedSetsSelect.addEventListener('change',loadSet);document.getElementById('suggestQuestionsBtn').addEventListener('click',suggestQuestions);document.getElementById('addQuestionBtn').addEventListener('click',addQuestion);document.getElementById('resetDefaultBtn').addEventListener('click',resetDefaultQuestions);document.getElementById('clearQuestionsBtn').addEventListener('click',clearQuestions);document.getElementById('spinBtn').addEventListener('click',chooseQuestion);document.getElementById('keepQuestionBtn').addEventListener('click',keepQuestion);document.getElementById('removeQuestionBtn').addEventListener('click',removeQuestion);darkModeBtn.addEventListener('click',toggleDarkMode);selectionMode.addEventListener('change',()=>{safeSave('questionWheelSelectionMode',selectionMode.value);updateModeView();renderWheel()});visualMode.addEventListener('change',()=>{safeSave('questionWheelVisualMode',visualMode.value);updateModeView();renderWheel()});selectionMode.value=safeLoad('questionWheelSelectionMode','wheel');visualMode.value=safeLoad('questionWheelVisualMode','auto');updateModeView();if(safeLoad('darkMode',false)){document.body.classList.add('dark-mode');darkModeBtn.textContent='☀️ Modo claro'}updateSavedSetsSelect();renderQuestionList();renderWheel();loadQuestionBanksFromDatabase(false)}function setDbStatus(m,t='ok'){dbStatus.textContent='Base de datos: '+m;if(t==='error'){dbStatus.style.background='#fee2e2';dbStatus.style.color='#991b1b'}else if(t==='warn'){dbStatus.style.background='#fef3c7';dbStatus.style.color='#92400e'}else{dbStatus.style.background='#e0f2fe';dbStatus.style.color='#075985'}}
 function apiCall(action,payload={}){return jsonpCall({action,userId:USER_ID,userID:USER_ID,UserID:USER_ID,...payload})}
@@ -248,15 +472,19 @@ function setModeVisual(m,a=true){
  else if(m==='arcade'){
    modeText.textContent=a?'Girando símbolos aleatorios...':'Máquina arcade lista';
    const machine=document.createElement('div');machine.className='slot-machine';machine.innerHTML='<div class="slot-top">QUESTION JACKPOT</div><div class="slot-reels"><div class="slot-reel"><span class="slot-symbol">❓</span></div><div class="slot-reel"><span class="slot-symbol">🎲</span></div><div class="slot-reel"><span class="slot-symbol">✨</span></div></div>';stage.appendChild(machine);
-   if(a){const icons=['❓','🎲','✨','🎯','🃏','🎁','🌎','💬','🔥','⭐'];modeTicker=setInterval(()=>{modeShowcase.querySelectorAll('.slot-symbol').forEach(s=>s.textContent=pick(icons))},95)}
+   if(a){const icons=['❓','🎲','✨','🎯','🃏','🎁','🌎','💬','🔥','⭐'];modeTicker=setInterval(()=>{modeShowcase.querySelectorAll('.slot-symbol').forEach(s=>{s.textContent=pick(icons);s.classList.toggle('flash')})},95)}
  }
  else if(m==='globe'){
    modeText.textContent=a?'Girando por el mundo hispano...':'Globo cultural listo';
    const arena=document.createElement('div');arena.className='globe-arena';
-   const flags=['🇲🇽','🇦🇷','🇪🇸','🇨🇴','🇵🇪','🇨🇱','🇨🇺','🇩🇴','🇵🇷','🇺🇾'];
-   arena.innerHTML='<div class="flag-orbit">'+flags.map(f=>`<div class="flag-dot">${f}</div>`).join('')+'</div><div class="culture-globe">🌎</div><div class="country-chip" id="countryChip">Buscando destino...</div>';
+   const flags=[
+    ['mx','México'],['ar','Argentina'],['es','España'],['co','Colombia'],['pe','Perú'],
+    ['cl','Chile'],['cu','Cuba'],['do','República Dominicana'],['pr','Puerto Rico'],['uy','Uruguay']
+   ];
+   arena.innerHTML='<div class="globe-glow-ring"></div><div class="globe-glow-ring r2"></div><div class="flag-orbit">'+flags.map(f=>`<div class="flag-dot" data-country="${f[1]}"><span class="flag-icon flag-${f[0]}"></span></div>`).join('')+'</div><div class="culture-globe">🌎</div><div class="country-chip" id="countryChip">Buscando destino...</div>';
    stage.appendChild(arena);
-   const dots=stage.querySelectorAll('.flag-dot');dots.forEach((d,i)=>{const angle=(i/dots.length)*Math.PI*2-Math.PI/2;d.style.left=(112+Math.cos(angle)*112)+'px';d.style.top=(112+Math.sin(angle)*112)+'px'})
+   const dots=stage.querySelectorAll('.flag-dot');dots.forEach((d,i)=>{const angle=(i/dots.length)*Math.PI*2-Math.PI/2;d.style.left=(139+Math.cos(angle)*140)+'px';d.style.top=(139+Math.sin(angle)*140)+'px'});
+   if(a){let flagStep=0;modeTicker=setInterval(()=>{const ds=modeShowcase.querySelectorAll('.flag-dot');ds.forEach(x=>x.classList.remove('active'));if(ds.length){ds[flagStep%ds.length].classList.add('active');flagStep++}},130)}
  }
  else{modeIcon.textContent='✨';modeText.textContent='Seleccionando...'}
 
@@ -273,7 +501,18 @@ function fillDieFace(el,face){
 }
 function renderDie(face){renderDiceCube()}
 function generateCultureQuestion(){
- const countries=[['🇲🇽 México','¿Qué tradición mexicana refleja mejor la identidad de una comunidad?'],['🇦🇷 Argentina','¿Cómo puede el arte representar la identidad cultural de Argentina?'],['🇪🇸 España','¿Qué celebración española compararías con una tradición de tu comunidad?'],['🇨🇴 Colombia','¿Cómo influyen la música y la diversidad en la cultura colombiana?'],['🇵🇪 Perú','¿Por qué es importante proteger el patrimonio cultural de Perú?'],['🇨🇱 Chile','¿Cómo puede la geografía influir en la cultura de Chile?'],['🇨🇺 Cuba','¿Qué papel puede tener la música en la identidad cultural cubana?'],['🇩🇴 República Dominicana','¿Cómo se expresa la identidad cultural en la música o el deporte?']];
+ const countries=[
+  ['mx','México','¿Qué tradición mexicana refleja mejor la identidad de una comunidad?'],
+  ['ar','Argentina','¿Cómo puede el arte representar la identidad cultural de Argentina?'],
+  ['es','España','¿Qué celebración española compararías con una tradición de tu comunidad?'],
+  ['co','Colombia','¿Cómo influyen la música y la diversidad en la cultura colombiana?'],
+  ['pe','Perú','¿Por qué es importante proteger el patrimonio cultural de Perú?'],
+  ['cl','Chile','¿Cómo puede la geografía influir en la cultura de Chile?'],
+  ['cu','Cuba','¿Qué papel puede tener la música en la identidad cultural cubana?'],
+  ['do','República Dominicana','¿Cómo se expresa la identidad cultural en la música o el deporte?'],
+  ['pr','Puerto Rico','¿Cómo se conecta la música con la identidad de Puerto Rico?'],
+  ['uy','Uruguay','¿Qué aspectos culturales distinguen a Uruguay dentro del mundo hispano?']
+ ];
  return countries[Math.floor(Math.random()*countries.length)]
 }
 function revealModeResult(m,q,i,extra=null){
@@ -307,7 +546,8 @@ function revealModeResult(m,q,i,extra=null){
  else if(m==='globe'){
    const globe=modeShowcase.querySelector('.culture-globe');if(globe){globe.style.animation='none';globe.textContent='📍'}
    const orbit=modeShowcase.querySelector('.flag-orbit');if(orbit)orbit.style.animation='none';
-   const chip=document.getElementById('countryChip');if(chip&&extra)chip.textContent=extra[0];
+   const chip=document.getElementById('countryChip');if(chip&&extra)chip.textContent=extra[1];
+   const dots=modeShowcase.querySelectorAll('.flag-dot');dots.forEach(d=>{d.classList.remove('active');if(extra&&d.querySelector('.flag-icon')&&d.querySelector('.flag-icon').classList.contains('flag-'+extra[0]))d.classList.add('active')});
    const culture=document.createElement('div');culture.className='culture-card';culture.textContent='Destino cultural seleccionado';
    modeShowcase.appendChild(culture);
    modeText.textContent='Pregunta cultural lista';
@@ -320,7 +560,7 @@ function animateAlternativeMode(m){
 
  setTimeout(()=>{
    let i=0,q='',extra=null;
-   if(m==='globe'){extra=generateCultureQuestion();q=extra[1];i=-1}
+   if(m==='globe'){extra=generateCultureQuestion();q=extra[2];i=-1}
    else{i=Math.floor(Math.random()*activeQuestions.length);q=activeQuestions[i]}
    selectedQuestion=q;selectedQuestionIndex=i;revealModeResult(m,q,i<0?0:i,extra);resultQuestion.textContent=q;resultBox.classList.remove('result-pop');void resultBox.offsetWidth;resultBox.classList.add('result-pop');playFinishSound();spinning=false
  },2300)
