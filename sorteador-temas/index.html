@@ -447,8 +447,9 @@ body.dark-mode .group-preview{
 </div>
 
 <div id="groupAssignBox" class="hidden">
+<button class="secondary load-groups-btn" id="loadClassGroupsBtn" type="button" style="width:100%;margin-top:10px;">📥 Cargar grupos de esta clase</button>
 <select id="projectSelect" style="margin-top:10px;">
-<option value="">Primero selecciona una clase...</option>
+<option value="">Pulsa “Cargar grupos de esta clase”...</option>
 </select>
 <select id="groupSelect" style="margin-top:10px;">
 <option value="">Primero selecciona un proyecto...</option>
@@ -520,7 +521,7 @@ body.dark-mode .group-preview{
 const USER_ID="MIGUEL";
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbyysudqQSafy_m38E2p267y_HBMRduy1SN478w7DxiW81_drA4yuxbpfkfzcqClgCzMqg/exec";
 let currentTopic="",usedThisRound=[],assignments=[],audioCtx=null,revealDuration=safeLoad("topicRevealDuration",3000),classes=[],selectedClass=null,studentRecords=[],groupProjects=[],selectedProject=null,selectedGroups=[];
-const savedTopicLists=document.getElementById("savedTopicLists"),topicListName=document.getElementById("topicListName"),topicList=document.getElementById("topicList"),classSelect=document.getElementById("classSelect"),assignmentModeSelect=document.getElementById("assignmentModeSelect"),studentAssignBox=document.getElementById("studentAssignBox"),groupAssignBox=document.getElementById("groupAssignBox"),studentSelect=document.getElementById("studentSelect"),projectSelect=document.getElementById("projectSelect"),groupSelect=document.getElementById("groupSelect"),groupPreview=document.getElementById("groupPreview"),drawMode=document.getElementById("drawMode"),topicCard=document.getElementById("topicCard"),topicIcon=document.getElementById("topicIcon"),topicTitle=document.getElementById("topicTitle"),topicDetail=document.getElementById("topicDetail"),topicNote=document.getElementById("topicNote"),totalTopics=document.getElementById("totalTopics"),usedTopics=document.getElementById("usedTopics"),remainingTopics=document.getElementById("remainingTopics"),listPill=document.getElementById("listPill"),modePill=document.getElementById("modePill"),assignmentHistory=document.getElementById("assignmentHistory"),darkModeBtn=document.getElementById("darkModeBtn"),dbStatus=document.getElementById("dbStatus"),customDurationBox=document.getElementById("customDurationBox"),customDurationInput=document.getElementById("customDurationInput");
+const savedTopicLists=document.getElementById("savedTopicLists"),topicListName=document.getElementById("topicListName"),topicList=document.getElementById("topicList"),classSelect=document.getElementById("classSelect"),assignmentModeSelect=document.getElementById("assignmentModeSelect"),studentAssignBox=document.getElementById("studentAssignBox"),groupAssignBox=document.getElementById("groupAssignBox"),studentSelect=document.getElementById("studentSelect"),loadClassGroupsBtn=document.getElementById("loadClassGroupsBtn"),projectSelect=document.getElementById("projectSelect"),groupSelect=document.getElementById("groupSelect"),groupPreview=document.getElementById("groupPreview"),drawMode=document.getElementById("drawMode"),topicCard=document.getElementById("topicCard"),topicIcon=document.getElementById("topicIcon"),topicTitle=document.getElementById("topicTitle"),topicDetail=document.getElementById("topicDetail"),topicNote=document.getElementById("topicNote"),totalTopics=document.getElementById("totalTopics"),usedTopics=document.getElementById("usedTopics"),remainingTopics=document.getElementById("remainingTopics"),listPill=document.getElementById("listPill"),modePill=document.getElementById("modePill"),assignmentHistory=document.getElementById("assignmentHistory"),darkModeBtn=document.getElementById("darkModeBtn"),dbStatus=document.getElementById("dbStatus"),customDurationBox=document.getElementById("customDurationBox"),customDurationInput=document.getElementById("customDurationInput");
 
 document.addEventListener("DOMContentLoaded",initApp);
 
@@ -541,6 +542,7 @@ savedTopicLists.addEventListener("change",loadSelectedTopicList);
 drawMode.addEventListener("change",updateStats);
 classSelect.addEventListener("change",handleClassChange);
 assignmentModeSelect.addEventListener("change",handleAssignmentModeChange);
+loadClassGroupsBtn.addEventListener("click",loadGroupProjectsForSelectedClass);
 projectSelect.addEventListener("change",handleProjectChange);
 groupSelect.addEventListener("change",updateGroupPreview);
 document.querySelectorAll(".duration-btn").forEach(btn=>btn.addEventListener("click",()=>setRevealDurationFromButton(btn)));
@@ -598,13 +600,13 @@ const classId=classSelect.value;
 selectedClass=classes.find(item=>String(item.classId||"").trim()===String(classId).trim())||null;
 await loadStudentsForSelectedClass();
 
-if(assignmentModeSelect.value==="group"){
- await loadGroupProjectsForSelectedClass();
-}else{
- projectSelect.innerHTML='<option value="">Cambia a grupo para cargar proyectos...</option>';
- groupSelect.innerHTML='<option value="">Primero selecciona un proyecto...</option>';
- groupPreview.classList.add("hidden");
-}
+groupProjects=[];
+selectedProject=null;
+selectedGroups=[];
+projectSelect.innerHTML='<option value="">Pulsa “Cargar grupos de esta clase”...</option>';
+groupSelect.innerHTML='<option value="">Primero selecciona un proyecto...</option>';
+if(groupPreview) groupPreview.classList.add("hidden");
+groupPreview.innerHTML="";
 }
 
 async function loadStudentsForSelectedClass(){
@@ -639,87 +641,114 @@ const classId=classSelect.value;
 groupProjects=[];
 selectedProject=null;
 selectedGroups=[];
-projectSelect.innerHTML='<option value="">Cargando proyectos de grupos...</option>';
+projectSelect.innerHTML='<option value="">Cargando grupos de esta clase...</option>';
 groupSelect.innerHTML='<option value="">Primero selecciona un proyecto...</option>';
-groupPreview.classList.add("hidden");
+if(groupPreview) groupPreview.classList.add("hidden");
 groupPreview.innerHTML="";
 
 if(!classId){
  projectSelect.innerHTML='<option value="">Primero selecciona una clase...</option>';
+ showMessage("Elige una clase","👥","Selecciona una clase antes de cargar grupos.");
  return;
 }
 
 try{
- const result=await getGroupHistoryFromApi(classId);
+ setDbStatus("cargando grupos...","warn");
+ const result=await apiCall("getGroupHistory",{classId});
  const rawItems=extractGroupHistoryItems(result);
+
  groupProjects=rawItems
-   .map(normalizeGroupHistoryItem)
-   .filter(item=>item.classId===classId && item.groups.length);
+   .map(normalizeGroupConfiguration)
+   .filter(item=>String(item.classId||"").trim()===String(classId).trim() && item.groups.length);
 
  projectSelect.innerHTML='<option value="">Seleccionar proyecto guardado...</option>';
 
  if(!groupProjects.length){
    projectSelect.innerHTML='<option value="">No hay grupos guardados para esta clase</option>';
    groupSelect.innerHTML='<option value="">Sin grupos disponibles</option>';
+   setDbStatus("sin grupos para esta clase","warn");
+   showMessage("Sin grupos guardados","👥","No encontré grupos guardados para esta clase en GroupHistory.");
    return;
  }
 
  groupProjects.forEach((project,index)=>{
    const option=document.createElement("option");
    option.value=String(index);
-   option.textContent=project.projectName || project.activity || `Proyecto ${index+1}`;
+   const when=project.timeStamp?` · ${formatShortDate(project.timeStamp)}`:"";
+   option.textContent=`${project.projectName || project.activity || `Proyecto ${index+1}`}${when}`;
    projectSelect.appendChild(option);
  });
+
+ setDbStatus(`proyectos de grupos: ${groupProjects.length}`,"ok");
+ showMessage("Grupos cargados","👥",`${groupProjects.length} proyecto(s) de grupos disponibles para esta clase.`);
+ playSoftClick();
 }catch(error){
  projectSelect.innerHTML='<option value="">No se pudieron cargar grupos</option>';
  groupSelect.innerHTML='<option value="">Sin grupos disponibles</option>';
- console.warn("GroupHistory no disponible:",error);
+ setDbStatus("error al cargar grupos","error");
+ showMessage("No se pudieron cargar grupos","⚠️",error.message);
 }
-}
-
-async function getGroupHistoryFromApi(classId){
-const attempts=[
- {action:"getGroupHistory",payload:{classId}},
- {action:"getGroupsHistory",payload:{classId}},
- {action:"getGroupProjects",payload:{classId}},
- {action:"getSavedGroups",payload:{classId}},
- {action:"getGroupHistory"}
-];
-
-let lastError=null;
-
-for(const attempt of attempts){
- try{
-   const result=await apiCall(attempt.action,attempt.payload||{});
-   if(result && result.status!=="error") return result;
- }catch(error){
-   lastError=error;
- }
-}
-
-throw lastError||new Error("No se encontró endpoint de GroupHistory.");
 }
 
 function extractGroupHistoryItems(result){
 if(!result) return [];
-if(Array.isArray(result.groupHistory)) return result.groupHistory;
-if(Array.isArray(result.groupsHistory)) return result.groupsHistory;
+if(Array.isArray(result.configurations)) return result.configurations;
 if(Array.isArray(result.projects)) return result.projects;
-if(Array.isArray(result.history)) return result.history;
+if(Array.isArray(result.groupHistory)) return groupRowsToConfigurations(result.groupHistory);
+if(Array.isArray(result.history)) return groupRowsToConfigurations(result.history);
 if(Array.isArray(result.items)) return result.items;
 if(Array.isArray(result.records)) return result.records;
 if(Array.isArray(result.data)) return result.data;
 return [];
 }
 
-function normalizeGroupHistoryItem(item){
+function groupRowsToConfigurations(rows){
+const map={};
+
+(rows||[]).forEach(row=>{
+ const classId=String(row.classId||"").trim();
+ const projectName=String(row.projectName||row.ProjectName||"Proyecto sin nombre").trim();
+ const activity=String(row.activity||row.Activity||"").trim();
+ const timeStamp=String(row.timeStamp||row.timestamp||row.date||"").trim();
+ const groupName=String(row.groupName||row.group||"Grupo").trim();
+ const studentName=String(row.studentName||row.student||"").trim();
+ const studentId=String(row.studentId||"").trim();
+ const key=`${classId}::${projectName}::${timeStamp}`;
+
+ if(!map[key]){
+   map[key]={timeStamp,classId,projectName,activity,groups:{}};
+ }
+
+ if(!map[key].groups[groupName]){
+   map[key].groups[groupName]=[];
+ }
+
+ if(studentName){
+   map[key].groups[groupName].push({studentId,studentName});
+ }
+});
+
+return Object.values(map).map(config=>({
+ timeStamp:config.timeStamp,
+ classId:config.classId,
+ projectName:config.projectName,
+ activity:config.activity,
+ groups:Object.keys(config.groups).map(groupName=>({
+   groupName,
+   students:config.groups[groupName]
+ }))
+}));
+}
+
+function normalizeGroupConfiguration(item){
 const classId=String(item.classId||item.ClassID||item.classID||"").trim();
-const projectName=String(item.ProjectName||item.projectName||item.project||item.name||"").trim();
-const activity=String(item.Activity||item.activity||"").trim();
-const rawGroups=item.groups||item.Groups||item.groupData||item.GroupData||"";
-const groups=parseGroups(rawGroups);
+const projectName=String(item.projectName||item.ProjectName||item.project||item.name||"").trim();
+const activity=String(item.activity||item.Activity||"").trim();
+const timeStamp=item.timeStamp||item.timestamp||item.date||"";
+const groups=parseGroups(item.groups||item.Groups||item.groupData||item.GroupData||[]);
 
 return{
+ timeStamp,
  classId,
  projectName:projectName||activity||"Grupos guardados",
  activity,
@@ -743,10 +772,11 @@ if(Array.isArray(value)){
 
    if(typeof group==="object" && group){
      const name=String(group.groupName||group.name||group.title||`Grupo ${index+1}`);
+     const students=Array.isArray(group.students)?group.students:[];
      const members=Array.isArray(group.members)?group.members:
-       Array.isArray(group.students)?group.students:
        Array.isArray(group.names)?group.names:
-       [];
+       students.map(student=>student.studentName||student.name||student.student||"").filter(Boolean);
+
      return {name,members:members.map(String)};
    }
 
@@ -756,7 +786,12 @@ if(Array.isArray(value)){
 
 if(value && typeof value==="object"){
  return Object.entries(value).map(([name,members])=>{
-   if(Array.isArray(members)) return {name:String(name),members:members.map(String)};
+   if(Array.isArray(members)){
+     return {name:String(name),members:members.map(member=>{
+       if(member && typeof member==="object") return String(member.studentName||member.name||member.student||"");
+       return String(member);
+     }).filter(Boolean)};
+   }
    return {name:String(name),members:[String(members)]};
  }).filter(group=>group.members.length || group.name);
 }
@@ -781,16 +816,31 @@ return String(text||"")
  });
 }
 
+function formatShortDate(value){
+try{
+ const date=new Date(value);
+ if(!isNaN(date.getTime())) return date.toLocaleDateString();
+}catch(e){}
+return String(value||"").slice(0,10);
+}
+
+
 function handleAssignmentModeChange(){
 const mode=assignmentModeSelect.value;
 const isGroup=mode==="group";
 studentAssignBox.classList.toggle("hidden",isGroup);
 groupAssignBox.classList.toggle("hidden",!isGroup);
 
-if(isGroup && classSelect.value && !groupProjects.length){
- loadGroupProjectsForSelectedClass();
-}else if(!isGroup){
- groupPreview.classList.add("hidden");
+if(isGroup){
+ if(!classSelect.value){
+   projectSelect.innerHTML='<option value="">Primero selecciona una clase...</option>';
+   groupSelect.innerHTML='<option value="">Primero selecciona un proyecto...</option>';
+ }else if(!groupProjects.length){
+   projectSelect.innerHTML='<option value="">Pulsa “Cargar grupos de esta clase”...</option>';
+   groupSelect.innerHTML='<option value="">Primero selecciona un proyecto...</option>';
+ }
+}else{
+ if(groupPreview) groupPreview.classList.add("hidden");
 }
 
 updateGroupPreview();
@@ -820,7 +870,7 @@ if(!groupPreview) return;
 const group=getSelectedGroup();
 
 if(!group){
- groupPreview.classList.add("hidden");
+ if(groupPreview) groupPreview.classList.add("hidden");
  groupPreview.innerHTML="";
  return;
 }
@@ -1164,7 +1214,7 @@ if(show)showMessage("Lista cargada","📂",`${name} está lista para usar.`);
 function newTopicList(){
 topicListName.value="";
 topicList.value="";
-classSelect.value="";studentSelect.innerHTML='<option value="">Primero selecciona una clase...</option>';projectSelect.innerHTML='<option value="">Primero selecciona una clase...</option>';groupSelect.innerHTML='<option value="">Primero selecciona un proyecto...</option>';groupPreview.classList.add("hidden");
+classSelect.value="";studentSelect.innerHTML='<option value="">Primero selecciona una clase...</option>';projectSelect.innerHTML='<option value="">Primero selecciona una clase...</option>';groupSelect.innerHTML='<option value="">Primero selecciona un proyecto...</option>';if(groupPreview) groupPreview.classList.add("hidden");
 currentTopic="";
 usedThisRound=[];
 assignments=[];
