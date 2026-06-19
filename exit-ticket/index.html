@@ -142,50 +142,386 @@ box-shadow:0 0 24px rgba(34,211,238,.08);
 box-shadow:0 0 25px rgba(34,211,238,.35);
 }
 
-/* ===== PREMIUM NEON UPGRADE ===== */
-.app{
-box-shadow:
-0 0 20px rgba(34,211,238,.08),
-0 0 30px rgba(236,72,153,.05),
-0 20px 45px rgba(15,23,42,.14);
+/* =========================================================
+   ENTRY & EXIT TICKET · PREMIUM NEÓN V2
+   Marca Clases de Bolsillo · sin tocar lógica
+   ========================================================= */
+
+body:not(.dark-mode){
+  background:
+    radial-gradient(circle at 14% 8%, rgba(34,211,238,.12), transparent 30%),
+    radial-gradient(circle at 86% 14%, rgba(236,72,153,.10), transparent 28%),
+    radial-gradient(circle at 52% 100%, rgba(124,58,237,.08), transparent 34%),
+    linear-gradient(135deg,#f8fafc,#eef7ff 46%,#fff7fb)!important;
 }
 
+body:not(.dark-mode) .app{
+  border:1px solid rgba(236,72,153,.24)!important;
+  box-shadow:
+    0 0 0 1px rgba(236,72,153,.08),
+    0 0 24px rgba(34,211,238,.10),
+    0 0 42px rgba(236,72,153,.08),
+    0 24px 58px rgba(15,23,42,.13)!important;
+}
+
+body:not(.dark-mode) .panel,
+body:not(.dark-mode) .stage,
+body:not(.dark-mode) .ticket-card,
+body:not(.dark-mode) .ticket-hub,
+body:not(.dark-mode) .hub-card,
+body:not(.dark-mode) .qr-box,
+body:not(.dark-mode) .response-card{
+  border-color:rgba(14,165,233,.25)!important;
+  box-shadow:
+    0 12px 26px rgba(15,23,42,.07),
+    0 0 16px rgba(34,211,238,.07),
+    0 0 22px rgba(236,72,153,.05)!important;
+}
+
+body:not(.dark-mode) .primary{
+  background:linear-gradient(135deg,#ef4444,#ec4899 48%,#7c3aed)!important;
+  box-shadow:
+    0 14px 28px rgba(236,72,153,.22),
+    0 0 20px rgba(236,72,153,.16),
+    0 0 30px rgba(124,58,237,.10)!important;
+}
+
+body:not(.dark-mode) .magic{
+  background:linear-gradient(135deg,#22d3ee,#ec4899,#7c3aed)!important;
+  color:#fff!important;
+  box-shadow:0 0 18px rgba(236,72,153,.20)!important;
+}
+
+#entryTicketCard{
+  border-color:rgba(34,211,238,.38)!important;
+}
+#exitTicketCard{
+  border-color:rgba(74,222,128,.38)!important;
+}
 #entryTicketCard:hover{
-box-shadow:0 0 25px rgba(34,211,238,.45),0 0 50px rgba(34,211,238,.18);
+  border-color:#22d3ee!important;
+  box-shadow:
+    0 0 24px rgba(34,211,238,.38),
+    0 0 46px rgba(34,211,238,.16),
+    0 18px 30px rgba(15,23,42,.14)!important;
 }
-
 #exitTicketCard:hover{
-box-shadow:0 0 25px rgba(74,222,128,.45),0 0 50px rgba(74,222,128,.18);
+  border-color:#4ade80!important;
+  box-shadow:
+    0 0 24px rgba(74,222,128,.38),
+    0 0 46px rgba(74,222,128,.16),
+    0 18px 30px rgba(15,23,42,.14)!important;
 }
 
-.postit{
-box-shadow:
-0 0 12px rgba(255,255,255,.15),
-0 0 22px rgba(34,211,238,.12),
-0 16px 28px rgba(15,23,42,.18)!important;
+/* DARK MODE: igual de potente que el temporizador */
+body.dark-mode{
+  background:
+    radial-gradient(circle at 12% 8%, rgba(239,68,68,.20), transparent 30%),
+    radial-gradient(circle at 88% 10%, rgba(236,72,153,.22), transparent 29%),
+    radial-gradient(circle at 52% 104%, rgba(124,58,237,.20), transparent 36%),
+    linear-gradient(135deg,#020617,#071126 52%,#0f172a)!important;
+  color:#f8fafc!important;
 }
 
-.dark-mode .postit{
-box-shadow:
-0 0 12px rgba(255,255,255,.10),
-0 0 25px rgba(236,72,153,.18),
-0 0 40px rgba(34,211,238,.12),
-0 16px 28px rgba(0,0,0,.35)!important;
+body.dark-mode .app{
+  background:linear-gradient(180deg, rgba(15,23,42,.97), rgba(2,6,23,.99))!important;
+  border:1px solid rgba(236,72,153,.68)!important;
+  box-shadow:
+    0 0 0 1px rgba(236,72,153,.20),
+    0 0 28px rgba(236,72,153,.42),
+    0 0 58px rgba(124,58,237,.28),
+    0 0 92px rgba(239,68,68,.18),
+    0 28px 82px rgba(0,0,0,.62)!important;
 }
 
+body.dark-mode .app:after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  border-radius:24px!important;
+  pointer-events:none!important;
+  border:1px solid rgba(236,72,153,.82)!important;
+  box-shadow:
+    0 0 18px rgba(236,72,153,.50),
+    0 0 40px rgba(124,58,237,.30),
+    inset 0 0 24px rgba(239,68,68,.11)!important;
+  z-index:0!important;
+}
+
+body.dark-mode .content,
+body.dark-mode .home-button,
+body.dark-mode #closeStudentBtn{
+  position:relative!important;
+  z-index:1!important;
+}
+
+body.dark-mode .app:before{
+  background:
+    radial-gradient(circle, rgba(239,68,68,.18), transparent 64%),
+    radial-gradient(circle at 35% 35%, rgba(236,72,153,.16), transparent 44%)!important;
+}
+
+body.dark-mode .logo{
+  background:#020617!important;
+  border:2px solid rgba(239,68,68,.72)!important;
+  box-shadow:
+    0 0 22px rgba(239,68,68,.58),
+    0 0 42px rgba(236,72,153,.36),
+    0 0 64px rgba(239,68,68,.22)!important;
+}
+
+body.dark-mode h1,
+body.dark-mode .hub-title,
+body.dark-mode .mural-title{
+  color:#f8fafc!important;
+  text-shadow:
+    0 0 18px rgba(239,68,68,.30),
+    0 0 32px rgba(236,72,153,.24),
+    0 0 44px rgba(124,58,237,.16)!important;
+}
+
+body.dark-mode .subtitle,
+body.dark-mode .small-note,
+body.dark-mode .footer,
+body.dark-mode .hub-card p,
+body.dark-mode .response-card p{
+  color:#fecaca!important;
+}
+
+body.dark-mode .panel,
+body.dark-mode .stage,
+body.dark-mode .ticket-card,
+body.dark-mode .hub-card,
+body.dark-mode .qr-box,
+body.dark-mode .response-card,
+body.dark-mode .ticket-hub{
+  background:linear-gradient(180deg,rgba(15,23,42,.94),rgba(2,6,23,.97))!important;
+  border:1px solid rgba(236,72,153,.38)!important;
+  box-shadow:
+    0 16px 36px rgba(0,0,0,.30),
+    0 0 20px rgba(236,72,153,.16),
+    0 0 36px rgba(34,211,238,.08),
+    inset 0 0 0 1px rgba(255,255,255,.035)!important;
+}
+
+body.dark-mode .ticket-card{
+  border-color:rgba(236,72,153,.48)!important;
+  box-shadow:
+    0 18px 42px rgba(0,0,0,.34),
+    0 0 28px rgba(236,72,153,.20),
+    0 0 44px rgba(124,58,237,.12),
+    inset 0 0 0 1px rgba(255,255,255,.035)!important;
+}
+
+body.dark-mode .panel-title,
+body.dark-mode .ticket-label{
+  color:#fecaca!important;
+  text-shadow:0 0 12px rgba(239,68,68,.26)!important;
+}
+
+body.dark-mode .ticket-question{
+  color:#f8fafc!important;
+  text-shadow:
+    0 0 14px rgba(236,72,153,.22),
+    0 0 28px rgba(239,68,68,.12)!important;
+}
+
+body.dark-mode .primary{
+  background:linear-gradient(135deg,#ec4899,#7c3aed 48%,#2563eb)!important;
+  color:#fff!important;
+  box-shadow:
+    0 16px 34px rgba(124,58,237,.34),
+    0 0 24px rgba(236,72,153,.34),
+    0 0 36px rgba(34,211,238,.12)!important;
+}
+
+body.dark-mode .secondary,
+body.dark-mode .home-button,
+body.dark-mode #closeStudentBtn{
+  background:rgba(15,23,42,.90)!important;
+  color:#f8fafc!important;
+  border:1px solid rgba(56,189,248,.42)!important;
+  box-shadow:
+    0 0 14px rgba(34,211,238,.10),
+    inset 0 0 0 1px rgba(255,255,255,.03)!important;
+}
+
+body.dark-mode .secondary:hover,
+body.dark-mode .home-button:hover,
+body.dark-mode #closeStudentBtn:hover{
+  border-color:rgba(236,72,153,.68)!important;
+  box-shadow:
+    0 0 24px rgba(236,72,153,.26),
+    0 10px 24px rgba(0,0,0,.28)!important;
+}
+
+body.dark-mode .danger{
+  background:linear-gradient(135deg,#7f1d1d,#dc2626)!important;
+  color:#fff!important;
+  border:1px solid rgba(248,113,113,.32)!important;
+  box-shadow:0 0 18px rgba(239,68,68,.26)!important;
+}
+
+body.dark-mode .magic{
+  background:linear-gradient(135deg,#ec4899,#7c3aed,#2563eb)!important;
+  color:#fff!important;
+  box-shadow:
+    0 0 24px rgba(236,72,153,.28),
+    0 0 34px rgba(124,58,237,.18)!important;
+}
+
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select{
+  background:rgba(2,6,23,.86)!important;
+  color:#f8fafc!important;
+  border-color:rgba(56,189,248,.42)!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)!important;
+}
+
+body.dark-mode input:focus,
+body.dark-mode textarea:focus,
+body.dark-mode select:focus{
+  border-color:#ec4899!important;
+  box-shadow:
+    0 0 0 4px rgba(236,72,153,.14),
+    0 0 22px rgba(236,72,153,.20)!important;
+}
+
+body.dark-mode .mood-button{
+  background:rgba(2,6,23,.80)!important;
+  color:#f8fafc!important;
+  border-color:rgba(56,189,248,.35)!important;
+  box-shadow:0 0 12px rgba(34,211,238,.08)!important;
+}
+body.dark-mode .mood-button.selected{
+  background:linear-gradient(135deg,#ec4899,#7c3aed,#2563eb)!important;
+  border-color:rgba(236,72,153,.70)!important;
+  box-shadow:
+    0 0 24px rgba(236,72,153,.40),
+    0 0 36px rgba(34,211,238,.18)!important;
+}
+
+body.dark-mode .session-pill,
+body.dark-mode .summary-pill,
+body.dark-mode .mode-chip,
+body.dark-mode .db-status{
+  background:rgba(8,47,73,.82)!important;
+  color:#bae6fd!important;
+  border:1px solid rgba(56,189,248,.32)!important;
+  box-shadow:0 0 14px rgba(34,211,238,.10)!important;
+}
+
+body.dark-mode.ticket-exit .mode-chip,
+body.dark-mode.ticket-exit .session-pill,
+body.dark-mode.ticket-exit .summary-pill{
+  background:rgba(20,83,45,.82)!important;
+  color:#bbf7d0!important;
+  border-color:rgba(74,222,128,.38)!important;
+  box-shadow:0 0 16px rgba(74,222,128,.16)!important;
+}
+
+body.dark-mode #entryTicketCard{
+  border-color:rgba(34,211,238,.55)!important;
+  box-shadow:
+    0 0 18px rgba(34,211,238,.18),
+    inset 0 0 0 1px rgba(255,255,255,.035)!important;
+}
+body.dark-mode #exitTicketCard{
+  border-color:rgba(74,222,128,.55)!important;
+  box-shadow:
+    0 0 18px rgba(74,222,128,.18),
+    inset 0 0 0 1px rgba(255,255,255,.035)!important;
+}
+body.dark-mode #entryTicketCard:hover{
+  box-shadow:
+    0 0 28px rgba(34,211,238,.44),
+    0 0 58px rgba(34,211,238,.18),
+    0 18px 34px rgba(0,0,0,.34)!important;
+}
+body.dark-mode #exitTicketCard:hover{
+  box-shadow:
+    0 0 28px rgba(74,222,128,.44),
+    0 0 58px rgba(74,222,128,.18),
+    0 18px 34px rgba(0,0,0,.34)!important;
+}
+
+/* MURAL: el momento wow */
 .mural-overlay{
-background:
-radial-gradient(circle at 10% 10%, rgba(34,211,238,.10), transparent 30%),
-radial-gradient(circle at 90% 10%, rgba(236,72,153,.08), transparent 30%),
-linear-gradient(135deg,#f8fafc,#e0f2fe)!important;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(34,211,238,.14), transparent 32%),
+    radial-gradient(circle at 90% 12%, rgba(236,72,153,.12), transparent 31%),
+    radial-gradient(circle at 50% 100%, rgba(124,58,237,.08), transparent 36%),
+    linear-gradient(135deg,#f8fafc,#e0f2fe 48%,#fff1f7)!important;
 }
 
 .dark-mode .mural-overlay{
-background:
-radial-gradient(circle at 15% 10%, rgba(34,211,238,.20), transparent 28%),
-radial-gradient(circle at 85% 10%, rgba(236,72,153,.20), transparent 30%),
-radial-gradient(circle at 50% 100%, rgba(168,85,247,.12), transparent 35%),
-linear-gradient(135deg,#020617,#071126,#0f172a)!important;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(34,211,238,.28), transparent 30%),
+    radial-gradient(circle at 88% 10%, rgba(236,72,153,.30), transparent 30%),
+    radial-gradient(circle at 50% 104%, rgba(168,85,247,.22), transparent 38%),
+    radial-gradient(circle at 50% 45%, rgba(239,68,68,.12), transparent 34%),
+    linear-gradient(135deg,#020617,#070b1d 45%,#0f172a)!important;
+}
+
+.mural-header{
+  border:1px solid rgba(236,72,153,.20)!important;
+  border-radius:22px!important;
+  padding:14px!important;
+  background:rgba(255,255,255,.72)!important;
+  backdrop-filter:blur(10px)!important;
+  box-shadow:
+    0 14px 28px rgba(15,23,42,.10),
+    0 0 22px rgba(236,72,153,.10)!important;
+}
+
+.dark-mode .mural-header{
+  background:rgba(2,6,23,.68)!important;
+  border-color:rgba(236,72,153,.44)!important;
+  box-shadow:
+    0 0 24px rgba(236,72,153,.26),
+    0 0 42px rgba(34,211,238,.12),
+    0 16px 34px rgba(0,0,0,.36)!important;
+}
+
+.postit{
+  position:relative!important;
+  overflow:hidden!important;
+  border:1px solid rgba(255,255,255,.38)!important;
+  box-shadow:
+    0 0 16px rgba(255,255,255,.32),
+    0 0 24px rgba(15,23,42,.10),
+    0 18px 34px rgba(15,23,42,.18)!important;
+}
+
+.postit::after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  border-radius:12px!important;
+  pointer-events:none!important;
+  box-shadow:inset 0 0 22px rgba(255,255,255,.22)!important;
+}
+
+.dark-mode .postit{
+  border:1px solid rgba(255,255,255,.22)!important;
+  filter:saturate(1.25) contrast(1.04)!important;
+  box-shadow:
+    0 0 14px rgba(255,255,255,.10),
+    0 0 30px rgba(236,72,153,.22),
+    0 0 48px rgba(34,211,238,.12),
+    0 20px 42px rgba(0,0,0,.48)!important;
+}
+
+.dark-mode .postit h3,
+.dark-mode .postit p,
+.dark-mode .postit .mood{
+  color:#0f172a!important;
+  text-shadow:none!important;
+}
+
+.dark-mode .mural-grid{
+  filter:drop-shadow(0 0 26px rgba(236,72,153,.16));
 }
 
 </style>
@@ -276,6 +612,12 @@ const mainTitle=document.getElementById("mainTitle"), mainSubtitle=document.getE
 
 document.addEventListener("DOMContentLoaded",initApp);
 
+function applyLogo(){
+ document.querySelectorAll(".logo").forEach(logo=>{
+   logo.src=document.body.classList.contains("dark-mode")?"./Logo-red.png":"./logo.png";
+ });
+}
+
 function initApp(){
  document.getElementById("entryTicketCard")?.addEventListener("click",()=>selectTicketType("entry"));
  document.getElementById("exitTicketCard")?.addEventListener("click",()=>selectTicketType("exit"));
@@ -298,6 +640,7 @@ function initApp(){
  document.querySelectorAll(".mood-button").forEach(button=>button.addEventListener("click",()=>selectMood(button)));
  teacherQuestion?.addEventListener("input",()=>{teacherPreviewQuestion.textContent=teacherQuestion.value.trim()||"¿Qué aprendiste hoy?";});
  if(safeLoad("darkMode",false)){document.body.classList.add("dark-mode");darkModeBtn.textContent="☀️ Modo claro";}
+ applyLogo();
  if(isStudentMode){
    ticketType=(sessionFromUrl||"").toUpperCase().startsWith("ENTRY")?"entry":"exit";
    applyTicketType();
@@ -754,11 +1097,12 @@ function closeStudentWindow(){
 }
 
 function showFinalStudentScreen(){
+ const isDark=document.body.classList.contains("dark-mode");
  document.body.innerHTML = `
    <main class="app">
      <div class="content" style="text-align:center;padding:40px 20px;">
        <div class="brand">
-         <img class="logo" src="./logo.png" alt="Logo Miguel Iglesias" />
+         <img class="logo" src="${isDark ? './Logo-red.png' : './logo.png'}" alt="Logo Miguel Iglesias" />
        </div>
        <h1>Respuesta enviada</h1>
        <p class="subtitle">Puedes cerrar esta pestaña o volver a clase.</p>
@@ -769,7 +1113,7 @@ function showFinalStudentScreen(){
 
 function safeLoad(key,fallback){try{return JSON.parse(localStorage.getItem(key))||fallback;}catch(e){return fallback;}}
 function safeSave(key,value){localStorage.setItem(key,JSON.stringify(value));}
-function toggleDarkMode(){document.body.classList.toggle("dark-mode");const isDark=document.body.classList.contains("dark-mode");darkModeBtn.textContent=isDark?"☀️ Modo claro":"🌙 Modo oscuro";document.querySelectorAll(".logo").forEach(logo=>{logo.src=isDark?"./Logo-red.png":"./logo.png";});safeSave("darkMode",isDark);}
+function toggleDarkMode(){document.body.classList.toggle("dark-mode");const isDark=document.body.classList.contains("dark-mode");darkModeBtn.textContent=isDark?"☀️ Modo claro":"🌙 Modo oscuro";applyLogo();safeSave("darkMode",isDark);}
 function escapeHTML(text){return String(text).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");}
 function getAudioContext(){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;if(!audioCtx||audioCtx.state==="closed")audioCtx=new AC();if(audioCtx.state==="suspended")audioCtx.resume();return audioCtx;}
 function playTone(frequency,duration=.08,type="sine",volume=.06,delay=0){const ctx=getAudioContext();if(!ctx)return;const osc=ctx.createOscillator(),gain=ctx.createGain(),start=ctx.currentTime+delay;osc.type=type;osc.frequency.setValueAtTime(frequency,start);gain.gain.setValueAtTime(volume,start);gain.gain.exponentialRampToValueAtTime(.001,start+duration);osc.connect(gain);gain.connect(ctx.destination);osc.start(start);osc.stop(start+duration+.02);}
