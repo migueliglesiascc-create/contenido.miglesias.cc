@@ -1,0 +1,1022 @@
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<link rel="icon" type="image/png" href="../favicon.png">
+
+<link rel="apple-touch-icon" href="../favicon.png">
+
+<title>Rúbricas Rápidas | Clases de Bolsillo</title>
+
+<style>
+
+*{box-sizing:border-box}
+
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top left,rgba(14,165,233,.22),transparent 35%),radial-gradient(circle at bottom right,rgba(79,70,229,.18),transparent 35%),linear-gradient(135deg,#f8fafc,#e0f2fe);color:#1f2937;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:10px}
+
+body.dark-mode{background:radial-gradient(circle at top left,rgba(56,189,248,.18),transparent 35%),radial-gradient(circle at bottom right,rgba(99,102,241,.16),transparent 35%),linear-gradient(135deg,#020617,#0f172a);color:#e5e7eb}
+
+.app{width:100%;max-width:1180px;background:rgba(255,255,255,.96);border-radius:24px;padding:18px;box-shadow:0 20px 45px rgba(15,23,42,.14);border:1px solid rgba(14,165,233,.25);overflow:hidden;position:relative}
+
+.dark-mode .app{background:rgba(15,23,42,.96);border-color:rgba(56,189,248,.25);box-shadow:0 20px 45px rgba(0,0,0,.35)}
+
+.app:before{content:"";position:absolute;width:320px;height:320px;border-radius:50%;background:rgba(14,165,233,.08);right:-110px;top:-110px;z-index:0}
+
+.content{position:relative;z-index:1}
+
+.home-button{display:inline-flex;align-items:center;gap:8px;text-decoration:none;background:#dbeafe;color:#075985;border:1px solid #93c5fd;padding:10px 16px;border-radius:999px;font-weight:800;font-size:.92rem;margin-bottom:16px;box-shadow:0 6px 14px rgba(15,23,42,.08);transition:.15s}
+
+.home-button:hover{transform:translateY(-2px);background:#bfdbfe}
+
+.brand{display:flex;justify-content:center;margin-bottom:8px}
+
+.logo{width:82px;height:82px;object-fit:contain;border-radius:50%;background:white;box-shadow:0 10px 22px rgba(15,23,42,.16);padding:4px}
+
+h1{text-align:center;margin:6px 0 4px;font-size:1.75rem;color:#0f172a;letter-spacing:-.5px}
+
+.dark-mode h1{color:#f8fafc}
+
+.subtitle{text-align:center;color:#475569;margin-bottom:14px;font-size:.92rem}
+
+.dark-mode .subtitle,.dark-mode .footer,.dark-mode .small-note{color:#cbd5e1}
+
+.dark-toggle-wrap{display:flex;justify-content:center;margin-bottom:12px}
+
+.layout{display:grid;grid-template-columns:.9fr 1.1fr;gap:14px;align-items:start}
+
+.panel,.stage{background:#f8fafc;border-radius:20px;padding:14px;border:1px solid #dbeafe}
+
+.dark-mode .panel,.dark-mode .stage,.dark-mode .rubric-card,.dark-mode .criterion-card{background:#111827;border-color:#334155}
+
+.panel-title{font-weight:bold;color:#075985;margin-bottom:10px}
+
+.dark-mode .panel-title,.dark-mode .rubric-title,.dark-mode .criterion-card h3{color:#f8fafc}
+
+input,textarea,select{width:100%;border:2px solid #bae6fd;border-radius:16px;padding:12px 14px;font-size:1rem;outline:none;background:white;color:#0f172a}
+
+input:focus,textarea:focus,select:focus{border-color:#0ea5e9;box-shadow:0 0 0 4px rgba(14,165,233,.15)}
+
+textarea{min-height:104px;resize:vertical}
+
+button{border:none;border-radius:999px;padding:12px 16px;font-size:.95rem;font-weight:800;cursor:pointer;transition:.15s}
+
+button:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(15,23,42,.12)}
+
+button:active{transform:scale(.98)}
+
+.primary{width:100%;background:linear-gradient(135deg,#0284c7,#2563eb);color:white;font-size:1.08rem;padding:15px 18px;margin-top:12px}
+
+.secondary{background:#e0f2fe;color:#075985}.danger{background:#fee2e2;color:#991b1b}.success{background:#dcfce7;color:#166534}.gold{background:#fef3c7;color:#92400e}
+
+.button-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+
+.stage{background:linear-gradient(180deg,#fff,#f0f9ff)}
+
+.dark-mode .stage{background:linear-gradient(180deg,#111827,#0f172a)}
+
+.rubric-card{background:white;border:1px solid #dbeafe;border-radius:24px;padding:22px;box-shadow:0 14px 28px rgba(15,23,42,.08)}
+
+.rubric-card.pop{animation:pop .55s ease}
+
+@keyframes pop{0%{transform:scale(1)}35%{transform:scale(1.025);box-shadow:0 0 0 8px rgba(56,189,248,.18)}100%{transform:scale(1)}}
+
+.rubric-icon{text-align:center;font-size:3rem;margin-bottom:8px}
+
+.rubric-label{text-align:center;color:#64748b;font-size:.9rem;font-weight:900;margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em}
+
+.rubric-title{text-align:center;font-size:1.6rem;font-weight:900;color:#0f172a;line-height:1.15;margin-bottom:8px}
+
+.small-note{color:#64748b;font-size:.85rem;line-height:1.45;margin-top:8px;word-break:break-word}
+
+.criteria{display:grid;gap:10px;margin-top:14px}
+
+.criterion-card{background:white;border:1px solid #dbeafe;border-radius:16px;padding:12px}
+
+.criterion-card h3{margin:0 0 8px;color:#0f172a;font-size:1rem}
+
+.levels{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+
+.level{border:1px solid #dbeafe;border-radius:14px;padding:10px;background:#f8fafc;font-size:.86rem;line-height:1.35}
+
+.level strong{display:block;color:#075985;margin-bottom:4px}
+
+.dark-mode .level{background:#0f172a;border-color:#334155;color:#cbd5e1}
+
+.pill{display:inline-flex;align-items:center;justify-content:center;background:#e0f2fe;color:#075985;border-radius:999px;padding:8px 12px;font-size:.85rem;font-weight:900;margin:6px 4px}.db-status{margin-top:10px;background:#e0f2fe;color:#075985;border-radius:999px;padding:8px 12px;font-size:.8rem;font-weight:900;text-align:center}.dark-mode .db-status{background:#082f49;color:#bae6fd}.custom-levels-wrap{display:none;margin-top:10px}.custom-levels-wrap.show{display:block}
+
+.footer{text-align:center;margin-top:18px;color:#64748b;font-size:.85rem}
+
+@media(max-width:900px){.layout{grid-template-columns:1fr}.button-row,.levels{grid-template-columns:1fr}.rubric-title{font-size:1.35rem}}
+
+
+/* DARK MODE PREMIUM */
+body.dark-mode{
+background:
+radial-gradient(circle at 15% 10%, rgba(34,211,238,.22), transparent 30%),
+radial-gradient(circle at 85% 10%, rgba(236,72,153,.20), transparent 30%),
+linear-gradient(135deg,#020617,#071126 50%,#0f172a)!important;
+}
+.dark-mode .app{
+background:linear-gradient(180deg,rgba(15,23,42,.97),rgba(2,6,23,.98))!important;
+border-color:rgba(236,72,153,.45)!important;
+box-shadow:0 0 25px rgba(236,72,153,.22),0 0 55px rgba(34,211,238,.12),0 25px 70px rgba(0,0,0,.55)!important;
+}
+.dark-mode .app::after{
+content:"";position:absolute;inset:0;border-radius:24px;pointer-events:none;
+border:1px solid rgba(236,72,153,.55);
+box-shadow:0 0 18px rgba(236,72,153,.28), inset 0 0 18px rgba(34,211,238,.05);
+}
+.dark-mode .panel,.dark-mode .stage,.dark-mode .rubric-card,.dark-mode .criterion-card{
+background:linear-gradient(180deg,rgba(15,23,42,.92),rgba(2,6,23,.95))!important;
+box-shadow:0 0 16px rgba(34,211,238,.08);
+}
+.dark-mode .logo{
+border:2px solid rgba(125,211,252,.4);
+box-shadow:0 0 22px rgba(34,211,238,.35),0 0 40px rgba(236,72,153,.18);
+}
+.dark-mode h1,.dark-mode .rubric-title{
+text-shadow:0 0 18px rgba(34,211,238,.25);
+}
+.dark-mode .primary{
+background:linear-gradient(135deg,#ec4899,#7c3aed,#2563eb)!important;
+box-shadow:0 0 22px rgba(236,72,153,.25);
+}
+.dark-mode .secondary,.dark-mode .home-button,.dark-mode .pill{
+background:#0f172a!important;
+border:1px solid rgba(34,211,238,.35)!important;
+color:#e0f2fe!important;
+}
+.dark-mode input,.dark-mode textarea,.dark-mode select{
+background:#020617!important;
+color:#fff!important;
+border-color:rgba(34,211,238,.35)!important;
+}
+.dark-mode .level{
+box-shadow:0 0 12px rgba(34,211,238,.05);
+}
+.dark-mode .criterion-card:hover{
+transform:translateY(-2px);
+box-shadow:0 0 25px rgba(236,72,153,.18);
+}
+
+/* PREMIUM NEON RUBRICS */
+body:not(.dark-mode) .criterion-card{box-shadow:0 0 12px rgba(236,72,153,.08)}
+
+</style>
+
+
+<style id="miguel-rubricas-premium-intenso">
+/* Rúbricas · degradado premium más visible + logo rojo */
+body.dark-mode .logo{
+  background:#020617!important;
+  border:2px solid rgba(239,68,68,.72)!important;
+  box-shadow:
+    0 0 22px rgba(239,68,68,.58),
+    0 0 42px rgba(236,72,153,.36),
+    0 0 64px rgba(239,68,68,.22)!important;
+}
+
+body.dark-mode h1,
+body.dark-mode .rubric-title{
+  text-shadow:
+    0 0 18px rgba(239,68,68,.30),
+    0 0 32px rgba(236,72,153,.24),
+    0 0 44px rgba(124,58,237,.16)!important;
+}
+
+.criterion-card{
+  border-width:1.5px!important;
+  position:relative!important;
+  overflow:hidden!important;
+}
+
+.criterion-card::after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  pointer-events:none!important;
+  border-radius:16px!important;
+  box-shadow:inset 0 0 18px rgba(255,255,255,.10)!important;
+}
+
+.premium-level{
+  min-height:132px!important;
+  color:#0f172a!important;
+  font-weight:700!important;
+  transition:transform .15s ease, box-shadow .15s ease!important;
+}
+
+.premium-level:hover{
+  transform:translateY(-2px)!important;
+}
+
+body.dark-mode .premium-level{
+  color:#f8fafc!important;
+  background-blend-mode:screen!important;
+  box-shadow:
+    0 0 18px var(--level-glow, rgba(236,72,153,.22)),
+    inset 0 0 20px rgba(255,255,255,.035)!important;
+}
+
+body.dark-mode .criterion-card{
+  background:linear-gradient(180deg,rgba(15,23,42,.94),rgba(2,6,23,.96))!important;
+  box-shadow:
+    0 16px 34px rgba(0,0,0,.28),
+    0 0 22px rgba(236,72,153,.14),
+    0 0 36px rgba(34,211,238,.07)!important;
+}
+
+body:not(.dark-mode) .premium-level{
+  color:#0f172a!important;
+}
+
+body:not(.dark-mode) .criterion-card{
+  background:linear-gradient(180deg,rgba(255,255,255,.97),rgba(248,250,252,.94))!important;
+}
+</style>
+
+</head>
+
+<body>
+
+<main class="app">
+
+<a class="home-button" href="../">⬅ Volver al menú</a>
+
+<div class="content">
+
+<div class="brand"><img class="logo" src="./logo.png" alt="Logo Miguel Iglesias" /></div>
+
+<h1>Rúbricas rápidas</h1>
+
+<p class="subtitle">Crea, guarda y copia rúbricas sencillas para presentaciones, proyectos, trabajo oral o colaboración.</p>
+
+<div class="dark-toggle-wrap"><button class="secondary" id="darkModeBtn" style="padding:8px 14px;font-size:.85rem;">🌙 Modo oscuro</button></div>
+
+
+
+<section class="layout">
+
+<div class="panel">
+
+<div class="panel-title">Mis rúbricas guardadas</div>
+
+<select id="savedRubrics">
+
+<option value="">Selecciona una rúbrica guardada...</option>
+
+</select>
+
+<div class="button-row">
+
+<button class="secondary" id="newRubricBtn">➕ Nueva rúbrica</button>
+
+<button class="danger" id="deleteRubricBtn">🗑️ Borrar rúbrica</button>
+
+</div>
+
+
+
+<div class="panel-title" style="margin-top:16px;">Información básica</div>
+
+<input id="rubricName" placeholder="Nombre: Presentación oral Spanish 2" />
+
+<input id="rubricContext" style="margin-top:10px;" placeholder="Curso o actividad: AP Spanish · Debate cultural" />
+
+
+
+<div class="panel-title" style="margin-top:16px;">Plantilla rápida</div>
+
+<select id="templateSelect">
+
+<option value="">Elige una plantilla...</option>
+
+<option value="oral">Presentación oral</option>
+
+<option value="project">Proyecto creativo</option>
+
+<option value="collab">Trabajo colaborativo</option>
+
+<option value="writing">Escritura breve</option>
+
+<option value="ap_argumentative">AP · Ensayo argumentativo</option>
+
+<option value="ap_email">AP · Email reply</option>
+
+<option value="ap_cultural">AP · Comparación cultural</option>
+
+<option value="ap_presentational">AP · Presentational speaking</option>
+
+<option value="spanish12_final">Spanish 1/2 · Proyecto final</option>
+
+<option value="conversation">Conversación oral</option>
+
+<option value="rating_scale">Escala de valoración rápida</option>
+
+</select>
+
+
+
+<div class="button-row">
+
+<button class="secondary" id="loadTemplateBtn">✨ Cargar plantilla</button>
+
+<button class="secondary" id="saveRubricBtn">💾 Guardar local</button>
+
+</div>
+
+<div class="button-row">
+
+<button class="secondary" id="saveDbRubricBtn">☁️ Guardar en base</button>
+
+<button class="secondary" id="loadDbRubricsBtn">📥 Cargar rúbricas</button>
+
+</div>
+
+<button class="danger" id="deleteDbRubricBtn" style="width:100%;margin-top:10px;">🗑️ Borrar rúbrica de base</button>
+
+<div class="db-status" id="dbStatus">Base de datos: lista</div>
+
+
+
+<div class="panel-title" style="margin-top:16px;">Criterios</div>
+
+<textarea id="criteriaInput" placeholder="Un criterio por línea. Ejemplo:
+
+Fluidez
+
+Precisión
+
+Creatividad"></textarea>
+
+
+
+<div class="panel-title" style="margin-top:16px;">Escala</div>
+
+<select id="scaleSelect">
+
+<option value="4">4 niveles</option>
+
+<option value="3">3 niveles</option>
+
+<option value="5">5 niveles</option>
+
+<option value="6">6 niveles</option>
+
+<option value="custom">Personalizada</option>
+
+</select>
+
+<div class="custom-levels-wrap" id="customLevelsWrap">
+
+<textarea id="customLevelsInput" placeholder="Un nivel por línea. Ejemplo:
+Excelente
+Competente
+En desarrollo
+Inicial"></textarea>
+
+<p class="small-note">La escala personalizada permite crear rúbricas, escalas de valoración o listas de desempeño.</p>
+
+</div>
+
+
+
+<button class="primary" id="generateRubricBtn">📋 Generar rúbrica</button>
+
+<div class="button-row">
+
+<button class="success" id="copyRubricBtn">📋 Copiar texto</button>
+
+<button class="secondary" id="copyTableBtn">📋 Copiar tabla</button>
+
+</div>
+
+<button class="secondary" id="printRubricBtn" style="width:100%;margin-top:10px;">🖨️ Imprimir</button>
+
+</div>
+
+
+
+<div class="stage">
+
+<div class="rubric-card" id="rubricCard">
+
+<div class="rubric-icon">📋</div>
+
+<div class="rubric-label">Vista previa</div>
+
+<div class="rubric-title" id="previewTitle">Rúbrica rápida</div>
+
+<div class="small-note" id="previewContext">Crea o carga una rúbrica para empezar.</div>
+
+<div style="margin-top:12px;text-align:center;">
+
+<span class="pill" id="criteriaPill">0 criterios</span>
+
+<span class="pill" id="scalePill">4 niveles</span>
+
+</div>
+
+<div class="criteria" id="criteriaPreview"></div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<div class="footer">Creado para clase por Miguel Iglesias · Clases de Bolsillo</div>
+
+</div>
+
+</main>
+
+
+
+<script>
+
+const USER_ID="MIGUEL";
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbyysudqQSafy_m38E2p267y_HBMRduy1SN478w7DxiW81_drA4yuxbpfkfzcqClgCzMqg/exec";
+
+let currentRubricText="",currentRubricTableText="",audioCtx=null;
+
+const savedRubrics=document.getElementById("savedRubrics"),rubricName=document.getElementById("rubricName"),rubricContext=document.getElementById("rubricContext"),templateSelect=document.getElementById("templateSelect"),criteriaInput=document.getElementById("criteriaInput"),scaleSelect=document.getElementById("scaleSelect"),previewTitle=document.getElementById("previewTitle"),previewContext=document.getElementById("previewContext"),criteriaPreview=document.getElementById("criteriaPreview"),criteriaPill=document.getElementById("criteriaPill"),scalePill=document.getElementById("scalePill"),rubricCard=document.getElementById("rubricCard"),darkModeBtn=document.getElementById("darkModeBtn"),dbStatus=document.getElementById("dbStatus"),customLevelsWrap=document.getElementById("customLevelsWrap"),customLevelsInput=document.getElementById("customLevelsInput");
+
+
+
+document.addEventListener("DOMContentLoaded",initApp);
+
+
+
+function applyLogo(){
+  document.querySelectorAll(".logo").forEach(logo=>{
+    if(document.body.classList.contains("dark-mode")){
+      logo.src="./Logo-red.png";
+      logo.onerror=function(){
+        if(logo.src.includes("Logo-red.png")){
+          logo.onerror=null;
+          logo.src="./logo-red.png";
+        }
+      };
+    }else{
+      logo.onerror=null;
+      logo.src="./logo.png";
+    }
+  });
+}
+
+function initApp(){
+
+document.getElementById("generateRubricBtn").addEventListener("click",generateRubric);
+
+document.getElementById("copyRubricBtn").addEventListener("click",copyRubric);
+
+document.getElementById("copyTableBtn").addEventListener("click",copyRubricTable);
+
+document.getElementById("saveDbRubricBtn").addEventListener("click",saveRubricToDatabase);
+
+document.getElementById("loadDbRubricsBtn").addEventListener("click",()=>loadRubricsFromDatabase(true));
+
+document.getElementById("deleteDbRubricBtn").addEventListener("click",deleteRubricFromDatabase);
+
+document.getElementById("printRubricBtn").addEventListener("click",()=>window.print());
+
+document.getElementById("saveRubricBtn").addEventListener("click",saveRubric);
+
+document.getElementById("newRubricBtn").addEventListener("click",newRubric);
+
+document.getElementById("deleteRubricBtn").addEventListener("click",deleteRubric);
+
+document.getElementById("loadTemplateBtn").addEventListener("click",loadTemplate);
+
+savedRubrics.addEventListener("change",loadSelectedRubric);
+
+darkModeBtn.addEventListener("click",toggleDarkMode);
+
+[rubricName,rubricContext,criteriaInput,scaleSelect,customLevelsInput].forEach(el=>el.addEventListener("input",generateRubric));
+
+scaleSelect.addEventListener("change",updateCustomScaleVisibility);
+
+if(safeLoad("rubricDarkMode",false)){document.body.classList.add("dark-mode");darkModeBtn.textContent="☀️ Modo claro";}
+applyLogo();
+
+refreshRubrics();
+
+loadLastRubric(false);
+
+generateRubric();
+
+loadRubricsFromDatabase(false);
+
+}
+
+
+
+function setDbStatus(message,type="ok"){
+dbStatus.textContent="Base de datos: "+message;
+if(type==="error"){dbStatus.style.background="#fee2e2";dbStatus.style.color="#991b1b";}
+else if(type==="warn"){dbStatus.style.background="#fef3c7";dbStatus.style.color="#92400e";}
+else{dbStatus.style.background="#e0f2fe";dbStatus.style.color="#075985";}
+}
+
+function apiCall(action,payload={}){
+return jsonpCall({action,userId:USER_ID,userID:USER_ID,UserID:USER_ID,...payload});
+}
+
+function jsonpCall(data){
+return new Promise((resolve,reject)=>{
+ const callbackName="cb_"+Date.now()+"_"+Math.floor(Math.random()*100000);
+ const params=new URLSearchParams();
+ Object.entries(data).forEach(([key,value])=>params.set(key,typeof value==="string"?value:JSON.stringify(value)));
+ params.set("callback",callbackName);
+ const script=document.createElement("script");
+ script.src=`${SCRIPT_URL}?${params.toString()}`;
+ const timeout=setTimeout(()=>{cleanup();reject(new Error("Tiempo agotado al conectar con Apps Script."));},15000);
+ function cleanup(){clearTimeout(timeout);delete window[callbackName];if(script.parentNode)script.parentNode.removeChild(script);}
+ window[callbackName]=function(response){cleanup();if(response&&response.status==="error"){reject(new Error(response.message||"La API devolvió un error."));return;}resolve(response);};
+ script.onerror=function(){cleanup();reject(new Error("No se pudo conectar con Apps Script."));};
+ document.body.appendChild(script);
+});
+}
+
+async function saveRubricToDatabase(){
+const name=rubricName.value.trim();
+const criteria=getCriteria();
+const scale=getScaleForStorage();
+const category=templateSelect.value||"general";
+if(!name){showMiniMessage("Pon nombre a la rúbrica","☁️");setDbStatus("falta nombre","warn");return;}
+if(!criteria.length){showMiniMessage("Añade criterios primero","☁️");setDbStatus("sin criterios","warn");return;}
+try{
+ setDbStatus("guardando rúbrica...","warn");
+ const result=await apiCall("saveRubricTemplate",{templateName:name,context:rubricContext.value.trim(),criteria:JSON.stringify(criteria),level:scale,category:category,active:"TRUE"});
+ saveRubric();
+ setDbStatus(`rúbrica guardada (${result.count||criteria.length})`,"ok");
+ showMiniMessage("Rúbrica guardada en base","☁️");
+ playSoftClick();
+}catch(error){setDbStatus(error.message,"error");showMiniMessage("No se pudo guardar","⚠️");}
+}
+
+async function loadRubricsFromDatabase(show=true){
+try{
+ setDbStatus("cargando rúbricas...","warn");
+ const result=await apiCall("getRubricTemplates");
+ const templates=Array.isArray(result.templates)?result.templates:[];
+ const rubrics=safeLoad("savedRubrics",{});
+ templates.forEach(template=>{
+   if(template.templateName&&Array.isArray(template.criteria)){
+     rubrics[template.templateName]={name:template.templateName,context:template.context||"",criteria:template.criteria.join("\n"),scale:String(template.level||"4"),category:template.category||"general",updatedAt:new Date().toLocaleString()};
+   }
+ });
+ safeSave("savedRubrics",rubrics);
+ refreshRubrics();
+ setDbStatus(`rúbricas cargadas: ${templates.length}`,"ok");
+ if(show){showMiniMessage("Rúbricas cargadas","📥");playSoftClick();}
+}catch(error){setDbStatus(error.message,"error");if(show)showMiniMessage("No se pudieron cargar","⚠️");}
+}
+
+async function deleteRubricFromDatabase(){
+const name=savedRubrics.value||rubricName.value.trim();
+if(!name){showMiniMessage("No hay rúbrica seleccionada","🗑️");setDbStatus("elige una rúbrica","warn");return;}
+try{
+ setDbStatus("borrando rúbrica...","warn");
+ const result=await apiCall("deleteRubricTemplate",{templateName:name});
+ const rubrics=safeLoad("savedRubrics",{});
+ if(rubrics[name]){delete rubrics[name];safeSave("savedRubrics",rubrics);}
+ safeSave("lastRubric","");
+ refreshRubrics();
+ newRubric();
+ setDbStatus(`rúbrica desactivada (${result.count||0})`,"ok");
+ showMiniMessage("Rúbrica borrada de base","🗑️");
+ playSoftClick();
+}catch(error){setDbStatus(error.message,"error");showMiniMessage("No se pudo borrar","⚠️");}
+}
+
+function getScaleForStorage(){
+if(scaleSelect.value==="custom"){
+ const levels=getCustomLevels();
+ return "custom:"+levels.join("|");
+}
+return String(scaleSelect.value||"4");
+}
+
+function applyScaleFromStorage(value){
+const scale=String(value||"4");
+if(scale.startsWith("custom:")){
+ scaleSelect.value="custom";
+ customLevelsInput.value=scale.replace("custom:","").split("|").join("\n");
+}else{
+ scaleSelect.value=["3","4","5","6"].includes(scale)?scale:"4";
+}
+updateCustomScaleVisibility();
+}
+
+function updateCustomScaleVisibility(){
+if(scaleSelect.value==="custom"){customLevelsWrap.classList.add("show");}
+else{customLevelsWrap.classList.remove("show");}
+}
+
+function getCustomLevels(){
+return customLevelsInput.value.split("\n").map(l=>l.trim()).filter(Boolean);
+}
+
+function getCriteria(){return criteriaInput.value.split("\n").map(c=>c.trim()).filter(Boolean);}
+
+
+
+function generateRubric(){
+
+updateCustomScaleVisibility();
+
+const title=rubricName.value.trim()||"Rúbrica rápida";
+
+const context=rubricContext.value.trim()||"Actividad de clase";
+
+const criteria=getCriteria();
+
+const levels=getLevelSet();
+
+previewTitle.textContent=title;
+
+previewContext.textContent=context;
+
+criteriaPill.textContent=`${criteria.length} criterio${criteria.length===1?"":"s"}`;
+
+scalePill.textContent=`${levels.length} niveles`;
+
+criteriaPreview.innerHTML="";
+
+if(!criteria.length){
+
+criteriaPreview.innerHTML='<div class="criterion-card"><h3>Sin criterios todavía</h3><p class="small-note">Escribe criterios o carga una plantilla para generar la rúbrica.</p></div>';
+
+currentRubricText="";
+
+currentRubricTableText="";
+
+return;
+
+}
+
+let text=`${title}\n${context}\n\n`;
+
+let table=`${title}\n${context}\n\nCriterio\t${levels.map(l=>l.label).join("\t")}\n`;
+
+const neonColors=["#22c55e","#06b6d4","#ec4899","#f97316","#a855f7","#eab308","#ef4444","#14b8a6"];
+
+criteria.forEach((c,index)=>{
+
+const color=neonColors[index % neonColors.length];
+const card=document.createElement("article");
+card.className="criterion-card";
+card.style.borderLeft=`4px solid ${color}`;
+card.style.boxShadow=`0 0 14px ${color}33`;
+
+const rubricLevels=levels.map((level,levelIndex)=>{
+const maxIndex=Math.max(1,levels.length-1);
+const strength=1-(levelIndex/maxIndex);
+const bgOpacity=0.54-(levelIndex*(0.38/maxIndex));
+const borderOpacity=0.95-(levelIndex*(0.42/maxIndex));
+const glowOpacity=0.58-(levelIndex*(0.34/maxIndex));
+return {
+  label:level.label,
+  text:getDescriptor(c,level,levels.length),
+  bg:`linear-gradient(135deg, rgba(${hexToRgb(color)},${Math.max(bgOpacity,.16)}), rgba(${hexToRgb(color)},${Math.max(bgOpacity*.36,.06)}))`,
+  border:`rgba(${hexToRgb(color)},${Math.max(borderOpacity,.45)})`,
+  glow:`rgba(${hexToRgb(color)},${Math.max(glowOpacity,.18)})`,
+  color
+};
+});
+
+card.innerHTML=`<h3 style="color:${color};text-shadow:0 0 12px ${color}88;">${escapeHTML(c)}</h3><div class="levels">${rubricLevels.map((l,i)=>`<div class="level premium-level" style="background:${l.bg};border:1.5px solid ${l.border};box-shadow:0 0 16px ${l.glow}, inset 0 0 18px rgba(255,255,255,.10);"><strong style="color:${l.color};text-shadow:0 0 9px ${l.color}66;">${escapeHTML(l.label)}</strong>${escapeHTML(l.text)}</div>`).join("")}</div>`;
+
+criteriaPreview.appendChild(card);
+
+text+=`${c}\n`;
+
+rubricLevels.forEach(l=>{text+=`- ${l.label}: ${l.text}\n`;});
+
+table+=`${c}\t${rubricLevels.map(l=>l.text).join("\t")}\n`;
+
+text+="\n";
+
+});
+
+currentRubricText=text.trim();
+
+currentRubricTableText=table.trim();
+
+popCard();
+
+}
+
+function getLevelSet(){
+if(scaleSelect.value==="custom"){
+ const custom=getCustomLevels();
+ if(custom.length>0)return custom.map((label,index)=>({label:label,value:custom.length-index}));
+ return ["Excelente","Competente","En desarrollo","Inicial"].map((label,index)=>({label:label,value:4-index}));
+}
+const n=Number(scaleSelect.value)||4;
+const labels={
+ 6:["6 · Excepcional","5 · Excelente","4 · Competente","3 · Adecuado","2 · En desarrollo","1 · Inicial"],
+ 5:["5 · Excelente","4 · Muy bueno","3 · Competente","2 · En desarrollo","1 · Inicial"],
+ 4:["4 · Excelente","3 · Competente","2 · En progreso","1 · Inicial"],
+ 3:["3 · Logrado","2 · En desarrollo","1 · Inicial"]
+};
+return (labels[n]||labels[4]).map((label,index)=>({label:label,value:n-index}));
+}
+
+function getDescriptor(c,level,total){
+const criterion=c.toLowerCase();
+const label=String(level.label||"").toLowerCase();
+if(label.includes("excepcional"))return`Supera claramente las expectativas en ${criterion}, con desempeño consistente, preciso y altamente elaborado.`;
+if(label.includes("excelente"))return`Demuestra dominio claro de ${criterion} con evidencia consistente y alto nivel de calidad.`;
+if(label.includes("muy bueno"))return`Demuestra muy buen manejo de ${criterion}, con detalles claros y pocos aspectos por mejorar.`;
+if(label.includes("competente")||label.includes("logrado"))return`Cumple adecuadamente con ${criterion}, con evidencia suficiente y errores menores.`;
+if(label.includes("adecuado"))return`Cumple parcialmente con ${criterion}; el desempeño es aceptable pero puede desarrollarse más.`;
+if(label.includes("desarrollo")||label.includes("progreso"))return`Muestra desarrollo parcial de ${criterion} y necesita más práctica o apoyo.`;
+if(label.includes("inicial"))return`Presenta evidencia limitada de ${criterion} o requiere apoyo frecuente.`;
+return`Nivel "${level.label}" aplicado a ${criterion}.`;
+}
+
+function levelSet4(c){return[
+
+{label:"4 · Excelente",text:`Demuestra dominio claro de ${c.toLowerCase()} con evidencia consistente.`},
+
+{label:"3 · Competente",text:`Cumple adecuadamente con ${c.toLowerCase()} con pocos errores o apoyos.`},
+
+{label:"2 · En progreso",text:`Muestra desarrollo parcial de ${c.toLowerCase()} y necesita más práctica.`},
+
+{label:"1 · Inicial",text:`Presenta evidencia limitada de ${c.toLowerCase()} o requiere apoyo frecuente.`}
+
+];}
+
+
+
+function levelSet3(c){return[
+
+{label:"3 · Logrado",text:`Demuestra buen manejo de ${c.toLowerCase()} de forma clara.`},
+
+{label:"2 · En desarrollo",text:`Muestra comprensión parcial de ${c.toLowerCase()}.`},
+
+{label:"1 · Inicial",text:`Necesita apoyo para demostrar ${c.toLowerCase()}.`}
+
+];}
+
+
+
+function loadTemplate(){
+
+const t=templateSelect.value;
+
+const templates={
+
+oral:{name:"Presentación oral",context:"Actividad oral de clase",criteria:["Fluidez","Pronunciación","Precisión lingüística","Contenido y organización"]},
+
+project:{name:"Proyecto creativo",context:"Proyecto de clase",criteria:["Creatividad","Contenido","Uso del idioma","Presentación final"]},
+
+collab:{name:"Trabajo colaborativo",context:"Actividad en grupo",criteria:["Participación","Colaboración","Responsabilidad","Comunicación"]},
+
+writing:{name:"Escritura breve",context:"Respuesta escrita",criteria:["Claridad","Vocabulario","Gramática","Organización"]},
+
+ap_argumentative:{name:"AP · Ensayo argumentativo",context:"AP Spanish Language and Culture · Escritura argumentativa",criteria:["Tesis clara y defendible","Desarrollo de argumentos","Uso de evidencia","Organización y cohesión","Precisión lingüística","Registro académico"]},
+
+ap_email:{name:"AP · Email reply",context:"AP Spanish Language and Culture · Respuesta interpersonal escrita",criteria:["Cumple el propósito comunicativo","Responde a todos los puntos","Organización del mensaje","Registro apropiado","Control gramatical","Vocabulario adecuado"]},
+
+ap_cultural:{name:"AP · Comparación cultural",context:"AP Spanish Language and Culture · Presentación oral",criteria:["Comparación cultural","Conocimiento cultural","Organización","Fluidez","Pronunciación","Precisión lingüística"]},
+
+ap_presentational:{name:"AP · Presentational speaking",context:"AP Spanish Language and Culture · Presentación oral formal",criteria:["Desarrollo de ideas","Organización","Uso del vocabulario","Precisión gramatical","Fluidez","Impacto comunicativo"]},
+
+spanish12_final:{name:"Spanish 1/2 · Proyecto final",context:"Proyecto final de video o presentación",criteria:["Uso del español","Pronunciación","Creatividad","Contenido","Trabajo en equipo","Presentación visual"]},
+
+conversation:{name:"Conversación oral",context:"Actividad oral de clase",criteria:["Participación","Comprensión","Fluidez","Vocabulario","Pronunciación"]},
+
+rating_scale:{name:"Escala de valoración rápida",context:"Valoración rápida de desempeño",criteria:["Participación","Esfuerzo","Preparación","Colaboración"]}
+
+};
+
+if(!templates[t])return;
+
+rubricName.value=templates[t].name;
+
+rubricContext.value=templates[t].context;
+
+criteriaInput.value=templates[t].criteria.join("\n");
+
+if(t==="rating_scale"){
+ scaleSelect.value="custom";
+ customLevelsInput.value=["Excelente","Bueno","Adecuado","Necesita apoyo"].join("\n");
+}else if(t.startsWith("ap_")){
+ scaleSelect.value="6";
+}else{
+ scaleSelect.value="4";
+}
+
+generateRubric();
+
+playSoftClick();
+
+}
+
+function saveRubric(){
+
+const name=rubricName.value.trim();
+
+if(!name){showMiniMessage("Pon nombre a la rúbrica","💾");return;}
+
+const rubrics=safeLoad("savedRubrics",{});
+
+rubrics[name]={name:name,context:rubricContext.value,criteria:criteriaInput.value,scale:getScaleForStorage(),updatedAt:new Date().toLocaleString()};
+
+safeSave("savedRubrics",rubrics);
+
+safeSave("lastRubric",name);
+
+refreshRubrics();
+
+savedRubrics.value=name;
+
+showMiniMessage("Rúbrica guardada","💾");
+
+playSoftClick();
+
+}
+
+
+
+function refreshRubrics(){
+
+const rubrics=safeLoad("savedRubrics",{});
+
+savedRubrics.innerHTML='<option value="">Selecciona una rúbrica guardada...</option>';
+
+Object.keys(rubrics).sort().forEach(name=>{
+
+const option=document.createElement("option");
+
+option.value=name;
+
+option.textContent=name;
+
+savedRubrics.appendChild(option);
+
+});
+
+}
+
+
+
+function loadLastRubric(show){
+
+const last=safeLoad("lastRubric","");
+
+if(last){savedRubrics.value=last;loadSelectedRubric(show);}
+
+}
+
+
+
+function loadSelectedRubric(show=true){
+
+const name=savedRubrics.value;
+
+if(!name)return;
+
+const rubrics=safeLoad("savedRubrics",{});
+
+const r=rubrics[name];
+
+if(!r)return;
+
+rubricName.value=r.name||name;
+
+rubricContext.value=r.context||"";
+
+criteriaInput.value=r.criteria||"";
+
+applyScaleFromStorage(r.scale||"4");
+
+safeSave("lastRubric",name);
+
+generateRubric();
+
+if(show)showMiniMessage("Rúbrica cargada","📂");
+
+}
+
+
+
+function newRubric(){
+
+rubricName.value="";
+
+rubricContext.value="";
+
+criteriaInput.value="";
+
+scaleSelect.value="4";
+
+customLevelsInput.value="";
+
+updateCustomScaleVisibility();
+
+templateSelect.value="";
+
+savedRubrics.value="";
+
+generateRubric();
+
+showMiniMessage("Nueva rúbrica","➕");
+
+}
+
+
+
+function deleteRubric(){
+
+const name=savedRubrics.value||rubricName.value.trim();
+
+if(!name){showMiniMessage("No hay rúbrica seleccionada","🗑️");return;}
+
+const rubrics=safeLoad("savedRubrics",{});
+
+delete rubrics[name];
+
+safeSave("savedRubrics",rubrics);
+
+safeSave("lastRubric","");
+
+refreshRubrics();
+
+newRubric();
+
+showMiniMessage("Rúbrica borrada","🗑️");
+
+}
+
+
+
+function copyRubric(){
+
+if(!currentRubricText){showMiniMessage("No hay rúbrica para copiar","📋");return;}
+
+navigator.clipboard.writeText(currentRubricText).then(()=>{showMiniMessage("Texto copiado","📋");playSoftClick();});
+
+}
+
+function copyRubricTable(){
+
+if(!currentRubricTableText){showMiniMessage("No hay tabla para copiar","📋");return;}
+
+navigator.clipboard.writeText(currentRubricTableText).then(()=>{showMiniMessage("Tabla copiada","📋");playSoftClick();});
+
+}
+
+
+
+function showMiniMessage(title,icon){
+
+previewTitle.textContent=title;
+
+previewContext.textContent=icon;
+
+popCard();
+
+setTimeout(generateRubric,1200);
+
+}
+
+
+
+function popCard(){rubricCard.classList.remove("pop");void rubricCard.offsetWidth;rubricCard.classList.add("pop");}
+
+function toggleDarkMode(){document.body.classList.toggle("dark-mode");const isDark=document.body.classList.contains("dark-mode");darkModeBtn.textContent=isDark?"☀️ Modo claro":"🌙 Modo oscuro";applyLogo();safeSave("rubricDarkMode",isDark);}
+
+function safeLoad(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback;}catch(e){return fallback;}}
+
+function safeSave(key,value){localStorage.setItem(key,JSON.stringify(value));}
+
+function hexToRgb(hex){
+const bigint=parseInt(hex.replace("#",""),16);
+const r=(bigint>>16)&255; const g=(bigint>>8)&255; const b=bigint&255;
+return `${r},${g},${b}`;
+}
+
+function escapeHTML(text){return String(text).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");}
+
+function getAudioContext(){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;if(!audioCtx||audioCtx.state==="closed")audioCtx=new AC();if(audioCtx.state==="suspended")audioCtx.resume();return audioCtx;}
+
+function playTone(frequency,duration=.08,type="sine",volume=.06,delay=0){const ctx=getAudioContext();if(!ctx)return;const osc=ctx.createOscillator(),gain=ctx.createGain(),start=ctx.currentTime+delay;osc.type=type;osc.frequency.setValueAtTime(frequency,start);gain.gain.setValueAtTime(volume,start);gain.gain.exponentialRampToValueAtTime(.001,start+duration);osc.connect(gain);gain.connect(ctx.destination);osc.start(start);osc.stop(start+duration+.02);}
+
+function playSoftClick(){playTone(620,.08,"sine",.04)}
+
+</script>
+
+</body>
+
+</html>
