@@ -363,7 +363,10 @@ return id;
 function checkAPI(){callAPI({action:"getClasses"}).then(()=>apiStatus.textContent="✅ Base de datos conectada").catch(()=>apiStatus.textContent="⚠️ No se pudo conectar con la base de datos");}
 function loadClasses(){
 classesTableBody.innerHTML='<tr><td colspan="6">Cargando...</td></tr>';
-return callAPI({action:"getAllClasses"}).catch(()=>callAPI({action:"getClasses"})).then(data=>{
+return callAPI({action:"getAllClasses"}).then(data=>{
+if(!data||!Array.isArray(data.classes))return callAPI({action:"getClasses"});
+return data;
+}).catch(()=>callAPI({action:"getClasses"})).then(data=>{
 classesTableBody.innerHTML="";
 const classes=(data&&Array.isArray(data.classes))?data.classes:[];
 allClassesCache=classes;
