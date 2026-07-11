@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="apple-touch-icon" href="../favicon.png">
+<title>Clases de Bolsillo Database</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top left,rgba(14,165,233,.20),transparent 35%),radial-gradient(circle at bottom right,rgba(37,99,235,.16),transparent 35%),linear-gradient(135deg,#f8fafc,#e0f2fe);min-height:100vh;padding:16px;color:#0f172a}
+.app{width:100%;max-width:1180px;margin:0 auto;background:rgba(255,255,255,.96);border:1px solid rgba(14,165,233,.25);border-radius:30px;padding:24px;box-shadow:0 22px 50px rgba(15,23,42,.12);overflow:hidden;position:relative}
+.app:before{content:"";position:absolute;width:320px;height:320px;border-radius:50%;background:rgba(14,165,233,.08);top:-120px;right:-120px;z-index:0}
+.content{position:relative;z-index:1}
+.home-button{display:inline-flex;align-items:center;gap:8px;text-decoration:none;background:#dbeafe;color:#075985;border:1px solid #93c5fd;padding:10px 16px;border-radius:999px;font-weight:900;font-size:.92rem;margin-bottom:16px;box-shadow:0 6px 14px rgba(15,23,42,.08);transition:.15s}
+.home-button:hover{transform:translateY(-2px);background:#bfdbfe}
+.hero{text-align:center;margin-bottom:22px}.logo{width:96px;height:96px;object-fit:contain;border-radius:50%;background:white;padding:5px;box-shadow:0 12px 28px rgba(15,23,42,.16)}
+h1{margin:16px 0 6px;font-size:2.35rem;line-height:1.05;letter-spacing:-.6px;color:#0f172a}.subtitle{max-width:820px;margin:0 auto;color:#334155;line-height:1.6;font-size:1rem}
+.status-pill{display:inline-flex;align-items:center;justify-content:center;margin-top:14px;background:#e0f2fe;color:#075985;border-radius:999px;padding:8px 14px;font-weight:900;font-size:.86rem}
+.tabs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:24px 0 18px}.tab-btn{border:none;border-radius:999px;padding:12px 18px;font-size:.95rem;font-weight:900;cursor:pointer;background:#e0f2fe;color:#075985;border:1px solid #bae6fd;transition:.15s}.tab-btn:hover{transform:translateY(-2px);box-shadow:0 10px 18px rgba(15,23,42,.1)}.tab-btn.active{background:linear-gradient(135deg,#0284c7,#2563eb);color:white;border-color:#0284c7}
+.panel{display:none}.panel.active{display:block}.grid{display:grid;grid-template-columns:.92fr 1.08fr;gap:16px;align-items:start}.card{background:#f8fafc;border:1px solid #dbeafe;border-radius:24px;padding:18px;box-shadow:0 12px 26px rgba(15,23,42,.06)}.card-title{margin:0 0 14px;color:#075985;font-size:1.18rem;font-weight:900}
+label{display:block;font-weight:900;color:#075985;margin:12px 0 6px;font-size:.9rem}input,select,textarea{width:100%;border:2px solid #bae6fd;border-radius:16px;padding:12px 14px;font-size:1rem;outline:none;background:white;color:#0f172a}input:focus,select:focus,textarea:focus{border-color:#0ea5e9;box-shadow:0 0 0 4px rgba(14,165,233,.15)}textarea{min-height:160px;resize:vertical}
+.button-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}button{border:none;border-radius:999px;padding:12px 16px;font-size:.95rem;font-weight:900;cursor:pointer;transition:.15s}button:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(15,23,42,.12)}.primary{background:linear-gradient(135deg,#0284c7,#2563eb);color:white}.secondary{background:#e0f2fe;color:#075985}
+.table-wrap{overflow:auto;border:1px solid #dbeafe;border-radius:18px;background:white}table{width:100%;border-collapse:collapse;min-width:680px}th,td{text-align:left;padding:11px 12px;border-bottom:1px solid #e2e8f0;font-size:.92rem}th{background:#e0f2fe;color:#075985;font-weight:900;position:sticky;top:0}tr:hover td{background:#f8fafc}
+.small-note{color:#64748b;font-size:.86rem;line-height:1.45;margin-top:10px}.message{margin-top:14px;border-radius:18px;padding:12px 14px;background:#ecfeff;border:1px solid #bae6fd;color:#075985;font-weight:900;text-align:center}.hidden{display:none}.footer{text-align:center;margin-top:26px;color:#64748b;font-size:.9rem}
+.coming-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.coming-card{background:linear-gradient(135deg,#fff,#eef6ff);border:1px solid #dbeafe;border-radius:22px;padding:18px;min-height:150px}.coming-card h3{margin:0 0 8px;color:#0f172a}.coming-card p{margin:0;color:#334155;line-height:1.5}
+@media(max-width:860px){.grid{grid-template-columns:1fr}.button-row{grid-template-columns:1fr}h1{font-size:2rem}.app{padding:18px;border-radius:24px}}
+
+/* =========================================================
+   CENTRO DE DATOS · PREMIUM DARK MODE
+   Logo rojo + bancos de preguntas + bancos de temas
+   ========================================================= */
+
+.dark-toggle-wrap{
+  display:flex;
+  justify-content:center;
+  margin:12px 0 0;
+}
+
+body.dark-mode{
+  background:
+    radial-gradient(circle at 14% 8%, rgba(239,68,68,.20), transparent 30%),
+    radial-gradient(circle at 86% 12%, rgba(236,72,153,.22), transparent 30%),
+    radial-gradient(circle at 52% 100%, rgba(124,58,237,.18), transparent 36%),
+    linear-gradient(135deg,#020617,#071126 52%,#0f172a)!important;
+  color:#f8fafc!important;
+}
+
+body.dark-mode .app{
+  background:linear-gradient(180deg,rgba(15,23,42,.97),rgba(2,6,23,.98))!important;
+  border:1px solid rgba(236,72,153,.62)!important;
+  box-shadow:
+    0 0 0 1px rgba(236,72,153,.20),
+    0 0 30px rgba(236,72,153,.38),
+    0 0 64px rgba(124,58,237,.24),
+    0 0 92px rgba(239,68,68,.16),
+    0 30px 86px rgba(0,0,0,.62)!important;
+}
+
+body.dark-mode .app:after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  border-radius:30px!important;
+  pointer-events:none!important;
+  border:1px solid rgba(236,72,153,.82)!important;
+  box-shadow:
+    0 0 20px rgba(236,72,153,.50),
+    0 0 44px rgba(124,58,237,.30),
+    inset 0 0 26px rgba(239,68,68,.11)!important;
+  z-index:0!important;
+}
+
+body.dark-mode .content,
+body.dark-mode .home-button{
+  position:relative!important;
+  z-index:1!important;
+}
+
+body.dark-mode .app:before{
+  background:
+    radial-gradient(circle,rgba(239,68,68,.18),transparent 64%),
+    radial-gradient(circle at 35% 35%,rgba(236,72,153,.16),transparent 44%)!important;
+}
+
+body.dark-mode .logo{
+  background:#020617!important;
+  border:2px solid rgba(239,68,68,.75)!important;
+  box-shadow:
+    0 0 24px rgba(239,68,68,.62),
+    0 0 46px rgba(236,72,153,.38),
+    0 0 70px rgba(239,68,68,.22)!important;
+}
+
+body.dark-mode h1{
+  color:#f8fafc!important;
+  text-shadow:
+    0 0 20px rgba(239,68,68,.32),
+    0 0 34px rgba(236,72,153,.25),
+    0 0 48px rgba(124,58,237,.18)!important;
+}
+
+body.dark-mode .subtitle,
+body.dark-mode .footer,
+body.dark-mode .small-note,
+body.dark-mode .coming-card p{
+  color:#fecaca!important;
+}
+
+body.dark-mode .status-pill,
+body.dark-mode .message{
+  background:rgba(8,47,73,.84)!important;
+  color:#bae6fd!important;
+  border:1px solid rgba(56,189,248,.35)!important;
+  box-shadow:0 0 16px rgba(34,211,238,.12)!important;
+}
+
+body.dark-mode .home-button,
+body.dark-mode .secondary,
+body.dark-mode .tab-btn{
+  background:rgba(15,23,42,.90)!important;
+  color:#f8fafc!important;
+  border:1px solid rgba(56,189,248,.42)!important;
+  box-shadow:
+    0 0 14px rgba(34,211,238,.10),
+    inset 0 0 0 1px rgba(255,255,255,.03)!important;
+}
+
+body.dark-mode .home-button:hover,
+body.dark-mode .secondary:hover,
+body.dark-mode .tab-btn:hover{
+  border-color:rgba(236,72,153,.68)!important;
+  box-shadow:
+    0 0 24px rgba(236,72,153,.26),
+    0 10px 24px rgba(0,0,0,.28)!important;
+}
+
+body.dark-mode .tab-btn.active,
+body.dark-mode .primary{
+  background:linear-gradient(135deg,#ec4899,#7c3aed 48%,#2563eb)!important;
+  color:#fff!important;
+  border:1px solid rgba(255,255,255,.10)!important;
+  box-shadow:
+    0 16px 34px rgba(124,58,237,.34),
+    0 0 24px rgba(236,72,153,.34),
+    0 0 36px rgba(34,211,238,.12)!important;
+}
+
+body.dark-mode .card,
+body.dark-mode .coming-card{
+  background:
+    radial-gradient(circle at 18% 0%, rgba(236,72,153,.08), transparent 38%),
+    linear-gradient(180deg,rgba(15,23,42,.94),rgba(2,6,23,.97))!important;
+  border:1px solid rgba(236,72,153,.38)!important;
+  box-shadow:
+    0 16px 36px rgba(0,0,0,.30),
+    0 0 20px rgba(236,72,153,.16),
+    0 0 36px rgba(34,211,238,.08),
+    inset 0 0 0 1px rgba(255,255,255,.035)!important;
+}
+
+body.dark-mode .card-title,
+body.dark-mode label,
+body.dark-mode .coming-card h3{
+  color:#fecaca!important;
+  text-shadow:0 0 12px rgba(239,68,68,.26)!important;
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea{
+  background:rgba(2,6,23,.86)!important;
+  color:#f8fafc!important;
+  border-color:rgba(56,189,248,.42)!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)!important;
+}
+
+body.dark-mode input:focus,
+body.dark-mode select:focus,
+body.dark-mode textarea:focus{
+  border-color:#ec4899!important;
+  box-shadow:
+    0 0 0 4px rgba(236,72,153,.14),
+    0 0 22px rgba(236,72,153,.20)!important;
+}
+
+body.dark-mode .table-wrap{
+  background:#020617!important;
+  border-color:rgba(236,72,153,.32)!important;
+  box-shadow:0 0 18px rgba(236,72,153,.12)!important;
+}
+
+body.dark-mode table{
+  color:#f8fafc!important;
+}
+
+body.dark-mode th{
+  background:rgba(8,47,73,.90)!important;
+  color:#bae6fd!important;
+  border-bottom-color:rgba(56,189,248,.25)!important;
+}
+
+body.dark-mode td{
+  border-bottom-color:rgba(148,163,184,.14)!important;
+}
+
+body.dark-mode tr:hover td{
+  background:rgba(236,72,153,.08)!important;
+}
+
+</style>
+</head>
+<body>
+<main class="app"><div class="content">
+<a class="home-button" href="../">⬅ Volver al menú</a>
+<section class="hero"><img class="logo" src="../logo.png" alt="Logo Miguel Iglesias" /><h1>Clases de Bolsillo Database</h1><p class="subtitle">Centro de datos para gestionar clases, estudiantes y bancos reutilizables sin tocar la hoja de cálculo. Esta será la fuente común para reutilizar información en todas las apps.</p><div class="status-pill" id="apiStatus">🗄️ Conectando con la base de datos...</div><div class="dark-toggle-wrap"><button class="secondary" id="darkModeBtn" type="button" style="padding:8px 16px;font-size:.86rem;">🌙 Modo oscuro</button></div></section>
+<div class="tabs"><button class="tab-btn active" data-tab="classesPanel">📚 Clases</button><button class="tab-btn" data-tab="studentsPanel">👨‍🎓 Estudiantes</button><button class="tab-btn" data-tab="questionsPanel">❓ Bancos de preguntas</button><button class="tab-btn" data-tab="topicsPanel">🎯 Bancos de temas</button><button class="tab-btn" data-tab="futurePanel">⚙️ Administración</button></div>
+<section id="classesPanel" class="panel active"><div class="grid"><div class="card"><h2 class="card-title">Crear clase</h2><label>Curso</label><select id="courseSelect"><option value="__new__">Nuevo curso...</option></select><input id="courseInput" placeholder="Ejemplo: Spanish 1/2" /><label>Sección / Período</label><select id="sectionSelect"><option value="__new__">Nueva sección...</option></select><input id="sectionInput" placeholder="Ejemplo: P1" /><label>Año escolar</label><select id="schoolYearSelect"><option value="__new__">Nuevo año escolar...</option></select><input id="schoolYearInput" placeholder="Ejemplo: 2026-2027" /><label>Número de identificación automático</label><input id="classIdInput" placeholder="Se generará automáticamente" readonly /><label style="display:flex;align-items:center;gap:10px;margin-top:14px;"><input id="activeClassCheckbox" type="checkbox" checked style="width:auto;transform:scale(1.25);" /> Clase activa</label><div class="button-row"><button class="primary" id="addClassBtn">➕ Añadir clase</button><button class="secondary" id="saveClassBtn">💾 Guardar cambios</button></div><div class="button-row" style="grid-template-columns:1fr;"><button class="secondary" id="clearClassFormBtn">🧹 Limpiar</button></div><p class="small-note">Puedes crear una clase nueva o guardar el checkbox de una clase existente si el ClassID coincide.</p><div id="classMessage" class="message hidden"></div></div><div class="card"><h2 class="card-title">Clases</h2><div class="button-row" style="grid-template-columns:1fr;"><button class="secondary" id="refreshClassesBtn">🔄 Actualizar clases</button></div><div class="table-wrap" style="margin-top:14px;"><table><thead><tr><th>ClassID</th><th>Course</th><th>Section</th><th>SchoolYear</th><th>Activo</th></tr></thead><tbody id="classesTableBody"></tbody></table></div></div></div></section>
+<section id="studentsPanel" class="panel"><div class="grid"><div class="card"><h2 class="card-title">Añadir estudiantes</h2><label>Clase</label><select id="studentClassSelect"><option value="">Seleccionar clase...</option></select><label>Número de identificación del estudiante</label><input id="studentIdInput" list="studentIdSuggestions" placeholder="Ejemplo: 1234567" /><datalist id="studentIdSuggestions"></datalist><label>Nombre del estudiante</label><input id="studentNameInput" list="studentNameSuggestions" placeholder="Ejemplo: Ana García" /><datalist id="studentNameSuggestions"></datalist><label style="display:flex;align-items:center;gap:10px;margin-top:14px;"><input id="studentActiveCheckbox" type="checkbox" checked style="width:auto;transform:scale(1.25);" /> Estudiante activo</label><label>Notas</label><input id="studentNotesInput" placeholder="Opcional" /><div class="button-row"><button class="primary" id="addStudentsBtn">➕ Añadir estudiante</button><button class="secondary" id="saveStudentBtn">💾 Guardar cambios</button></div><div class="button-row" style="grid-template-columns:1fr;"><button class="secondary" id="clearStudentFormBtn">🧹 Limpiar</button></div><p class="small-note">Selecciona una clase y la tabla se actualizará automáticamente. Para activar o desactivar, elige un estudiante sugerido, cambia el checkbox y guarda.</p><div id="studentMessage" class="message hidden"></div></div><div class="card"><h2 class="card-title">Estudiantes por clase</h2><div class="button-row" style="grid-template-columns:1fr;margin-top:0;"><button class="secondary" id="loadStudentsBtn">📚 Actualizar estudiantes</button></div><div class="table-wrap" style="margin-top:14px;"><table><thead><tr><th>Número de identificación</th><th>Número de identificación del estudiante</th><th>Nombre del estudiante</th><th>Activo</th><th>Notas</th></tr></thead><tbody id="studentsTableBody"></tbody></table></div></div></div></section>
+
+<section id="questionsPanel" class="panel">
+  <div class="grid">
+    <div class="card">
+      <h2 class="card-title">Crear banco de preguntas</h2>
+      <label>Nombre del banco</label>
+      <input id="questionBankNameInput" placeholder="Ejemplo: Spanish 1/2 · Unidad 1 · Saludos" />
+      <label>Categoría</label>
+      <select id="questionBankCategoryInput">
+        <option value="General">General</option>
+        <option value="Ruleta">Ruleta de preguntas</option>
+        <option value="EntryTicket">Entry Ticket</option>
+        <option value="ExitTicket">Exit Ticket</option>
+        <option value="AP">AP Spanish</option>
+        <option value="Spanish12">Spanish 1/2</option>
+      </select>
+      <label>Preguntas</label>
+      <textarea id="questionBankQuestionsInput" placeholder="Una pregunta por línea..."></textarea>
+      <div class="button-row">
+        <button class="primary" id="saveQuestionBankBtn">💾 Guardar banco</button>
+        <button class="secondary" id="clearQuestionBankBtn">🧹 Limpiar</button>
+      </div>
+      <p class="small-note">Estos bancos se reutilizan en Ruleta de preguntas, Entry Ticket y Exit Ticket.</p>
+      <div id="questionBankMessage" class="message hidden"></div>
+    </div>
+    <div class="card">
+      <h2 class="card-title">Bancos de preguntas guardados</h2>
+      <div class="button-row" style="grid-template-columns:1fr;">
+        <button class="secondary" id="loadQuestionBanksBtn">📥 Cargar bancos de preguntas</button>
+      </div>
+      <div class="table-wrap" style="margin-top:14px;">
+        <table>
+          <thead><tr><th>Banco</th><th>Categoría</th><th>Preguntas</th></tr></thead>
+          <tbody id="questionBanksTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="topicsPanel" class="panel">
+  <div class="grid">
+    <div class="card">
+      <h2 class="card-title">Crear banco de temas</h2>
+      <label>Nombre del banco</label>
+      <input id="topicBankNameInput" placeholder="Ejemplo: Spanish 1/2 · Presentaciones culturales" />
+      <label>Categoría</label>
+      <select id="topicBankCategoryInput">
+        <option value="General">General</option>
+        <option value="Sorteador">Sorteador de temas</option>
+        <option value="Proyecto">Proyecto</option>
+        <option value="Presentacion">Presentación</option>
+        <option value="AP">AP Spanish</option>
+        <option value="Spanish12">Spanish 1/2</option>
+      </select>
+      <label>Temas</label>
+      <textarea id="topicBankTopicsInput" placeholder="Un tema por línea..."></textarea>
+      <div class="button-row">
+        <button class="primary" id="saveTopicBankBtn">💾 Guardar banco</button>
+        <button class="secondary" id="clearTopicBankBtn">🧹 Limpiar</button>
+      </div>
+      <p class="small-note">Estos bancos se reutilizan en el Sorteador de temas y en proyectos.</p>
+      <div id="topicBankMessage" class="message hidden"></div>
+    </div>
+    <div class="card">
+      <h2 class="card-title">Bancos de temas guardados</h2>
+      <div class="button-row" style="grid-template-columns:1fr;">
+        <button class="secondary" id="loadTopicBanksBtn">📥 Cargar bancos de temas</button>
+      </div>
+      <div class="table-wrap" style="margin-top:14px;">
+        <table>
+          <thead><tr><th>Banco</th><th>Categoría</th><th>Temas</th></tr></thead>
+          <tbody id="topicBanksTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="futurePanel" class="panel"><div class="coming-grid"><article class="coming-card"><h3>👨‍🏫 Clases</h3><p>Gestionar clases activas e históricas desde una interfaz sencilla.</p></article><article class="coming-card"><h3>👨‍🎓 Estudiantes</h3><p>Añadir, consultar y más adelante editar estudiantes sin tocar la hoja de cálculo.</p></article><article class="coming-card"><h3>❓ Bancos de preguntas</h3><p>Crear preguntas reutilizables para Ruleta y Exit Ticket.</p></article><article class="coming-card"><h3>🎯 Bancos de temas</h3><p>Guardar temas para sorteos, proyectos y presentaciones.</p></article><article class="coming-card"><h3>📄 Plantillas</h3><p>Gestionar plantillas de rúbricas y otros recursos reutilizables.</p></article></div></section>
+<div class="footer">© 2026 · Miguel Iglesias · Clases de Bolsillo Database</div>
+</div></main>
+<script>
+const DATABASE_API_URL="https://script.google.com/macros/s/AKfycbypuRr05eJ6FkN0KhrPQmZPLZRrGtMp7xZKfm-aFadulcwucsEMppFhli7pvfSOrBy3OA/exec";
+const apiStatus=document.getElementById("apiStatus"),tabs=document.querySelectorAll(".tab-btn"),panels=document.querySelectorAll(".panel");
+const classIdInput=document.getElementById("classIdInput"),courseInput=document.getElementById("courseInput"),sectionInput=document.getElementById("sectionInput"),schoolYearInput=document.getElementById("schoolYearInput"),courseSelect=document.getElementById("courseSelect"),sectionSelect=document.getElementById("sectionSelect"),schoolYearSelect=document.getElementById("schoolYearSelect"),activeClassCheckbox=document.getElementById("activeClassCheckbox"),classesTableBody=document.getElementById("classesTableBody"),classMessage=document.getElementById("classMessage");
+const studentClassSelect=document.getElementById("studentClassSelect"),studentIdInput=document.getElementById("studentIdInput"),studentNameInput=document.getElementById("studentNameInput"),studentNotesInput=document.getElementById("studentNotesInput"),studentActiveCheckbox=document.getElementById("studentActiveCheckbox"),studentIdSuggestions=document.getElementById("studentIdSuggestions"),studentNameSuggestions=document.getElementById("studentNameSuggestions"),studentsTableBody=document.getElementById("studentsTableBody"),studentMessage=document.getElementById("studentMessage");
+let currentClasses=[];
+let currentStudents=[];
+const darkModeBtn=document.getElementById("darkModeBtn"),questionBankNameInput=document.getElementById("questionBankNameInput"),questionBankCategoryInput=document.getElementById("questionBankCategoryInput"),questionBankQuestionsInput=document.getElementById("questionBankQuestionsInput"),questionBanksTableBody=document.getElementById("questionBanksTableBody"),questionBankMessage=document.getElementById("questionBankMessage"),topicBankNameInput=document.getElementById("topicBankNameInput"),topicBankCategoryInput=document.getElementById("topicBankCategoryInput"),topicBankTopicsInput=document.getElementById("topicBankTopicsInput"),topicBanksTableBody=document.getElementById("topicBanksTableBody"),topicBankMessage=document.getElementById("topicBankMessage");
+document.addEventListener("DOMContentLoaded",initApp);
+function initApp(){
+tabs.forEach(btn=>btn.addEventListener("click",()=>showTab(btn.dataset.tab)));
+document.getElementById("refreshClassesBtn").addEventListener("click",loadClasses);
+document.getElementById("addClassBtn").addEventListener("click",addClass);
+document.getElementById("saveClassBtn").addEventListener("click",saveClassChanges);
+document.getElementById("clearClassFormBtn").addEventListener("click",clearClassForm);
+document.getElementById("addStudentsBtn").addEventListener("click",addStudents);
+document.getElementById("saveStudentBtn").addEventListener("click",saveStudentChanges);
+document.getElementById("clearStudentFormBtn").addEventListener("click",clearStudentForm);
+document.getElementById("loadStudentsBtn").addEventListener("click",()=>loadStudents(studentClassSelect.value));
+studentClassSelect.addEventListener("change",()=>{clearStudentForm(false);loadStudents(studentClassSelect.value);});
+studentIdInput.addEventListener("change",()=>fillStudentFromSuggestion("id"));
+studentNameInput.addEventListener("change",()=>fillStudentFromSuggestion("name"));
+document.getElementById("saveQuestionBankBtn").addEventListener("click",saveQuestionBank);
+document.getElementById("clearQuestionBankBtn").addEventListener("click",clearQuestionBankForm);
+document.getElementById("loadQuestionBanksBtn").addEventListener("click",loadQuestionBanks);
+document.getElementById("saveTopicBankBtn").addEventListener("click",saveTopicBank);
+document.getElementById("clearTopicBankBtn").addEventListener("click",clearTopicBankForm);
+document.getElementById("loadTopicBanksBtn").addEventListener("click",loadTopicBanks);
+darkModeBtn.addEventListener("click",toggleDarkMode);
+[courseInput,sectionInput,schoolYearInput].forEach(input=>input.addEventListener("input",generateClassID));
+[[courseSelect,courseInput],[sectionSelect,sectionInput],[schoolYearSelect,schoolYearInput]].forEach(pair=>pair[0].addEventListener("change",()=>handleClassValueSelect(pair[0],pair[1])));
+studentNameInput.addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();addStudents();}});
+if(safeLoad("databaseDarkMode",false)){document.body.classList.add("dark-mode");darkModeBtn.textContent="☀️ Modo claro";}
+applyLogo();
+checkAPI();
+loadClasses();
+loadQuestionBanks();
+loadTopicBanks();
+}
+function showTab(panelId){tabs.forEach(btn=>btn.classList.toggle("active",btn.dataset.tab===panelId));panels.forEach(panel=>panel.classList.toggle("active",panel.id===panelId));}
+function callAPI(params){return new Promise((resolve,reject)=>{const callbackName="cbdb_"+Date.now()+"_"+Math.floor(Math.random()*100000),script=document.createElement("script");params.callback=callbackName;const query=new URLSearchParams(params).toString();window[callbackName]=data=>{delete window[callbackName];script.remove();resolve(data);};script.onerror=()=>{delete window[callbackName];script.remove();reject(new Error("No se pudo conectar."));};script.src=DATABASE_API_URL+"?"+query;document.body.appendChild(script);});}
+function showMessage(el,text){el.textContent=text;el.classList.remove("hidden");setTimeout(()=>el.classList.add("hidden"),4200);}
+function normalizeCourseCode(course){
+const cleaned=String(course||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+if(cleaned.includes("AP")) return "AP";
+if(cleaned.includes("SPANISH12")||cleaned.includes("SPAN12")||cleaned.includes("ESPAÑOL12")||cleaned.includes("ESPANOL12")) return "SPAN12";
+if(cleaned.includes("SPANISH1")||cleaned.includes("SPAN1")||cleaned.includes("ESPAÑOL1")||cleaned.includes("ESPANOL1")) return "SPAN1";
+return cleaned.slice(0,8)||"CLASS";
+}
+function normalizeSectionCode(section){
+return String(section||"").toUpperCase().replace(/\s+/g,"").replace(/[^A-Z0-9]/g,"");
+}
+function normalizeYearCode(schoolYear){
+const match=String(schoolYear||"").match(/\d{4}/);
+return match?match[0]:"";
+}
+function generateClassID(){
+const courseCode=normalizeCourseCode(courseInput.value);
+const sectionCode=normalizeSectionCode(sectionInput.value);
+const yearCode=normalizeYearCode(schoolYearInput.value);
+if(!courseCode||!sectionCode||!yearCode){classIdInput.value="";return "";}
+const id=`${courseCode}_${sectionCode}_${yearCode}`;
+classIdInput.value=id;
+syncClassActiveFromId(id);
+return id;
+}
+
+function checkAPI(){callAPI({action:"getClasses"}).then(()=>apiStatus.textContent="✅ Base de datos conectada").catch(()=>apiStatus.textContent="⚠️ No se pudo conectar con la base de datos");}
+function loadClasses(){classesTableBody.innerHTML='<tr><td colspan="5">Cargando...</td></tr>';return callAPI({action:"getClasses",includeInactive:"TRUE"}).then(data=>{classesTableBody.innerHTML="";currentClasses=(data&&Array.isArray(data.classes))?data.classes:[];populateClassValueSelects(currentClasses);if(!currentClasses.length){classesTableBody.innerHTML='<tr><td colspan="5">No hay clases todavía.</td></tr>';populateClassSelects([]);return;}currentClasses.forEach(cls=>{const tr=document.createElement("tr");tr.innerHTML=`<td>${escapeHTML(cls.classId)}</td><td>${escapeHTML(cls.course)}</td><td>${escapeHTML(cls.section)}</td><td>${escapeHTML(cls.schoolYear)}</td><td>${isActiveValueClient(cls.active)?"Sí":"No"}</td>`;classesTableBody.appendChild(tr);});populateClassSelects(currentClasses.filter(cls=>isActiveValueClient(cls.active)));syncClassActiveFromId(classIdInput.value);}).catch(()=>classesTableBody.innerHTML='<tr><td colspan="5">Error al cargar clases.</td></tr>');}
+function populateClassValueSelects(classes){
+  fillClassValueSelect(courseSelect,classes.map(cls=>cls.course),"Nuevo curso...");
+  fillClassValueSelect(sectionSelect,classes.map(cls=>cls.section),"Nueva sección...");
+  fillClassValueSelect(schoolYearSelect,classes.map(cls=>cls.schoolYear),"Nuevo año escolar...");
+}
+function fillClassValueSelect(select,values,newLabel){
+  const current=select.value;
+  const unique=[...new Set(values.map(value=>String(value||"").trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"es",{numeric:true,sensitivity:"base"}));
+  select.innerHTML=`<option value="__new__">${newLabel}</option>`;
+  unique.forEach(value=>{const option=document.createElement("option");option.value=value;option.textContent=value;select.appendChild(option);});
+  if(unique.includes(current)) select.value=current;
+}
+function handleClassValueSelect(select,input){
+  if(select.value==="__new__"){input.value="";input.classList.remove("hidden");input.focus();}
+  else{input.value=select.value;input.classList.add("hidden");}
+  generateClassID();
+}
+function syncClassActiveFromId(classId){
+  const match=currentClasses.find(cls=>String(cls.classId||"").trim()===String(classId||"").trim());
+  if(match) activeClassCheckbox.checked=isActiveValueClient(match.active);
+}
+function populateClassSelects(classes){const current=studentClassSelect.value;studentClassSelect.innerHTML='<option value="">Seleccionar clase...</option>';classes.forEach(cls=>{const option=document.createElement("option");option.value=String(cls.classId||"").trim();option.textContent=cls.displayName||`${cls.course} · ${cls.section} · ${cls.schoolYear}`;studentClassSelect.appendChild(option);});if(current)studentClassSelect.value=current;}
+function addClass(){
+const classId=generateClassID();
+const course=courseInput.value.trim(),section=sectionInput.value.trim(),schoolYear=schoolYearInput.value.trim(),active=activeClassCheckbox.checked?"TRUE":"FALSE";
+if(!course||!section||!schoolYear){showMessage(classMessage,"Completa Curso, Sección / Período y Año escolar.");return;}
+if(!classId){showMessage(classMessage,"No se pudo generar el número de identificación.");return;}
+const existingIds=[...classesTableBody.querySelectorAll("tr td:first-child")].map(td=>td.textContent.trim());
+if(existingIds.includes(classId)){showMessage(classMessage,"⚠ Ya existe esta clase.");return;}
+callAPI({action:"addClass",classId,course,section,schoolYear,active}).then(data=>{if(data&&data.status==="success"){showMessage(classMessage,"Clase añadida correctamente.");clearClassForm();loadClasses();}else showMessage(classMessage,(data&&data.message)||"No se pudo añadir la clase.");}).catch(()=>showMessage(classMessage,"Error de conexión al añadir clase."));}
+function saveClassChanges(){
+const classId=generateClassID();
+const course=courseInput.value.trim(),section=sectionInput.value.trim(),schoolYear=schoolYearInput.value.trim(),active=activeClassCheckbox.checked?"TRUE":"FALSE";
+if(!course||!section||!schoolYear){showMessage(classMessage,"Completa Curso, Sección / Período y Año escolar.");return;}
+if(!classId){showMessage(classMessage,"No se pudo generar el número de identificación.");return;}
+const exists=currentClasses.some(cls=>String(cls.classId||"").trim()===classId);
+if(!exists){showMessage(classMessage,"Esa clase no existe todavía. Usa Añadir clase si es nueva.");return;}
+callAPI({action:"setClassActive",classId,course,section,schoolYear,active})
+.then(data=>{
+if(data&&data.status==="success"){
+showMessage(classMessage,active==="TRUE"?"Clase activada correctamente.":"Clase desactivada correctamente.");
+loadClasses();
+}else showMessage(classMessage,(data&&data.message)||"No se pudieron guardar los cambios.");
+})
+.catch(()=>showMessage(classMessage,"Error de conexión al guardar la clase."));
+}
+function clearClassForm(){classIdInput.value="";courseInput.value="";sectionInput.value="";schoolYearInput.value="";courseSelect.value="__new__";sectionSelect.value="__new__";schoolYearSelect.value="__new__";courseInput.classList.remove("hidden");sectionInput.classList.remove("hidden");schoolYearInput.classList.remove("hidden");activeClassCheckbox.checked=true;}
+function addStudents(){
+const classId=studentClassSelect.value;
+const studentId=studentIdInput.value.trim();
+const studentName=studentNameInput.value.trim();
+const notes=studentNotesInput.value.trim();
+const active=studentActiveCheckbox.checked?"TRUE":"FALSE";
+
+if(!classId){showMessage(studentMessage,"Selecciona una clase.");return;}
+if(!studentId){showMessage(studentMessage,"Escribe el StudentID.");return;}
+if(!studentName){showMessage(studentMessage,"Escribe el nombre del estudiante.");return;}
+
+const students=[{studentId,studentName,active,notes}];
+
+callAPI({action:"addStudents",classId,students:JSON.stringify(students),active,notes})
+.then(data=>{
+if(data&&data.status==="success"){
+if(Number(data.count||0)>0){
+showMessage(studentMessage,"Estudiante añadido correctamente.");
+clearStudentForm(false);
+loadStudents(classId);
+}else{
+showMessage(studentMessage,"No se añadió: quizá ese StudentID ya existe en esta clase.");
+}
+}else showMessage(studentMessage,(data&&data.message)||"No se pudo añadir el estudiante.");
+})
+.catch(()=>showMessage(studentMessage,"Error de conexión al añadir estudiante."));
+}
+
+function saveStudentChanges(){
+const classId=studentClassSelect.value;
+const studentId=studentIdInput.value.trim();
+const studentName=studentNameInput.value.trim();
+const notes=studentNotesInput.value.trim();
+const active=studentActiveCheckbox.checked?"TRUE":"FALSE";
+if(!classId){showMessage(studentMessage,"Selecciona una clase.");return;}
+if(!studentId){showMessage(studentMessage,"Selecciona o escribe el StudentID.");return;}
+if(!studentName){showMessage(studentMessage,"Selecciona o escribe el nombre del estudiante.");return;}
+const exists=currentStudents.some(st=>String(st.studentId||"").trim()===studentId);
+if(!exists){showMessage(studentMessage,"Ese estudiante no está cargado en esta clase. Usa Añadir estudiante si es nuevo.");return;}
+callAPI({action:"setStudentActive",classId,studentId,studentName,notes,active})
+.then(data=>{
+if(data&&data.status==="success"){
+showMessage(studentMessage,active==="TRUE"?"Estudiante activado correctamente.":"Estudiante desactivado correctamente.");
+clearStudentForm(false);
+loadStudents(classId);
+}else showMessage(studentMessage,(data&&data.message)||"No se pudieron guardar los cambios.");
+})
+.catch(()=>showMessage(studentMessage,"Error de conexión al guardar cambios."));
+}
+
+function clearStudentForm(clearClass=true){studentIdInput.value="";studentNameInput.value="";studentNotesInput.value="";studentActiveCheckbox.checked=true;if(clearClass){studentClassSelect.value="";currentStudents=[];populateStudentSuggestions([]);studentsTableBody.innerHTML='<tr><td colspan="5">Selecciona una clase.</td></tr>';}}
+function loadStudents(classId){studentsTableBody.innerHTML='<tr><td colspan="5">Cargando...</td></tr>';if(!classId){currentStudents=[];populateStudentSuggestions([]);studentsTableBody.innerHTML='<tr><td colspan="5">Selecciona una clase.</td></tr>';return;}callAPI({action:"getStudents",classId,includeInactive:"TRUE"}).then(data=>{studentsTableBody.innerHTML="";currentStudents=(data&&Array.isArray(data.students))?data.students:[];populateStudentSuggestions(currentStudents);if(!currentStudents.length){studentsTableBody.innerHTML='<tr><td colspan="5">Esta clase no tiene estudiantes todavía.</td></tr>';return;}currentStudents.forEach(st=>{const tr=document.createElement("tr");tr.innerHTML=`<td>${escapeHTML(st.classId)}</td><td>${escapeHTML(st.studentId)}</td><td>${escapeHTML(st.studentName)}</td><td>${isActiveValueClient(st.active)?"Sí":"No"}</td><td>${escapeHTML(st.notes)}</td>`;studentsTableBody.appendChild(tr);});}).catch(()=>studentsTableBody.innerHTML='<tr><td colspan="5">Error al cargar estudiantes.</td></tr>');}
+function populateStudentSuggestions(students){
+  studentIdSuggestions.innerHTML="";
+  studentNameSuggestions.innerHTML="";
+  students.forEach(st=>{
+    const id=String(st.studentId||"").trim();
+    const name=String(st.studentName||"").trim();
+    if(id){const option=document.createElement("option");option.value=id;option.label=name?`${name} · ${id}`:id;studentIdSuggestions.appendChild(option);}
+    if(name){const option=document.createElement("option");option.value=name;option.label=id?`${id} · ${name}`:name;studentNameSuggestions.appendChild(option);}
+  });
+}
+function fillStudentFromSuggestion(mode){
+  const typedId=studentIdInput.value.trim();
+  const typedName=studentNameInput.value.trim();
+  const match=currentStudents.find(st=>mode==="id"?String(st.studentId||"").trim()===typedId:String(st.studentName||"").trim()===typedName);
+  if(!match) return;
+  studentIdInput.value=String(match.studentId||"").trim();
+  studentNameInput.value=String(match.studentName||"").trim();
+  studentNotesInput.value=String(match.notes||"").trim();
+  studentActiveCheckbox.checked=isActiveValueClient(match.active);
+}
+function isActiveValueClient(value){
+  const v=String(value??"").trim().toLowerCase();
+  return v==="true"||v==="active"||v==="activo"||v==="sí"||v==="si"||v==="yes"||v==="1";
+}
+
+function applyLogo(){
+  document.querySelectorAll(".logo").forEach(logo=>{
+    if(document.body.classList.contains("dark-mode")){
+      logo.src="../Logo-red.png";
+      logo.onerror=function(){
+        if(logo.src.includes("Logo-red.png")){
+          logo.onerror=null;
+          logo.src="../logo-red.png";
+        }
+      };
+    }else{
+      logo.onerror=null;
+      logo.src="../logo.png";
+    }
+  });
+}
+
+function toggleDarkMode(){
+  document.body.classList.toggle("dark-mode");
+  const isDark=document.body.classList.contains("dark-mode");
+  darkModeBtn.textContent=isDark?"☀️ Modo claro":"🌙 Modo oscuro";
+  applyLogo();
+  safeSave("databaseDarkMode",isDark);
+}
+
+function safeLoad(key,fallback){
+  try{return JSON.parse(localStorage.getItem(key))??fallback;}catch(e){return fallback;}
+}
+function safeSave(key,value){localStorage.setItem(key,JSON.stringify(value));}
+
+function splitLines(value){
+  return String(value||"").split("\n").map(item=>item.trim()).filter(Boolean);
+}
+
+function saveQuestionBank(){
+  const bankName=questionBankNameInput.value.trim();
+  const category=questionBankCategoryInput.value;
+  const questions=splitLines(questionBankQuestionsInput.value);
+  if(!bankName){showMessage(questionBankMessage,"Escribe el nombre del banco de preguntas.");return;}
+  if(!questions.length){showMessage(questionBankMessage,"Escribe al menos una pregunta.");return;}
+  callAPI({action:"saveQuestionBank",bankName,category,questions:JSON.stringify(questions),active:"TRUE"})
+  .then(data=>{
+    if(data&&data.status==="success"){
+      showMessage(questionBankMessage,"Banco de preguntas guardado correctamente.");
+      clearQuestionBankForm(false);
+      loadQuestionBanks();
+    }else showMessage(questionBankMessage,(data&&data.message)||"No se pudo guardar el banco de preguntas.");
+  })
+  .catch(()=>showMessage(questionBankMessage,"Error de conexión al guardar banco de preguntas."));
+}
+
+function clearQuestionBankForm(clearMessage=true){
+  questionBankNameInput.value="";
+  questionBankCategoryInput.value="General";
+  questionBankQuestionsInput.value="";
+  if(clearMessage) questionBankMessage.classList.add("hidden");
+}
+
+function loadQuestionBanks(){
+  questionBanksTableBody.innerHTML='<tr><td colspan="3">Cargando...</td></tr>';
+  callAPI({action:"getQuestionBanks"})
+  .then(data=>{
+    const banks=(data&&Array.isArray(data.banks))?data.banks:[];
+    questionBanksTableBody.innerHTML="";
+    if(!banks.length){
+      questionBanksTableBody.innerHTML='<tr><td colspan="3">No hay bancos de preguntas todavía.</td></tr>';
+      return;
+    }
+    banks.forEach(bank=>{
+      const questions=Array.isArray(bank.questions)?bank.questions:(String(bank.questions||"").split("|").filter(Boolean));
+      const tr=document.createElement("tr");
+      tr.innerHTML=`<td>${escapeHTML(bank.bankName||bank.name||"")}</td><td>${escapeHTML(bank.category||"General")}</td><td>${escapeHTML(questions.join(" · "))}</td>`;
+      questionBanksTableBody.appendChild(tr);
+    });
+  })
+  .catch(()=>questionBanksTableBody.innerHTML='<tr><td colspan="3">Error al cargar bancos de preguntas.</td></tr>');
+}
+
+function saveTopicBank(){
+  const bankName=topicBankNameInput.value.trim();
+  const category=topicBankCategoryInput.value;
+  const topics=splitLines(topicBankTopicsInput.value);
+  if(!bankName){showMessage(topicBankMessage,"Escribe el nombre del banco de temas.");return;}
+  if(!topics.length){showMessage(topicBankMessage,"Escribe al menos un tema.");return;}
+  callAPI({action:"saveTopicBank",bankName,category,topics:JSON.stringify(topics),active:"TRUE"})
+  .then(data=>{
+    if(data&&data.status==="success"){
+      showMessage(topicBankMessage,"Banco de temas guardado correctamente.");
+      clearTopicBankForm(false);
+      loadTopicBanks();
+    }else showMessage(topicBankMessage,(data&&data.message)||"No se pudo guardar el banco de temas.");
+  })
+  .catch(()=>showMessage(topicBankMessage,"Error de conexión al guardar banco de temas."));
+}
+
+function clearTopicBankForm(clearMessage=true){
+  topicBankNameInput.value="";
+  topicBankCategoryInput.value="General";
+  topicBankTopicsInput.value="";
+  if(clearMessage) topicBankMessage.classList.add("hidden");
+}
+
+function loadTopicBanks(){
+  topicBanksTableBody.innerHTML='<tr><td colspan="3">Cargando...</td></tr>';
+  callAPI({action:"getTopicBanks"})
+  .then(data=>{
+    const banks=(data&&Array.isArray(data.banks))?data.banks:(data&&Array.isArray(data.topicBanks)?data.topicBanks:[]);
+    topicBanksTableBody.innerHTML="";
+    if(!banks.length){
+      topicBanksTableBody.innerHTML='<tr><td colspan="3">No hay bancos de temas todavía.</td></tr>';
+      return;
+    }
+    banks.forEach(bank=>{
+      const topics=Array.isArray(bank.topics)?bank.topics:(String(bank.topics||"").split("|").filter(Boolean));
+      const tr=document.createElement("tr");
+      tr.innerHTML=`<td>${escapeHTML(bank.bankName||bank.name||"")}</td><td>${escapeHTML(bank.category||"General")}</td><td>${escapeHTML(topics.join(" · "))}</td>`;
+      topicBanksTableBody.appendChild(tr);
+    });
+  })
+  .catch(()=>topicBanksTableBody.innerHTML='<tr><td colspan="3">Error al cargar bancos de temas. Revisa que Apps Script tenga getTopicBanks.</td></tr>');
+}
+
+
+function escapeHTML(value){return String(value??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");}
+</script>
+</body>
+</html>
