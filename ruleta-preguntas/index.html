@@ -1,0 +1,2873 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>La Ruleta de Preguntas | Miguel Iglesias</title><link rel="icon" href="./logo.png"/><style>*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top left,rgba(14,165,233,.22),transparent 35%),radial-gradient(circle at bottom right,rgba(79,70,229,.18),transparent 35%),linear-gradient(135deg,#f8fafc,#e0f2fe);color:#1f2937;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:10px;transition:.35s}body.dark-mode{background:radial-gradient(circle at top left,rgba(56,189,248,.18),transparent 35%),radial-gradient(circle at bottom right,rgba(99,102,241,.16),transparent 35%),linear-gradient(135deg,#020617,#0f172a);color:#e5e7eb}.app{width:100%;max-width:980px;background:rgba(255,255,255,.96);border-radius:24px;padding:18px;box-shadow:0 20px 45px rgba(15,23,42,.14);border:1px solid rgba(14,165,233,.25);overflow:hidden;position:relative}.dark-mode .app{background:rgba(15,23,42,.96);border-color:rgba(56,189,248,.25);box-shadow:0 20px 45px rgba(0,0,0,.35)}.app:before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(14,165,233,.08);right:-90px;top:-90px;z-index:0}.content{position:relative;z-index:1}.home-button{display:inline-flex;align-items:center;gap:8px;text-decoration:none;background:#dbeafe;color:#075985;border:1px solid #93c5fd;padding:10px 16px;border-radius:999px;font-weight:800;font-size:.92rem;margin-bottom:16px;box-shadow:0 6px 14px rgba(15,23,42,.08);transition:.15s}.home-button:hover{transform:translateY(-2px);background:#bfdbfe}.brand{display:flex;justify-content:center;margin-bottom:8px}.logo{width:82px;height:82px;object-fit:contain;border-radius:50%;background:white;box-shadow:0 10px 22px rgba(15,23,42,.16);padding:4px}h1{text-align:center;margin:6px 0 4px;font-size:1.7rem;color:#0f172a;letter-spacing:-.5px}.dark-mode h1{color:#f8fafc}.subtitle{text-align:center;color:#475569;margin-bottom:14px;font-size:.9rem}.dark-mode .subtitle,.dark-mode .footer{color:#cbd5e1}.dark-toggle-wrap{display:flex;justify-content:center;margin-bottom:12px}.layout{display:grid;grid-template-columns:.95fr 1.05fr;gap:14px;align-items:start}.panel,.stage{background:#f8fafc;border-radius:20px;padding:14px;border:1px solid #dbeafe;transition:.35s}.dark-mode .panel,.dark-mode .stage,.dark-mode .question-item,.dark-mode .result-box{background:#111827;border-color:#334155}.panel-title{font-weight:bold;color:#075985;margin-bottom:10px}.dark-mode .panel-title,.dark-mode .question-item,.dark-mode .result-question{color:#f8fafc}input,select,textarea{width:100%;border:2px solid #bae6fd;border-radius:16px;padding:12px 14px;font-size:1rem;outline:none;background:white;color:#0f172a}input:focus,select:focus,textarea:focus{border-color:#0ea5e9;box-shadow:0 0 0 4px rgba(14,165,233,.15)}textarea{min-height:120px;resize:vertical}.mini-buttons,.bottom-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}button{border:none;border-radius:999px;padding:12px 16px;font-size:.95rem;font-weight:800;cursor:pointer;transition:.15s}button:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(15,23,42,.12)}button:active{transform:scale(.98)}.primary{width:100%;background:linear-gradient(135deg,#0284c7,#2563eb);color:white;font-size:1.08rem;padding:15px 18px;margin-top:12px}.start-button{font-size:1.22rem;padding:20px 24px;margin-top:18px;box-shadow:0 16px 32px rgba(37,99,235,.28),0 0 0 4px rgba(14,165,233,.1);letter-spacing:.03em;position:relative;z-index:20}.start-button:hover{transform:translateY(-3px) scale(1.01)}.secondary{background:#e0f2fe;color:#075985}.danger{background:#fee2e2;color:#991b1b}.magic{background:linear-gradient(135deg,#a5f3fc,#dbeafe);color:#075985}.question-list{display:grid;gap:8px;margin-top:12px;max-height:230px;overflow-y:auto;padding-right:4px}.question-item{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:#fff;border:1px solid #dbeafe;border-radius:14px;padding:8px}.question-item input{border:none;padding:6px 8px;border-radius:10px;font-size:.9rem;background:#f8fafc}.question-item button{padding:7px 10px;font-size:.8rem}.stage{background:linear-gradient(180deg,#fff,#f0f9ff);text-align:center}.dark-mode .stage{background:linear-gradient(180deg,#111827,#0f172a)}
+
+.pointer{width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-top:34px solid #0f172a;margin:0 auto -12px;position:relative;z-index:4}.dark-mode .pointer{border-top-color:#e5e7eb}.wheel-wrap{display:flex;justify-content:center;align-items:center;margin:8px auto 18px}.wheel{width:300px;height:300px;border-radius:50%;background:conic-gradient(#0ea5e9 0deg 45deg,#fff 45deg 90deg,#1d4ed8 90deg 135deg,#fff 135deg 180deg,#0ea5e9 180deg 225deg,#fff 225deg 270deg,#1d4ed8 270deg 315deg,#fff 315deg 360deg);border:9px solid white;box-shadow:0 18px 34px rgba(15,23,42,.18),inset 0 0 0 3px #0f172a;position:relative;display:flex;justify-content:center;align-items:center;transition:transform 3s cubic-bezier(.08,.78,.16,1);overflow:hidden}.wheel:after{content:"";width:88px;height:88px;border-radius:50%;background:white;box-shadow:inset 0 0 0 3px #0ea5e9;position:absolute;z-index:2}.wheel-logo{width:74px;height:74px;border-radius:50%;object-fit:contain;z-index:3;background:white;position:absolute}.wheel-name{position:absolute;left:50%;top:50%;width:112px;color:#0f172a;font-weight:900;font-size:.62rem;text-align:left;line-height:1;text-shadow:0 1px 2px rgba(255,255,255,.95);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:1;pointer-events:none;transform-origin:left center;padding-left:8px}.spin-glow{animation:pulse .42s infinite alternate}@keyframes pulse{from{filter:brightness(1)}to{filter:brightness(1.12)}}.wheel-legend{display:grid;grid-template-columns:1fr;gap:6px;margin:0 auto 12px;max-height:110px;overflow-y:auto;text-align:left;padding:8px;border-radius:14px;background:rgba(224,242,254,.7);border:1px solid #bae6fd}.dark-mode .wheel-legend{background:rgba(8,47,73,.55);border-color:#38bdf8}.legend-item{font-size:.78rem;line-height:1.25;color:#0f172a;font-weight:700}.dark-mode .legend-item{color:#e5e7eb}.legend-number{color:#075985;font-weight:900;margin-right:5px}.dark-mode .legend-number{color:#7dd3fc}.result-box{margin-top:8px;padding:18px;border-radius:20px;background:#ecfeff;border:2px dashed #38bdf8;min-height:120px;display:flex;flex-direction:column;justify-content:center;transition:.25s}.result-label{color:#64748b;font-size:.9rem;margin-bottom:8px;font-weight:bold}.result-question{font-size:1.35rem;font-weight:900;color:#0f172a;line-height:1.25}.result-pop{animation:resultPop .65s ease}@keyframes resultPop{0%{transform:scale(1)}35%{transform:scale(1.05);box-shadow:0 0 0 8px rgba(56,189,248,.18)}100%{transform:scale(1)}}.db-status{margin-top:10px;background:#e0f2fe;color:#075985;border-radius:999px;padding:8px 12px;font-size:.8rem;font-weight:900;text-align:center}.dark-mode .db-status{background:#082f49;color:#bae6fd}.footer{text-align:center;margin-top:18px;color:#64748b;font-size:.85rem}
+
+@media(max-width:760px){.layout{grid-template-columns:1fr}.mini-buttons,.bottom-buttons{grid-template-columns:1fr}.wheel{width:250px;height:250px}.wheel-name{width:94px;font-size:.52rem}}
+
+/* ===== CLASES DE BOLSILLO · NEON GAME UI V5 ===== */
+body{
+  background:
+    radial-gradient(circle at 18% 10%,rgba(168,85,247,.30),transparent 30%),
+    radial-gradient(circle at 82% 16%,rgba(14,165,233,.24),transparent 28%),
+    radial-gradient(circle at 50% 100%,rgba(236,72,153,.18),transparent 34%),
+    linear-gradient(135deg,#020617,#060818 48%,#0b1026);
+  color:#f8fafc;
+}
+.app{
+  max-width:1180px;
+  background:rgba(5,10,28,.92);
+  border:1px solid rgba(168,85,247,.45);
+  box-shadow:0 0 0 1px rgba(14,165,233,.12),0 28px 80px rgba(0,0,0,.42),0 0 45px rgba(168,85,247,.22);
+}
+.app:before{
+  width:340px;height:340px;
+  background:radial-gradient(circle,rgba(34,211,238,.18),transparent 62%);
+  right:-130px;top:-130px;
+}
+.home-button,.secondary{
+  background:rgba(15,23,42,.78);
+  color:#f8fafc;
+  border:1px solid rgba(168,85,247,.65);
+  box-shadow:0 0 16px rgba(168,85,247,.16);
+}
+.home-button:hover,.secondary:hover{background:rgba(30,41,59,.9)}
+.logo{box-shadow:0 0 24px rgba(34,211,238,.42);border:2px solid rgba(34,211,238,.35)}
+h1{
+  color:#fff;
+  font-size:2.1rem;
+  text-shadow:0 0 24px rgba(34,211,238,.25);
+}
+.subtitle{
+  color:#67e8f9;
+  font-weight:800;
+  font-style:italic;
+}
+.layout{grid-template-columns:.88fr 1.12fr;gap:16px}
+.panel,.stage{
+  background:linear-gradient(180deg,rgba(10,18,42,.92),rgba(5,10,28,.94));
+  border:1px solid rgba(99,102,241,.45);
+  box-shadow:0 18px 45px rgba(0,0,0,.28), inset 0 0 0 1px rgba(34,211,238,.08);
+}
+.panel-title{
+  color:#22d3ee;
+  font-size:1.05rem;
+  letter-spacing:.02em;
+}
+input,select,textarea{
+  background:rgba(248,250,252,.96);
+  border:2px solid rgba(125,211,252,.55);
+}
+.primary{
+  background:linear-gradient(135deg,#ec4899,#7c3aed 48%,#2563eb);
+  box-shadow:0 16px 34px rgba(124,58,237,.34),0 0 20px rgba(236,72,153,.18);
+}
+.magic{
+  background:linear-gradient(135deg,#ec4899,#7c3aed);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.18);
+}
+.danger{background:linear-gradient(135deg,#991b1b,#ef4444);color:white}
+.db-status{
+  background:rgba(8,47,73,.8)!important;
+  color:#bae6fd!important;
+  border:1px solid rgba(34,211,238,.35);
+}
+.question-item{
+  background:rgba(15,23,42,.82)!important;
+  border-color:rgba(99,102,241,.45)!important;
+}
+.question-item input{background:rgba(2,6,23,.8)!important;color:#f8fafc!important}
+.stage{position:relative;overflow:hidden}
+.stage:before{
+  content:"";
+  position:absolute;inset:10px;
+  border-radius:24px;
+  border:1px solid rgba(168,85,247,.28);
+  box-shadow:inset 0 0 42px rgba(168,85,247,.12);
+  pointer-events:none;
+}
+
+.result-box{
+  background:linear-gradient(180deg,rgba(15,23,42,.92),rgba(2,6,23,.96));
+  border:2px solid rgba(99,102,241,.85);
+  box-shadow:0 0 30px rgba(124,58,237,.22);
+}
+.result-label{
+  display:inline-flex;
+  align-self:center;
+  background:linear-gradient(135deg,#ec4899,#7c3aed);
+  color:white;
+  padding:7px 22px;
+  border-radius:999px;
+  margin-bottom:12px;
+}
+.result-question{color:#fff;font-size:1.45rem;text-shadow:0 0 16px rgba(255,255,255,.1)}
+.wheel{
+  box-shadow:0 20px 46px rgba(0,0,0,.38),0 0 34px rgba(34,211,238,.22),inset 0 0 0 3px #0f172a;
+}
+.wheel-legend{
+  background:rgba(15,23,42,.72);
+  border-color:rgba(34,211,238,.35);
+}
+.legend-item{color:#f8fafc}.legend-number{color:#67e8f9}
+
+/* =========================================================
+   CLASES DE BOLSILLO · DARK MODE PREMIUM
+   Ruleta de Preguntas · Miguel Iglesias
+   Vuelve el modo claro a estética clásica; premium solo en dark-mode
+   ========================================================= */
+
+/* ---- MODO CLARO: plataforma clásica ---- */
+body:not(.dark-mode){
+  background:
+    radial-gradient(circle at top left,rgba(14,165,233,.22),transparent 35%),
+    radial-gradient(circle at bottom right,rgba(79,70,229,.18),transparent 35%),
+    linear-gradient(135deg,#f8fafc,#e0f2fe)!important;
+  color:#1f2937!important;
+}
+
+body:not(.dark-mode) .app{
+  max-width:980px!important;
+  background:rgba(255,255,255,.96)!important;
+  border:1px solid rgba(14,165,233,.25)!important;
+  box-shadow:0 20px 45px rgba(15,23,42,.14)!important;
+}
+
+body:not(.dark-mode) .app:before{
+  width:260px!important;
+  height:260px!important;
+  background:rgba(14,165,233,.08)!important;
+  right:-90px!important;
+  top:-90px!important;
+}
+
+body:not(.dark-mode) .home-button,
+body:not(.dark-mode) .secondary{
+  background:#e0f2fe!important;
+  color:#075985!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+
+body:not(.dark-mode) .home-button{
+  background:#dbeafe!important;
+  border:1px solid #93c5fd!important;
+  box-shadow:0 6px 14px rgba(15,23,42,.08)!important;
+}
+
+body:not(.dark-mode) .logo{
+  background:white!important;
+  border:0!important;
+  box-shadow:0 10px 22px rgba(15,23,42,.16)!important;
+}
+
+body:not(.dark-mode) h1{
+  color:#0f172a!important;
+  font-size:1.7rem!important;
+  text-shadow:none!important;
+}
+
+body:not(.dark-mode) .subtitle{
+  color:#475569!important;
+  font-weight:400!important;
+  font-style:normal!important;
+}
+
+body:not(.dark-mode) .layout{
+  grid-template-columns:.95fr 1.05fr!important;
+  gap:14px!important;
+}
+
+body:not(.dark-mode) .panel,
+body:not(.dark-mode) .stage{
+  background:#f8fafc!important;
+  border:1px solid #dbeafe!important;
+  box-shadow:none!important;
+}
+
+body:not(.dark-mode) .stage{
+  background:linear-gradient(180deg,#fff,#f0f9ff)!important;
+}
+
+body:not(.dark-mode) .stage:before{
+  display:none!important;
+}
+
+body:not(.dark-mode) .panel-title{
+  color:#075985!important;
+  font-size:initial!important;
+  letter-spacing:normal!important;
+}
+
+body:not(.dark-mode) input,
+body:not(.dark-mode) select,
+body:not(.dark-mode) textarea{
+  background:white!important;
+  color:#0f172a!important;
+  border:2px solid #bae6fd!important;
+}
+
+body:not(.dark-mode) .primary{
+  background:linear-gradient(135deg,#0284c7,#2563eb)!important;
+  box-shadow:none!important;
+}
+
+body:not(.dark-mode) .start-button{
+  box-shadow:0 16px 32px rgba(37,99,235,.28),0 0 0 4px rgba(14,165,233,.1)!important;
+}
+
+body:not(.dark-mode) .magic{
+  background:linear-gradient(135deg,#a5f3fc,#dbeafe)!important;
+  color:#075985!important;
+  border:0!important;
+}
+
+body:not(.dark-mode) .danger{
+  background:#fee2e2!important;
+  color:#991b1b!important;
+}
+
+body:not(.dark-mode) .db-status{
+  background:#e0f2fe!important;
+  color:#075985!important;
+  border:0!important;
+}
+
+body:not(.dark-mode) .question-item{
+  background:#fff!important;
+  border:1px solid #dbeafe!important;
+}
+
+body:not(.dark-mode) .question-item input{
+  background:#f8fafc!important;
+  color:#0f172a!important;
+}
+
+body:not(.dark-mode) .result-box{
+  background:#ecfeff!important;
+  border:2px dashed #38bdf8!important;
+  box-shadow:none!important;
+}
+
+body:not(.dark-mode) .result-label{
+  display:block!important;
+  background:transparent!important;
+  color:#64748b!important;
+  padding:0!important;
+  border-radius:0!important;
+  margin-bottom:8px!important;
+}
+
+body:not(.dark-mode) .result-question{
+  color:#0f172a!important;
+  font-size:1.35rem!important;
+  text-shadow:none!important;
+}
+
+body:not(.dark-mode) .wheel-legend{
+  background:rgba(224,242,254,.7)!important;
+  border:1px solid #bae6fd!important;
+}
+
+body:not(.dark-mode) .legend-item{color:#0f172a!important}
+body:not(.dark-mode) .legend-number{color:#075985!important}
+
+/* ---- MODO OSCURO PREMIUM ---- */
+body.dark-mode{
+  background:
+    radial-gradient(circle at 16% 8%, rgba(34,211,238,.22), transparent 30%),
+    radial-gradient(circle at 84% 14%, rgba(168,85,247,.22), transparent 28%),
+    radial-gradient(circle at 50% 100%, rgba(236,72,153,.13), transparent 34%),
+    linear-gradient(135deg,#020617,#071126 52%,#0f172a)!important;
+  color:#e5e7eb!important;
+}
+
+.dark-mode .app{
+  max-width:1180px!important;
+  background:linear-gradient(180deg,rgba(15,23,42,.96),rgba(2,6,23,.97))!important;
+  border-color:rgba(236,72,153,.48)!important;
+  box-shadow:
+    0 0 0 1px rgba(236,72,153,.20),
+    0 0 22px rgba(236,72,153,.26),
+    0 0 44px rgba(168,85,247,.20),
+    0 0 76px rgba(34,211,238,.10),
+    0 28px 78px rgba(0,0,0,.52)!important;
+}
+
+.dark-mode .app::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:24px;
+  pointer-events:none;
+  border:1px solid rgba(236,72,153,.72);
+  box-shadow:
+    0 0 16px rgba(236,72,153,.42),
+    0 0 34px rgba(168,85,247,.28),
+    inset 0 0 22px rgba(34,211,238,.08);
+  z-index:0;
+}
+
+.dark-mode .content,
+.dark-mode .home-button{
+  position:relative;
+  z-index:1;
+}
+
+.dark-mode .app:before{
+  width:340px!important;
+  height:340px!important;
+  background:
+    radial-gradient(circle,rgba(34,211,238,.20),transparent 64%),
+    radial-gradient(circle at 35% 35%,rgba(236,72,153,.12),transparent 44%)!important;
+  right:-130px!important;
+  top:-130px!important;
+}
+
+.dark-mode .logo{
+  background:#020617!important;
+  border:2px solid rgba(125,211,252,.45)!important;
+  box-shadow:
+    0 0 22px rgba(34,211,238,.35),
+    0 0 42px rgba(168,85,247,.18)!important;
+}
+
+.dark-mode h1{
+  color:#f8fafc!important;
+  text-shadow:
+    0 0 18px rgba(34,211,238,.22),
+    0 0 30px rgba(168,85,247,.16)!important;
+}
+
+.dark-mode .subtitle{
+  color:#bae6fd!important;
+}
+
+.dark-mode .home-button,
+.dark-mode .secondary{
+  background:rgba(15,23,42,.88)!important;
+  color:#dff7ff!important;
+  border:1px solid rgba(56,189,248,.42)!important;
+  box-shadow:
+    0 0 14px rgba(34,211,238,.10),
+    inset 0 0 0 1px rgba(255,255,255,.03)!important;
+}
+
+.dark-mode .home-button:hover,
+.dark-mode .secondary:hover{
+  background:rgba(30,41,59,.96)!important;
+  box-shadow:
+    0 0 22px rgba(34,211,238,.22),
+    0 10px 24px rgba(0,0,0,.26)!important;
+}
+
+.dark-mode .primary,
+.dark-mode .magic{
+  background:linear-gradient(135deg,#ec4899,#7c3aed 45%,#2563eb)!important;
+  color:white!important;
+  box-shadow:
+    0 16px 34px rgba(124,58,237,.32),
+    0 0 22px rgba(236,72,153,.28),
+    0 0 28px rgba(34,211,238,.12)!important;
+}
+
+.dark-mode .danger{
+  background:linear-gradient(135deg,#7f1d1d,#ef4444)!important;
+  color:white!important;
+  box-shadow:0 0 18px rgba(239,68,68,.20)!important;
+}
+
+.dark-mode .panel,
+.dark-mode .stage{
+  background:linear-gradient(180deg,rgba(15,23,42,.92),rgba(2,6,23,.92))!important;
+  border-color:rgba(99,102,241,.38)!important;
+  box-shadow:
+    0 18px 42px rgba(0,0,0,.26),
+    inset 0 0 0 1px rgba(34,211,238,.06)!important;
+}
+
+.dark-mode .stage{
+  border-color:rgba(236,72,153,.34)!important;
+}
+
+.dark-mode .stage:before{
+  content:"";
+  display:block!important;
+  position:absolute;
+  inset:10px;
+  border-radius:22px;
+  border:1px solid rgba(56,189,248,.18);
+  box-shadow:
+    inset 0 0 40px rgba(14,165,233,.08),
+    0 0 22px rgba(168,85,247,.08);
+  pointer-events:none;
+}
+
+.dark-mode .panel-title{
+  color:#67e8f9!important;
+  text-shadow:0 0 12px rgba(34,211,238,.22)!important;
+}
+
+.dark-mode input,
+.dark-mode select,
+.dark-mode textarea{
+  background:rgba(2,6,23,.78)!important;
+  color:#f8fafc!important;
+  border-color:rgba(125,211,252,.45)!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)!important;
+}
+
+.dark-mode input::placeholder,
+.dark-mode textarea::placeholder{color:#94a3b8!important}
+
+.dark-mode input:focus,
+.dark-mode select:focus,
+.dark-mode textarea:focus{
+  border-color:#22d3ee!important;
+  box-shadow:
+    0 0 0 4px rgba(34,211,238,.14),
+    0 0 22px rgba(34,211,238,.18)!important;
+}
+
+.dark-mode .db-status{
+  background:rgba(8,47,73,.82)!important;
+  color:#bae6fd!important;
+  border:1px solid rgba(56,189,248,.30)!important;
+  box-shadow:0 0 12px rgba(34,211,238,.08)!important;
+}
+
+.dark-mode .question-item{
+  background:linear-gradient(180deg,rgba(15,23,42,.90),rgba(2,6,23,.92))!important;
+  border-color:rgba(56,189,248,.28)!important;
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.20),
+    inset 0 0 0 1px rgba(255,255,255,.03)!important;
+}
+
+.dark-mode .question-item input{
+  background:rgba(2,6,23,.75)!important;
+  color:#f8fafc!important;
+}
+
+.dark-mode .result-box{
+  background:linear-gradient(180deg,rgba(15,23,42,.92),rgba(2,6,23,.96))!important;
+  border-color:rgba(236,72,153,.58)!important;
+  box-shadow:
+    0 0 26px rgba(236,72,153,.18),
+    0 0 30px rgba(34,211,238,.10),
+    inset 0 0 0 1px rgba(255,255,255,.04)!important;
+}
+
+.dark-mode .result-label{
+  display:inline-flex!important;
+  align-self:center!important;
+  background:linear-gradient(135deg,#ec4899,#7c3aed)!important;
+  color:white!important;
+  padding:7px 22px!important;
+  border-radius:999px!important;
+  margin-bottom:12px!important;
+}
+
+.dark-mode .result-question{
+  color:#fff!important;
+  text-shadow:
+    0 0 16px rgba(255,255,255,.10),
+    0 0 26px rgba(236,72,153,.13)!important;
+}
+
+.dark-mode .wheel{
+  box-shadow:
+    0 24px 44px rgba(0,0,0,.36),
+    0 0 28px rgba(34,211,238,.22),
+    0 0 44px rgba(236,72,153,.20),
+    0 0 62px rgba(168,85,247,.14),
+    inset 0 0 0 3px #020617!important;
+}
+
+.dark-mode .wheel-legend{
+  background:rgba(15,23,42,.72)!important;
+  border-color:rgba(34,211,238,.35)!important;
+}
+
+.dark-mode .legend-item{color:#f8fafc!important}
+.dark-mode .legend-number{color:#67e8f9!important}
+.dark-mode .footer{color:#94a3b8!important}
+
+/* ===== FIX PREMIUM v2: LOGO ROJO + BOTONES FUNCIONANDO + RULETA LEGIBLE ===== */
+.wheel-text-tools{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin-top:10px}
+.wheel-text-tools button{padding:9px 12px;font-size:.9rem}
+#wheelTextSizeLabel{text-align:center;font-weight:900;color:#075985;font-size:.86rem}
+.dark-mode #wheelTextSizeLabel{color:#bae6fd}
+.wheel-fullscreen-btn{width:auto;margin:-4px auto 8px;padding:9px 15px;font-size:.86rem;display:none}
+.stage.wheel-active .wheel-fullscreen-btn{display:inline-flex}
+.stage.wheel-active{min-height:calc(100vh - 190px);display:flex;flex-direction:column}
+.stage.wheel-active .wheel-wrap{flex:0 0 auto}
+.stage.wheel-active .wheel-legend{width:100%}
+.wheel-legend{max-height:none!important;overflow:visible!important;display:grid;gap:8px}
+.wheel-legend.scroll-needed{max-height:260px!important;overflow-y:auto!important}
+.legend-item{text-align:center!important;display:flex;align-items:center;justify-content:center;min-height:38px;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.58);font-weight:900!important}
+.dark-mode .legend-item{background:rgba(2,6,23,.45)}
+.legend-number{display:none!important}
+.wheel-name{white-space:normal!important;overflow:hidden!important;text-overflow:clip!important;text-align:center!important;line-height:1.03!important;display:flex!important;align-items:center!important;justify-content:center!important;padding-left:0!important;transform-origin:center center!important;color:#082f49!important;max-height:64px;word-break:normal;hyphens:auto}
+.dark-mode .wheel-name{color:#06121f!important}
+.dark-mode .logo{
+  box-shadow:0 0 20px rgba(239,68,68,.45),0 0 40px rgba(236,72,153,.25),0 0 60px rgba(239,68,68,.18)!important;
+  border-color:rgba(239,68,68,.55)!important;
+}
+body.wheel-fullscreen-mode{padding:0!important;overflow:hidden}
+body.wheel-fullscreen-mode .app{max-width:none!important;width:100vw!important;min-height:100vh!important;border-radius:0!important;padding:14px!important}
+body.wheel-fullscreen-mode .home-button,body.wheel-fullscreen-mode .brand,body.wheel-fullscreen-mode h1,body.wheel-fullscreen-mode .subtitle,body.wheel-fullscreen-mode .dark-toggle-wrap,body.wheel-fullscreen-mode .panel,body.wheel-fullscreen-mode .footer{display:none!important}
+body.wheel-fullscreen-mode .layout{display:block!important}
+body.wheel-fullscreen-mode .stage{min-height:calc(100vh - 28px)!important;width:100%!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important;padding:18px!important;overflow:hidden!important}
+body.wheel-fullscreen-mode .pointer{margin-top:4px!important}
+body.wheel-fullscreen-mode .wheel{width:min(61vh,620px)!important;height:min(61vh,620px)!important}
+body.wheel-fullscreen-mode .wheel:after{width:18%!important;height:18%!important}
+body.wheel-fullscreen-mode .wheel-logo{width:15%!important;height:15%!important}
+body.wheel-fullscreen-mode .wheel-name{width:min(25vh,210px)!important}
+body.wheel-fullscreen-mode .wheel-legend{max-height:16vh!important;overflow-y:auto!important;margin-top:0!important}
+body.wheel-fullscreen-mode .result-box{position:relative!important;z-index:50!important;width:min(900px,96vw)!important;margin:8px auto 0!important;min-height:92px!important}
+body.wheel-fullscreen-mode .bottom-buttons{position:relative!important;z-index:60!important;width:min(900px,96vw)!important;margin:10px auto 0!important;grid-template-columns:1fr 1fr!important}
+body.wheel-fullscreen-mode .wheel-fullscreen-btn{position:absolute;right:18px;top:18px;z-index:80}
+@media(max-width:760px){.stage.wheel-active{min-height:auto}.legend-item{min-height:34px}body.wheel-fullscreen-mode .wheel{width:min(56vh,92vw)!important;height:min(56vh,92vw)!important}}
+
+/* ===== V2.2 · PALETAS ELEGANTES + CONTROLES DE TAMAÑO ===== */
+.wheel-text-tools{
+  display:grid!important;
+  grid-template-columns:auto 1fr auto!important;
+  gap:8px!important;
+  align-items:center!important;
+  margin-top:10px!important;
+}
+.wheel-text-tools button{
+  padding:9px 12px!important;
+  font-size:.9rem!important;
+}
+#wheelTextSizeLabel,#legendTextSizeLabel{
+  text-align:center!important;
+  font-weight:900!important;
+  color:#075985!important;
+  font-size:.86rem!important;
+}
+.dark-mode #wheelTextSizeLabel,
+.dark-mode #legendTextSizeLabel{
+  color:#fecaca!important;
+}
+
+/* Modo claro: ruleta solo azul */
+body:not(.dark-mode) .wheel{
+  border-color:#ffffff!important;
+  box-shadow:
+    0 18px 34px rgba(15,23,42,.18),
+    0 0 24px rgba(14,165,233,.16),
+    inset 0 0 0 3px #0f172a!important;
+}
+body:not(.dark-mode) .wheel-name{
+  color:#061f3d!important;
+  text-shadow:
+    0 1px 2px rgba(255,255,255,.98),
+    0 0 5px rgba(255,255,255,.85)!important;
+}
+
+/* Modo oscuro: ruleta solo roja */
+.dark-mode .wheel{
+  border-color:#fecaca!important;
+  box-shadow:
+    0 24px 44px rgba(0,0,0,.38),
+    0 0 28px rgba(239,68,68,.28),
+    0 0 44px rgba(236,72,153,.22),
+    0 0 62px rgba(127,29,29,.18),
+    inset 0 0 0 3px #020617!important;
+}
+.dark-mode .wheel-name{
+  color:#190202!important;
+  text-shadow:
+    0 1px 2px rgba(255,255,255,.95),
+    0 0 6px rgba(254,226,226,.85)!important;
+}
+.dark-mode .wheel:after{
+  background:#020617!important;
+  box-shadow:
+    inset 0 0 0 3px #ef4444,
+    0 0 22px rgba(239,68,68,.45)!important;
+}
+.dark-mode .wheel-logo,
+.dark-mode .logo{
+  background:#020617!important;
+  border-color:rgba(239,68,68,.55)!important;
+  box-shadow:
+    0 0 20px rgba(239,68,68,.45),
+    0 0 40px rgba(236,72,153,.25),
+    0 0 60px rgba(239,68,68,.18)!important;
+}
+
+/* Leyenda de preguntas */
+.wheel-legend{
+  max-height:none!important;
+  overflow:visible!important;
+  display:grid!important;
+  gap:8px!important;
+}
+.wheel-legend.scroll-needed{
+  max-height:260px!important;
+  overflow-y:auto!important;
+}
+.legend-item{
+  text-align:center!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:38px!important;
+  padding:8px 10px!important;
+  border-radius:12px!important;
+  background:rgba(255,255,255,.58)!important;
+  font-weight:900!important;
+}
+.dark-mode .legend-item{
+  background:rgba(127,29,29,.22)!important;
+  border:1px solid rgba(239,68,68,.22)!important;
+}
+.legend-number{
+  display:none!important;
+}
+
+/* Pantalla completa: mantener controles visibles */
+body.wheel-fullscreen-mode .result-box{
+  position:relative!important;
+  z-index:50!important;
+}
+body.wheel-fullscreen-mode .bottom-buttons{
+  position:relative!important;
+  z-index:60!important;
+}
+
+/* =========================================================
+   TEST 01 · FULLSCREEN BUTTON STYLE ONLY
+   Base limpia: no crea botones nuevos, no toca lógica principal
+   ========================================================= */
+
+.wheel-fullscreen-btn,
+#fullscreenWheelBtn,
+#wheelFullscreenBtn{
+  position:static!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-height:46px!important;
+  height:46px!important;
+  margin:12px auto 0!important;
+  padding:0 16px!important;
+  border-radius:999px!important;
+  background:#e0f2fe!important;
+  color:#075985!important;
+  border:0!important;
+  box-shadow:none!important;
+  font-size:.95rem!important;
+  font-weight:900!important;
+  transform:none!important;
+}
+
+.dark-mode .wheel-fullscreen-btn,
+.dark-mode #fullscreenWheelBtn,
+.dark-mode #wheelFullscreenBtn{
+  background:rgba(15,23,42,.88)!important;
+  color:#dff7ff!important;
+  border:1px solid rgba(56,189,248,.42)!important;
+  box-shadow:0 0 14px rgba(34,211,238,.10), inset 0 0 0 1px rgba(255,255,255,.03)!important;
+}
+
+/* En fullscreen, el mismo botón se convierte en cerrar pequeño */
+body.wheel-fullscreen-mode .wheel-fullscreen-btn,
+body.wheel-fullscreen-mode #fullscreenWheelBtn,
+body.wheel-fullscreen-mode #wheelFullscreenBtn{
+  position:absolute!important;
+  top:16px!important;
+  right:16px!important;
+  left:auto!important;
+  width:auto!important;
+  max-width:none!important;
+  min-width:0!important;
+  height:auto!important;
+  min-height:0!important;
+  padding:10px 14px!important;
+  margin:0!important;
+  border-radius:999px!important;
+  background:#fee2e2!important;
+  color:#991b1b!important;
+  border:0!important;
+  box-shadow:none!important;
+  z-index:9999!important;
+  font-size:.92rem!important;
+}
+
+body.dark-mode.wheel-fullscreen-mode .wheel-fullscreen-btn,
+body.dark-mode.wheel-fullscreen-mode #fullscreenWheelBtn,
+body.dark-mode.wheel-fullscreen-mode #wheelFullscreenBtn{
+  background:linear-gradient(135deg,#7f1d1d,#ef4444)!important;
+  color:white!important;
+}
+
+/* =========================================================
+   FULLSCREEN CLEAN · PASOS 2-5 SOBRE BASE ESTABLE
+   1 botón existente · contenedor tipo modo clase · ruleta centrada
+   modal flotante mantener/sacar · márgenes seguros
+   ========================================================= */
+
+/* Botón existente, estado normal: dentro del contenedor */
+body:not(.wheel-fullscreen-mode) #fullscreenWheelBtn,
+body:not(.wheel-fullscreen-mode) .wheel-fullscreen-btn{
+  position:static!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  max-width:100%!important;
+  height:46px!important;
+  min-height:46px!important;
+  margin:12px auto 0!important;
+  padding:0 16px!important;
+  border-radius:999px!important;
+  background:#e0f2fe!important;
+  color:#075985!important;
+  border:0!important;
+  box-shadow:none!important;
+  font-size:.95rem!important;
+  font-weight:900!important;
+  transform:none!important;
+}
+
+body:not(.wheel-fullscreen-mode) #fullscreenWheelBtn::before,
+body:not(.wheel-fullscreen-mode) .wheel-fullscreen-btn::before{
+  content:""!important;
+}
+
+.dark-mode body:not(.wheel-fullscreen-mode) #fullscreenWheelBtn,
+.dark-mode body:not(.wheel-fullscreen-mode) .wheel-fullscreen-btn,
+body.dark-mode:not(.wheel-fullscreen-mode) #fullscreenWheelBtn,
+body.dark-mode:not(.wheel-fullscreen-mode) .wheel-fullscreen-btn{
+  background:rgba(15,23,42,.88)!important;
+  color:#dff7ff!important;
+  border:1px solid rgba(56,189,248,.42)!important;
+  box-shadow:0 0 14px rgba(34,211,238,.10), inset 0 0 0 1px rgba(255,255,255,.03)!important;
+}
+
+/* Fondo fullscreen con tarjeta/contenedor como modo clase */
+body.wheel-fullscreen-mode{
+  padding:0!important;
+  overflow:hidden!important;
+  display:block!important;
+}
+
+body.wheel-fullscreen-mode .app{
+  position:fixed!important;
+  inset:0!important;
+  width:100vw!important;
+  max-width:none!important;
+  min-height:100vh!important;
+  border-radius:0!important;
+  padding:18px!important;
+  border:0!important;
+  box-shadow:none!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  z-index:9000!important;
+  background:
+    radial-gradient(circle at top left,rgba(14,165,233,.22),transparent 35%),
+    linear-gradient(135deg,#f8fafc,#e0f2fe)!important;
+}
+
+body.dark-mode.wheel-fullscreen-mode .app{
+  background:
+    radial-gradient(circle at 16% 8%, rgba(34,211,238,.22), transparent 30%),
+    radial-gradient(circle at 84% 14%, rgba(168,85,247,.22), transparent 28%),
+    linear-gradient(135deg,#020617,#071126 52%,#0f172a)!important;
+}
+
+body.wheel-fullscreen-mode .app::before,
+body.wheel-fullscreen-mode .app::after{
+  display:none!important;
+}
+
+body.wheel-fullscreen-mode .content{
+  width:min(980px,96vw)!important;
+  min-height:min(720px,94vh)!important;
+  background:rgba(255,255,255,.98)!important;
+  border:1px solid #bae6fd!important;
+  border-radius:28px!important;
+  box-shadow:0 25px 60px rgba(15,23,42,.22)!important;
+  padding:22px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  position:relative!important;
+  overflow:hidden!important;
+}
+
+body.dark-mode.wheel-fullscreen-mode .content{
+  background:linear-gradient(180deg,rgba(15,23,42,.96),rgba(2,6,23,.97))!important;
+  border-color:rgba(56,189,248,.42)!important;
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.52),
+    0 0 44px rgba(34,211,238,.18),
+    0 0 70px rgba(168,85,247,.14)!important;
+}
+
+/* Ocultar panel y cabecera en fullscreen */
+body.wheel-fullscreen-mode .home-button,
+body.wheel-fullscreen-mode .brand,
+body.wheel-fullscreen-mode h1,
+body.wheel-fullscreen-mode .subtitle,
+body.wheel-fullscreen-mode .dark-toggle-wrap,
+body.wheel-fullscreen-mode .panel,
+body.wheel-fullscreen-mode .footer{
+  display:none!important;
+}
+
+body.wheel-fullscreen-mode .layout{
+  display:flex!important;
+  width:100%!important;
+  flex:1!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+
+body.wheel-fullscreen-mode .stage{
+  width:min(720px,88vw)!important;
+  min-height:auto!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  padding:18px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  overflow:visible!important;
+  position:relative!important;
+}
+
+body.wheel-fullscreen-mode .stage::before{
+  display:none!important;
+}
+
+/* Título de modo clase dentro del contenedor */
+body.wheel-fullscreen-mode .stage::after{
+  content:"Ruleta de Preguntas · Modo clase";
+  position:absolute;
+  top:-42px;
+  left:50%;
+  transform:translateX(-50%);
+  width:max-content;
+  max-width:80vw;
+  font-size:1.55rem;
+  font-weight:900;
+  color:#0f172a;
+  text-align:center;
+}
+
+body.dark-mode.wheel-fullscreen-mode .stage::after{
+  color:#f8fafc;
+  text-shadow:0 0 18px rgba(34,211,238,.20);
+}
+
+/* El mismo botón existente pasa a cerrar */
+body.wheel-fullscreen-mode #fullscreenWheelBtn,
+body.wheel-fullscreen-mode .wheel-fullscreen-btn{
+  position:absolute!important;
+  top:16px!important;
+  right:16px!important;
+  left:auto!important;
+  z-index:9999!important;
+  width:auto!important;
+  max-width:none!important;
+  min-width:0!important;
+  height:40px!important;
+  min-height:40px!important;
+  padding:0 14px!important;
+  margin:0!important;
+  border-radius:999px!important;
+  background:#fee2e2!important;
+  color:#991b1b!important;
+  border:0!important;
+  box-shadow:none!important;
+  font-size:.9rem!important;
+  font-weight:900!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+
+body.dark-mode.wheel-fullscreen-mode #fullscreenWheelBtn,
+body.dark-mode.wheel-fullscreen-mode .wheel-fullscreen-btn{
+  background:linear-gradient(135deg,#7f1d1d,#ef4444)!important;
+  color:white!important;
+}
+
+/* Ruleta centrada */
+body.wheel-fullscreen-mode .pointer{
+  margin:0 auto -12px!important;
+  z-index:4!important;
+}
+
+body.wheel-fullscreen-mode .wheel-wrap{
+  margin:0 auto 12px!important;
+  display:flex!important;
+  justify-content:center!important;
+  align-items:center!important;
+}
+
+body.wheel-fullscreen-mode .wheel{
+  width:min(520px,76vw,60vh)!important;
+  height:min(520px,76vw,60vh)!important;
+}
+
+body.wheel-fullscreen-mode .wheel:after{
+  width:15%!important;
+  height:15%!important;
+}
+
+body.wheel-fullscreen-mode .wheel-logo{
+  width:13.5%!important;
+  height:13.5%!important;
+}
+
+/* Controles y resultado contenidos */
+body.wheel-fullscreen-mode #stageWheelSizeTools,
+body.wheel-fullscreen-mode .wheel-text-tools{
+  width:min(520px,76vw)!important;
+  max-width:520px!important;
+  margin:8px auto!important;
+}
+
+body.wheel-fullscreen-mode #stageLegendSizeTools,
+body.wheel-fullscreen-mode .question-size-tools{
+  display:none!important;
+}
+
+body.wheel-fullscreen-mode #spinBtn,
+body.wheel-fullscreen-mode .start-button{
+  width:min(360px,86vw)!important;
+  max-width:360px!important;
+  min-height:56px!important;
+  height:56px!important;
+  margin:12px auto 0!important;
+  padding:0 18px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:999px!important;
+}
+
+body.wheel-fullscreen-mode .result-box{
+  width:min(680px,86vw)!important;
+  max-width:680px!important;
+  min-height:92px!important;
+  margin:12px auto 0!important;
+}
+
+/* Botones permanentes fuera: se reemplazan por modal tras selección */
+body.wheel-fullscreen-mode .bottom-buttons,
+.stage.wheel-active .bottom-buttons{
+  display:none!important;
+}
+
+/* Modal flotante para mantener/sacar */
+.question-action-modal{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(15,23,42,.42);
+  backdrop-filter:blur(3px);
+}
+.question-action-modal.show{display:flex}
+.question-action-card{
+  width:min(680px,94vw);
+  background:rgba(255,255,255,.98);
+  border:2px solid rgba(14,165,233,.35);
+  border-radius:26px;
+  padding:22px;
+  box-shadow:0 25px 60px rgba(15,23,42,.28);
+  text-align:center;
+}
+.dark-mode .question-action-card{
+  background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(2,6,23,.98));
+  border-color:rgba(236,72,153,.55);
+  box-shadow:0 0 34px rgba(236,72,153,.20),0 25px 70px rgba(0,0,0,.55);
+}
+.question-action-title{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:7px 18px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#0284c7,#2563eb);
+  color:white;
+  font-weight:900;
+  margin-bottom:12px;
+}
+.dark-mode .question-action-title{
+  background:linear-gradient(135deg,#ec4899,#7c3aed);
+}
+.question-action-text{
+  font-size:1.25rem;
+  line-height:1.28;
+  font-weight:900;
+  color:#0f172a;
+  margin:10px auto 18px;
+}
+.dark-mode .question-action-text{color:#fff}
+.question-action-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.question-action-buttons button{
+  min-height:54px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:999px!important;
+}
+
+/* Texto de ruleta: margen seguro desde logo y borde */
+body.wheel-fullscreen-mode .wheel-name{
+  padding:0 5px!important;
+  max-height:88px!important;
+}
+
+@media(max-width:760px){
+  body.wheel-fullscreen-mode .content{
+    padding:16px!important;
+  }
+  body.wheel-fullscreen-mode .stage::after{
+    font-size:1.25rem;
+    top:-36px;
+  }
+  body.wheel-fullscreen-mode .stage{
+    width:94vw!important;
+    padding:12px!important;
+  }
+  body.wheel-fullscreen-mode .wheel{
+    width:min(440px,82vw,54vh)!important;
+    height:min(440px,82vw,54vh)!important;
+  }
+  .question-action-buttons{
+    grid-template-columns:1fr;
+  }
+}
+
+/* =========================================================
+   FULLSCREEN CLEAN v2 · CONTENEDOR REAL + SIN PREGUNTAS EN FULLSCREEN
+   ========================================================= */
+
+/* Contenedor fullscreen visible, tipo modo clase */
+body.wheel-fullscreen-mode{
+  padding:0!important;
+  margin:0!important;
+  overflow:hidden!important;
+  background:
+    radial-gradient(circle at top left,rgba(14,165,233,.22),transparent 35%),
+    linear-gradient(135deg,#f8fafc,#e0f2fe)!important;
+}
+
+body.dark-mode.wheel-fullscreen-mode{
+  background:
+    radial-gradient(circle at 16% 8%, rgba(34,211,238,.22), transparent 30%),
+    radial-gradient(circle at 84% 14%, rgba(168,85,247,.22), transparent 28%),
+    linear-gradient(135deg,#020617,#071126 52%,#0f172a)!important;
+}
+
+body.wheel-fullscreen-mode .app{
+  position:fixed!important;
+  inset:0!important;
+  width:100vw!important;
+  max-width:none!important;
+  min-height:100vh!important;
+  padding:18px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:hidden!important;
+}
+
+body.wheel-fullscreen-mode .content{
+  width:min(980px,96vw)!important;
+  height:min(720px,94vh)!important;
+  min-height:0!important;
+  padding:22px!important;
+  border-radius:28px!important;
+  background:rgba(255,255,255,.98)!important;
+  border:1px solid #bae6fd!important;
+  box-shadow:0 25px 60px rgba(15,23,42,.22)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  position:relative!important;
+  overflow:hidden!important;
+}
+
+body.dark-mode.wheel-fullscreen-mode .content{
+  background:linear-gradient(180deg,rgba(15,23,42,.96),rgba(2,6,23,.97))!important;
+  border-color:rgba(56,189,248,.42)!important;
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.52),
+    0 0 44px rgba(34,211,238,.18),
+    0 0 70px rgba(168,85,247,.14)!important;
+}
+
+/* Ocultar elementos ajenos */
+body.wheel-fullscreen-mode .home-button,
+body.wheel-fullscreen-mode .brand,
+body.wheel-fullscreen-mode h1,
+body.wheel-fullscreen-mode .subtitle,
+body.wheel-fullscreen-mode .dark-toggle-wrap,
+body.wheel-fullscreen-mode .panel,
+body.wheel-fullscreen-mode .footer{
+  display:none!important;
+}
+
+body.wheel-fullscreen-mode .layout{
+  width:100%!important;
+  height:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+
+body.wheel-fullscreen-mode .stage{
+  width:min(720px,88vw)!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:100%!important;
+  padding:16px!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  position:relative!important;
+  overflow:visible!important;
+}
+
+body.wheel-fullscreen-mode .stage::before{
+  display:none!important;
+}
+
+/* Título del contenedor */
+body.wheel-fullscreen-mode .stage::after{
+  content:"Ruleta de Preguntas · Modo clase";
+  position:absolute;
+  top:-38px;
+  left:50%;
+  transform:translateX(-50%);
+  width:max-content;
+  max-width:80vw;
+  font-size:1.55rem;
+  font-weight:900;
+  color:#0f172a;
+  text-align:center;
+}
+
+body.dark-mode.wheel-fullscreen-mode .stage::after{
+  color:#f8fafc;
+  text-shadow:0 0 18px rgba(34,211,238,.20);
+}
+
+/* Cerrar compacto en esquina del contenedor */
+body.wheel-fullscreen-mode #fullscreenWheelBtn,
+body.wheel-fullscreen-mode .wheel-fullscreen-btn{
+  position:absolute!important;
+  top:16px!important;
+  right:16px!important;
+  left:auto!important;
+  z-index:9999!important;
+  width:auto!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:40px!important;
+  min-height:40px!important;
+  padding:0 14px!important;
+  margin:0!important;
+  border-radius:999px!important;
+  background:#fee2e2!important;
+  color:#991b1b!important;
+  border:0!important;
+  box-shadow:none!important;
+  font-size:.9rem!important;
+  font-weight:900!important;
+}
+
+body.dark-mode.wheel-fullscreen-mode #fullscreenWheelBtn,
+body.dark-mode.wheel-fullscreen-mode .wheel-fullscreen-btn{
+  background:linear-gradient(135deg,#7f1d1d,#ef4444)!important;
+  color:white!important;
+}
+
+/* Ruleta centrada */
+body.wheel-fullscreen-mode .pointer{
+  margin:0 auto -12px!important;
+  z-index:4!important;
+}
+
+body.wheel-fullscreen-mode .wheel-wrap{
+  margin:0 auto 10px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+
+body.wheel-fullscreen-mode .wheel{
+  width:min(520px,76vw,58vh)!important;
+  height:min(520px,76vw,58vh)!important;
+}
+
+/* En fullscreen NO mostrar preguntas dentro de la ruleta */
+body.wheel-fullscreen-mode .wheel-name{
+  display:none!important;
+}
+
+/* Mantener margen visual de logo/aro por si se activa texto en el futuro */
+body.wheel-fullscreen-mode .wheel:after{
+  width:15%!important;
+  height:15%!important;
+}
+
+body.wheel-fullscreen-mode .wheel-logo{
+  width:13.5%!important;
+  height:13.5%!important;
+}
+
+/* También ocultar listado/leyenda de preguntas solo en fullscreen */
+body.wheel-fullscreen-mode #wheelLegend,
+body.wheel-fullscreen-mode .wheel-legend,
+body.wheel-fullscreen-mode #stageLegendSizeTools,
+body.wheel-fullscreen-mode .question-size-tools{
+  display:none!important;
+}
+
+/* Controles contenidos */
+body.wheel-fullscreen-mode #stageWheelSizeTools,
+body.wheel-fullscreen-mode .wheel-text-tools{
+  width:min(520px,76vw)!important;
+  max-width:520px!important;
+  margin:8px auto!important;
+}
+
+body.wheel-fullscreen-mode #spinBtn,
+body.wheel-fullscreen-mode .start-button{
+  width:min(360px,86vw)!important;
+  max-width:360px!important;
+  min-height:56px!important;
+  height:56px!important;
+  margin:12px auto 0!important;
+  padding:0 18px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:999px!important;
+}
+
+body.wheel-fullscreen-mode .result-box{
+  width:min(680px,86vw)!important;
+  max-width:680px!important;
+  min-height:92px!important;
+  margin:12px auto 0!important;
+}
+
+@media(max-width:760px){
+  body.wheel-fullscreen-mode .content{
+    width:96vw!important;
+    height:94vh!important;
+    padding:16px!important;
+  }
+  body.wheel-fullscreen-mode .stage{
+    width:94vw!important;
+    padding:10px!important;
+  }
+  body.wheel-fullscreen-mode .stage::after{
+    font-size:1.2rem!important;
+    top:-34px!important;
+  }
+  body.wheel-fullscreen-mode .wheel{
+    width:min(430px,82vw,52vh)!important;
+    height:min(430px,82vw,52vh)!important;
+  }
+}
+
+/* =========================================================
+   FULLSCREEN CLEAN v3 · PREGUNTAS EN RULETA + CONTROL FUENTE
+   ========================================================= */
+
+/* En fullscreen: ocultar SOLO la lista/leyenda, no los textos de la ruleta */
+body.wheel-fullscreen-mode #wheelLegend,
+body.wheel-fullscreen-mode .wheel-legend{
+  display:none!important;
+}
+
+body.wheel-fullscreen-mode .wheel-name{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  white-space:normal!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+  line-height:1.06!important;
+  padding:0 5px!important;
+  max-height:92px!important;
+  z-index:1!important;
+  word-break:normal!important;
+  hyphens:auto!important;
+}
+
+/* Círculo interior casi igual al logo */
+.wheel:after{
+  width:64px!important;
+  height:64px!important;
+  border-radius:50%!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+.wheel-logo{
+  width:64px!important;
+  height:64px!important;
+  border-radius:50%!important;
+  padding:2px!important;
+  border:2px solid rgba(14,165,233,.55)!important;
+  background:white!important;
+  box-shadow:
+    0 10px 20px rgba(15,23,42,.22),
+    0 0 18px rgba(14,165,233,.24)!important;
+}
+
+.dark-mode .wheel-logo{
+  border:2px solid rgba(248,113,113,.60)!important;
+  background:#020617!important;
+  box-shadow:
+    0 12px 26px rgba(0,0,0,.42),
+    0 0 22px rgba(239,68,68,.44),
+    0 0 36px rgba(236,72,153,.18)!important;
+}
+
+body.wheel-fullscreen-mode .wheel:after{
+  width:13.5%!important;
+  height:13.5%!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+body.wheel-fullscreen-mode .wheel-logo{
+  width:13.5%!important;
+  height:13.5%!important;
+}
+
+/* Píldora compacta para tamaño de texto en fullscreen */
+body.wheel-fullscreen-mode #stageWheelSizeTools,
+body.wheel-fullscreen-mode .stage-size-tools{
+  width:min(420px,72vw)!important;
+  max-width:420px!important;
+  height:44px!important;
+  min-height:44px!important;
+  margin:8px auto!important;
+  padding:6px 10px!important;
+  display:flex!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:8px!important;
+  border-radius:999px!important;
+  background:#e0f2fe!important;
+  color:#075985!important;
+  border:1px solid #bae6fd!important;
+  box-shadow:none!important;
+}
+
+body.dark-mode.wheel-fullscreen-mode #stageWheelSizeTools,
+body.dark-mode.wheel-fullscreen-mode .stage-size-tools{
+  background:rgba(15,23,42,.88)!important;
+  color:#fecaca!important;
+  border:1px solid rgba(248,113,113,.42)!important;
+  box-shadow:0 0 14px rgba(239,68,68,.12), inset 0 0 0 1px rgba(255,255,255,.03)!important;
+}
+
+body.wheel-fullscreen-mode #stageWheelSizeTools span,
+body.wheel-fullscreen-mode .stage-size-tools span{
+  font-size:0!important;
+  flex:0 0 auto!important;
+  width:auto!important;
+  max-width:none!important;
+  min-width:0!important;
+  margin:0 4px 0 0!important;
+}
+
+body.wheel-fullscreen-mode #stageWheelSizeTools span::after,
+body.wheel-fullscreen-mode .stage-size-tools span::after{
+  content:"Tamaño texto";
+  font-size:.9rem!important;
+  font-weight:900!important;
+}
+
+body.wheel-fullscreen-mode #stageWheelSizeTools strong,
+body.wheel-fullscreen-mode .stage-size-tools strong{
+  display:none!important;
+}
+
+body.wheel-fullscreen-mode #stageWheelTextMinusBtn,
+body.wheel-fullscreen-mode #stageWheelTextPlusBtn,
+body.wheel-fullscreen-mode #wheelTextMinusBtn,
+body.wheel-fullscreen-mode #wheelTextPlusBtn{
+  flex:0 0 40px!important;
+  width:40px!important;
+  min-width:40px!important;
+  max-width:40px!important;
+  height:30px!important;
+  min-height:30px!important;
+  max-height:30px!important;
+  padding:0!important;
+  margin:0!important;
+  border-radius:10px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:.82rem!important;
+  font-weight:900!important;
+}
+
+/* Asegurar margen visual del texto: se ajusta con JS, pero estas medidas ayudan */
+body.wheel-fullscreen-mode .wheel-name{
+  width:min(112px,18vh)!important;
+}
+
+/* Mantener oculto el control de tamaño de la pregunta elegida en fullscreen */
+body.wheel-fullscreen-mode #stageLegendSizeTools,
+body.wheel-fullscreen-mode .question-size-tools{
+  display:none!important;
+}
+
+/* =========================================================
+   FULLSCREEN CLEAN v4 · CONTROL REAL DE TAMAÑO TEXTO RULETA
+   ========================================================= */
+
+/* Píldora visible SOLO en pantalla completa */
+body:not(.wheel-fullscreen-mode) #fullscreenTextSizeControl{
+  display:none!important;
+}
+
+body.wheel-fullscreen-mode #fullscreenTextSizeControl{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:10px!important;
+  width:min(420px,76vw)!important;
+  max-width:420px!important;
+  height:44px!important;
+  min-height:44px!important;
+  margin:8px auto 6px!important;
+  padding:6px 12px!important;
+  border-radius:999px!important;
+  background:#e0f2fe!important;
+  color:#075985!important;
+  border:1px solid #bae6fd!important;
+  box-shadow:none!important;
+  font-weight:900!important;
+}
+
+body.dark-mode.wheel-fullscreen-mode #fullscreenTextSizeControl{
+  background:rgba(15,23,42,.88)!important;
+  color:#fecaca!important;
+  border:1px solid rgba(248,113,113,.42)!important;
+  box-shadow:0 0 14px rgba(239,68,68,.12), inset 0 0 0 1px rgba(255,255,255,.03)!important;
+}
+
+#fullscreenTextSizeControl .fs-text-label{
+  font-size:.9rem!important;
+  white-space:nowrap!important;
+}
+
+#fullscreenTextSizeControl button{
+  flex:0 0 42px!important;
+  width:42px!important;
+  min-width:42px!important;
+  max-width:42px!important;
+  height:30px!important;
+  min-height:30px!important;
+  max-height:30px!important;
+  padding:0!important;
+  margin:0!important;
+  border-radius:10px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:.82rem!important;
+  font-weight:900!important;
+  background:#bae6fd!important;
+  color:#075985!important;
+  border:1px solid rgba(14,165,233,.25)!important;
+}
+
+body.dark-mode #fullscreenTextSizeControl button{
+  background:linear-gradient(135deg,#7f1d1d,#dc2626)!important;
+  color:#fff!important;
+  border:1px solid rgba(248,113,113,.42)!important;
+}
+
+/* Oculta el control viejo de tamaño en fullscreen si existe para no duplicar */
+body.wheel-fullscreen-mode #stageWheelSizeTools,
+body.wheel-fullscreen-mode .stage-size-tools{
+  display:none!important;
+}
+
+/* Círculo interior igualado al logo */
+.wheel:after{
+  width:64px!important;
+  height:64px!important;
+  border-radius:50%!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+.wheel-logo{
+  width:64px!important;
+  height:64px!important;
+  border-radius:50%!important;
+  padding:2px!important;
+}
+
+body.wheel-fullscreen-mode .wheel:after{
+  width:13.5%!important;
+  height:13.5%!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+body.wheel-fullscreen-mode .wheel-logo{
+  width:13.5%!important;
+  height:13.5%!important;
+}
+
+/* Márgenes de seguridad del texto en fullscreen */
+body.wheel-fullscreen-mode .wheel-name{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  padding:0 6px!important;
+  max-height:92px!important;
+  line-height:1.06!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+  white-space:normal!important;
+  word-break:normal!important;
+  hyphens:auto!important;
+}
+
+/* =========================================================
+   FULLSCREEN CLEAN v5 REAL · NO CORTAR CONTENIDO
+   ========================================================= */
+
+/* El problema real era .content con height fijo + overflow hidden */
+body.wheel-fullscreen-mode{
+  overflow:hidden!important;
+}
+
+body.wheel-fullscreen-mode .app{
+  overflow:auto!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  padding:24px 18px!important;
+}
+
+body.wheel-fullscreen-mode .content{
+  height:auto!important;
+  min-height:calc(100vh - 48px)!important;
+  max-height:none!important;
+  overflow:visible!important;
+  justify-content:flex-start!important;
+  padding-top:64px!important;
+  padding-bottom:56px!important;
+}
+
+/* La tarjeta/stage no debe recortar absolutamente nada */
+body.wheel-fullscreen-mode .stage{
+  overflow:visible!important;
+  justify-content:flex-start!important;
+  padding-top:18px!important;
+  padding-bottom:26px!important;
+}
+
+/* Título dentro del flujo visual, no montado sobre el borde superior */
+body.wheel-fullscreen-mode .stage::after{
+  top:-48px!important;
+  z-index:10!important;
+  line-height:1.1!important;
+}
+
+/* Más aire debajo del resultado seleccionado */
+body.wheel-fullscreen-mode .result-box{
+  margin-bottom:24px!important;
+  overflow:visible!important;
+}
+
+/* Evitar que la ruleta coma el título en pantallas bajas */
+body.wheel-fullscreen-mode .wheel{
+  width:min(500px,74vw,54vh)!important;
+  height:min(500px,74vw,54vh)!important;
+}
+
+/* Compactar un poco el bloque para que todo quepa mejor */
+body.wheel-fullscreen-mode .wheel-wrap{
+  margin-bottom:10px!important;
+}
+
+body.wheel-fullscreen-mode #fullscreenTextSizeControl{
+  margin-top:6px!important;
+  margin-bottom:10px!important;
+}
+
+body.wheel-fullscreen-mode #spinBtn,
+body.wheel-fullscreen-mode .start-button{
+  margin-top:10px!important;
+}
+
+@media(max-height:760px){
+  body.wheel-fullscreen-mode .content{
+    padding-top:54px!important;
+    padding-bottom:44px!important;
+  }
+  body.wheel-fullscreen-mode .stage::after{
+    top:-40px!important;
+    font-size:1.25rem!important;
+  }
+  body.wheel-fullscreen-mode .wheel{
+    width:min(430px,70vw,48vh)!important;
+    height:min(430px,70vw,48vh)!important;
+  }
+}
+
+@media(max-width:760px){
+  body.wheel-fullscreen-mode .app{
+    padding:16px 10px!important;
+  }
+  body.wheel-fullscreen-mode .content{
+    min-height:calc(100vh - 32px)!important;
+    padding-top:54px!important;
+    padding-bottom:42px!important;
+  }
+}
+
+/* =========================================================
+   AJUSTE SEGURO v8 · SOLO POSICIÓN DEL TEXTO EN RULETA
+   - Texto un poco más cerca del logo sin tocarlo
+   - Más distancia al aro azul/rojo exterior
+   - Aplica a ruleta normal y fullscreen
+   - NO toca botones ni colores
+   ========================================================= */
+
+.wheel:after,
+body.wheel-fullscreen-mode .wheel:after{
+  display:none!important;
+  width:0!important;
+  height:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+.wheel-logo{
+  z-index:3!important;
+  padding:0!important;
+  object-fit:contain!important;
+}
+
+.wheel-name{
+  max-height:72px!important;
+  padding:0 4px!important;
+  line-height:1.04!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+}
+
+body.wheel-fullscreen-mode .wheel-name{
+  max-height:82px!important;
+  padding:0 4px!important;
+  line-height:1.04!important;
+}
+
+</style>
+
+</head><body><main class="app"><a class="home-button" href="../">⬅ Volver al menú</a><div class="content"><div class="brand"><img class="logo" src="./logo.png" alt="Logo Miguel Iglesias"/></div><h1>Ruleta de Preguntas</h1><p class="subtitle">by Miguel Iglesias · La Ruleta de Preguntas.</p><div class="dark-toggle-wrap"><button class="secondary" id="darkModeBtn" style="padding:8px 14px;font-size:.85rem">🌙 Modo oscuro</button></div><section class="layout"><div class="panel"><div class="panel-title">Sets de preguntas</div><input id="setNameInput" type="text" placeholder="Nombre del set: AP Spanish Debate"/><select id="savedSetsSelect" style="margin-top:10px"><option value="">Seleccionar set guardado...</option></select><div class="mini-buttons"><button class="secondary" id="saveSetBtn">💾 Guardar local</button><button class="secondary" id="saveDbSetBtn">☁️ Guardar en base</button></div><div class="mini-buttons"><button class="danger" id="deleteSetBtn">🗑️ Borrar local</button><button class="danger" id="deleteDbSetBtn">🗑️ Borrar en base</button></div><button class="secondary" id="loadDbSetsBtn" style="width:100%;margin-top:10px">📥 Cargar bancos</button><div class="db-status" id="dbStatus">Base de datos: lista</div><div class="panel-title" style="margin-top:14px">Tema</div><input id="aiTopicInput" type="text" placeholder="Tema: tecnología, familia, inmigración, comida, identidad..."/><select id="suggestionCategory" style="margin-top:10px"><option value="conversation">🗣️ Conversación</option><option value="ap">🇪🇸 AP Spanish</option><option value="debate">🎭 Debate</option><option value="fun">😂 Divertidas</option><option value="critical">🧠 Pensamiento crítico</option><option value="culture">🌎 Cultura</option></select><button class="magic primary" id="suggestQuestionsBtn">✨ Sugerir preguntas</button><div class="panel-title" style="margin-top:14px">Visualización</div><select id="visualMode"><option value="showcase">👀 Mostrar preguntas completas</option><option value="auto">⭐ Auto: visible si hay 12 o menos</option><option value="compact">🔢 Compacto si hay demasiadas</option></select><div class="wheel-text-tools">
+  <button class="secondary" id="wheelTextMinusBtn" type="button">A−</button>
+  <span id="wheelTextSizeLabel">Texto ruleta</span>
+  <button class="secondary" id="wheelTextPlusBtn" type="button">A+</button>
+</div>
+<div class="wheel-text-tools">
+  <button class="secondary" id="legendTextMinusBtn" type="button">A−</button>
+  <span id="legendTextSizeLabel">Texto preguntas</span>
+  <button class="secondary" id="legendTextPlusBtn" type="button">A+</button>
+</div><div class="panel-title" style="margin-top:14px">Añadir pregunta</div><textarea id="newQuestionInput" placeholder="Escribe una pregunta nueva..."></textarea><button class="secondary primary" id="addQuestionBtn" style="color:white">➕ Añadir pregunta</button><div class="panel-title" style="margin-top:14px">Preguntas editables</div><div id="questionList" class="question-list"></div><div class="bottom-buttons"><button class="secondary hidden" id="resetDefaultBtn">🔄 Ejemplo base</button><button class="danger" id="clearQuestionsBtn">🗑️ Borrar preguntas</button></div></div><div class="stage"><div id="pointer" class="pointer"></div><div id="wheelWrap" class="wheel-wrap"><div id="wheel" class="wheel"><img class="wheel-logo" src="./logo.png" alt="Logo Miguel Iglesias"/></div></div><button class="secondary wheel-fullscreen-btn" id="fullscreenWheelBtn" type="button">⛶ Pantalla completa</button>
+<div id="fullscreenTextSizeControl" aria-label="Control de tamaño de texto de la ruleta">
+  <span class="fs-text-label">Tamaño texto</span>
+  <button class="secondary" id="fullscreenWheelTextMinusBtn" type="button">A−</button>
+  <button class="secondary" id="fullscreenWheelTextPlusBtn" type="button">A+</button>
+</div>
+<button class="primary start-button" id="spinBtn">🎡 COMENZAR</button><div id="wheelLegend" class="wheel-legend"></div><section class="result-box" id="resultBox"><div class="result-label">Pregunta seleccionada:</div><div id="resultQuestion" class="result-question">---</div></section><div class="bottom-buttons"><button class="secondary" id="keepQuestionBtn">✅ Mantener</button><button class="danger" id="removeQuestionBtn">✔️ Sacar temporalmente</button></div></div></section><div class="footer">Creado para clase por Miguel Iglesias</div></div></main><script>
+const USER_ID="MIGUEL";const SCRIPT_URL="https://script.google.com/macros/s/AKfycbyysudqQSafy_m38E2p267y_HBMRduy1SN478w7DxiW81_drA4yuxbpfkfzcqClgCzMqg/exec";
+const defaultQuestions=['¿Qué harías si pudieras viajar a cualquier país mañana?','¿Cuál es una tradición que te parece interesante?','¿Prefieres trabajar solo o en grupo? ¿Por qué?','¿Qué problema del mundo te gustaría resolver?','¿Qué consejo le darías a un estudiante nuevo?','¿Qué actividad te ayuda más a aprender español?'];const suggestionBank={conversation:['¿Qué lugar te gustaría visitar y por qué?','¿Cuál es tu comida favorita y cuándo la comes?','¿Qué haces normalmente después de la escuela?','¿Prefieres la ciudad o el campo? ¿Por qué?','¿Qué música escuchas cuando quieres relajarte?','¿Qué cualidad valoras más en un amigo?'],ap:['¿Cómo influye la familia en la identidad personal?','¿Qué papel juega la tecnología en la vida cotidiana?','¿Cómo reflejan las celebraciones los valores de una comunidad?','¿Qué desafíos enfrentan los jóvenes en la sociedad actual?','¿Cómo se relacionan el arte y la identidad cultural?','¿Qué impacto tiene la educación en el futuro de una comunidad?'],debate:['¿Deberían prohibirse los teléfonos en clase?','¿Es mejor estudiar en línea o en persona?','¿Las redes sociales conectan o aíslan a las personas?','¿Debería haber menos tarea en la escuela?','¿La inteligencia artificial ayuda o perjudica el aprendizaje?','¿Es más importante la creatividad o la disciplina?'],fun:['¿Preferirías tener alas o respirar bajo el agua?','¿Qué superpoder sería más útil en la escuela?','¿Qué animal sería el mejor maestro?','¿Qué harías si fueras invisible por un día?','¿Qué objeto llevarías a una isla desierta?','¿Qué comida podrías comer todos los días?'],critical:['¿Qué significa ser una persona responsable?','¿Cuándo es importante cambiar de opinión?','¿Qué hace que una idea sea poderosa?','¿Por qué algunas personas tienen miedo al cambio?','¿Cómo sabemos si una fuente de información es confiable?','¿Qué podemos aprender de un error?'],culture:['¿Qué tradición de tu cultura te gustaría compartir?','¿Cómo cambia la comida de una cultura a otra?','¿Por qué es importante proteger las lenguas?','¿Qué celebración representa mejor una comunidad?','¿Cómo se transmite la cultura entre generaciones?','¿Qué podemos aprender al comparar culturas?']};let questions=[],activeQuestions=[],savedSets={},currentRotation=0,spinning=false,selectedQuestion=null,selectedQuestionIndex=-1,audioCtx=null,wheelTextSize=Number(localStorage.getItem('questionWheelTextSize')||0.62),legendTextSize=Number(localStorage.getItem('questionWheelLegendTextSize')||0.88);const setNameInput=document.getElementById('setNameInput'),savedSetsSelect=document.getElementById('savedSetsSelect'),aiTopicInput=document.getElementById('aiTopicInput'),suggestionCategory=document.getElementById('suggestionCategory'),newQuestionInput=document.getElementById('newQuestionInput'),visualMode=document.getElementById('visualMode'),questionList=document.getElementById('questionList'),wheel=document.getElementById('wheel'),wheelWrap=document.getElementById('wheelWrap'),pointer=document.getElementById('pointer'),resultQuestion=document.getElementById('resultQuestion'),wheelLegend=document.getElementById('wheelLegend'),resultBox=document.getElementById('resultBox'),darkModeBtn=document.getElementById('darkModeBtn'),dbStatus=document.getElementById('dbStatus'),fullscreenWheelBtn=document.getElementById('fullscreenWheelBtn'),wheelTextMinusBtn=document.getElementById('wheelTextMinusBtn'),wheelTextPlusBtn=document.getElementById('wheelTextPlusBtn'),wheelTextSizeLabel=document.getElementById('wheelTextSizeLabel'),legendTextMinusBtn=document.getElementById('legendTextMinusBtn'),legendTextPlusBtn=document.getElementById('legendTextPlusBtn'),legendTextSizeLabel=document.getElementById('legendTextSizeLabel');document.addEventListener('DOMContentLoaded',initApp);function initApp(){savedSets=safeLoad('questionWheelSavedSets',{});questions=safeLoad('questionWheelQuestions',defaultQuestions);activeQuestions=safeLoad('questionWheelActiveQuestions',questions);if(!Array.isArray(questions)||questions.length===0){questions=[...defaultQuestions];activeQuestions=[...questions]}document.getElementById('saveSetBtn').addEventListener('click',saveSet);document.getElementById('deleteSetBtn').addEventListener('click',deleteSet);document.getElementById('saveDbSetBtn').addEventListener('click',saveSetToDatabase);document.getElementById('loadDbSetsBtn').addEventListener('click',()=>loadQuestionBanksFromDatabase(true));document.getElementById('deleteDbSetBtn').addEventListener('click',deleteSetFromDatabase);savedSetsSelect.addEventListener('change',loadSet);document.getElementById('suggestQuestionsBtn').addEventListener('click',suggestQuestions);document.getElementById('addQuestionBtn').addEventListener('click',addQuestion);document.getElementById('resetDefaultBtn').addEventListener('click',resetDefaultQuestions);document.getElementById('clearQuestionsBtn').addEventListener('click',clearQuestions);document.getElementById('spinBtn').addEventListener('click',chooseQuestion);document.getElementById('keepQuestionBtn').addEventListener('click',keepQuestion);document.getElementById('removeQuestionBtn').addEventListener('click',removeQuestion);darkModeBtn.addEventListener('click',toggleDarkMode);fullscreenWheelBtn?.addEventListener('click',toggleWheelFullscreen);wheelTextMinusBtn?.addEventListener('click',()=>adjustWheelTextSize(-0.06));wheelTextPlusBtn?.addEventListener('click',()=>adjustWheelTextSize(0.06));legendTextMinusBtn?.addEventListener('click',()=>adjustLegendTextSize(-0.06));legendTextPlusBtn?.addEventListener('click',()=>adjustLegendTextSize(0.06));visualMode.addEventListener('change',()=>{safeSave('questionWheelVisualMode',visualMode.value);renderWheel()});visualMode.value=safeLoad('questionWheelVisualMode','showcase');if(safeLoad('darkMode',false)){document.body.classList.add('dark-mode');darkModeBtn.textContent='☀️ Modo claro'}updateSavedSetsSelect();renderQuestionList();renderWheel();loadQuestionBanksFromDatabase(false)}function setDbStatus(m,t='ok'){dbStatus.textContent='Base de datos: '+m;if(t==='error'){dbStatus.style.background='#fee2e2';dbStatus.style.color='#991b1b'}else if(t==='warn'){dbStatus.style.background='#fef3c7';dbStatus.style.color='#92400e'}else{dbStatus.style.background='#e0f2fe';dbStatus.style.color='#075985'}}
+function apiCall(action,payload={}){return jsonpCall({action,userId:USER_ID,userID:USER_ID,UserID:USER_ID,...payload})}
+function jsonpCall(data){return new Promise((resolve,reject)=>{const cb='cb_'+Date.now()+'_'+Math.floor(Math.random()*100000),params=new URLSearchParams();Object.entries(data).forEach(([k,v])=>params.set(k,typeof v==='string'?v:JSON.stringify(v)));params.set('callback',cb);const s=document.createElement('script');s.src=`${SCRIPT_URL}?${params.toString()}`;const timeout=setTimeout(()=>{cleanup();reject(new Error('Tiempo agotado al conectar con Apps Script.'))},15000);function cleanup(){clearTimeout(timeout);delete window[cb];if(s.parentNode)s.parentNode.removeChild(s)}window[cb]=function(r){cleanup();if(r&&r.status==='error'){reject(new Error(r.message||'La API devolvió un error.'));return}resolve(r)};s.onerror=function(){cleanup();reject(new Error('No se pudo conectar con Apps Script.'))};document.body.appendChild(s)})}
+async function saveSetToDatabase(){const n=setNameInput.value.trim();if(!n){resultQuestion.textContent='Pon nombre al set';setDbStatus('falta nombre','warn');return}if(questions.length===0){resultQuestion.textContent='Añade preguntas primero';setDbStatus('sin preguntas','warn');return}try{setDbStatus('guardando banco...','warn');const r=await apiCall('saveQuestionBank',{bankName:n,category:suggestionCategory.value,questions:JSON.stringify(questions),active:'TRUE'});setDbStatus(`banco guardado (${r.count||questions.length})`,'ok');savedSets[n]=[...questions];safeSave('questionWheelSavedSets',savedSets);updateSavedSetsSelect(n);playMagicSound()}catch(e){setDbStatus(e.message,'error');resultQuestion.textContent='No se pudo guardar en base'}}
+async function loadQuestionBanksFromDatabase(show=true){try{setDbStatus('cargando bancos...','warn');const r=await apiCall('getQuestionBanks');const banks=Array.isArray(r.banks)?r.banks:[];banks.forEach(b=>{if(b.bankName&&Array.isArray(b.questions))savedSets[b.bankName]=b.questions});safeSave('questionWheelSavedSets',savedSets);updateSavedSetsSelect(savedSetsSelect.value);setDbStatus(`bancos cargados: ${banks.length}`,'ok');if(show){resultQuestion.textContent=`Bancos cargados: ${banks.length}`;playSoftClick()}}catch(e){setDbStatus(e.message,'error');if(show)resultQuestion.textContent='No se pudieron cargar bancos'}}
+async function deleteSetFromDatabase(){const n=savedSetsSelect.value||setNameInput.value.trim();if(!n){resultQuestion.textContent='Elige un banco';setDbStatus('elige un banco','warn');return}try{setDbStatus('borrando banco...','warn');const r=await apiCall('deleteQuestionBank',{bankName:n});if(savedSets[n]){delete savedSets[n];safeSave('questionWheelSavedSets',savedSets);updateSavedSetsSelect()}setDbStatus(`banco desactivado (${r.count||0})`,'ok');resultQuestion.textContent='Banco borrado de la base';playSoftClick()}catch(e){setDbStatus(e.message,'error');resultQuestion.textContent='No se pudo borrar de base'}}
+function safeLoad(k,f){try{return JSON.parse(localStorage.getItem(k))||f}catch(e){return f}}function safeSave(k,v){localStorage.setItem(k,JSON.stringify(v))}function updateLogoByTheme(){
+ const isDark=document.body.classList.contains('dark-mode');
+ document.querySelectorAll('img.logo,.wheel-logo').forEach(img=>{
+   if(img)img.src='./logo.png';
+ });
+}
+function toggleDarkMode(){
+ document.body.classList.toggle('dark-mode');
+ const d=document.body.classList.contains('dark-mode');
+ darkModeBtn.textContent=d?'☀️ Modo claro':'🌙 Modo oscuro';
+ safeSave('darkMode',d);
+ updateLogoByTheme();
+ renderWheel();
+}
+function saveState(){safeSave('questionWheelQuestions',questions);safeSave('questionWheelActiveQuestions',activeQuestions)}function saveSet(){const n=setNameInput.value.trim();if(!n){resultQuestion.textContent='Pon nombre al set';return}if(questions.length===0){resultQuestion.textContent='Añade preguntas primero';return}savedSets[n]=questions;safeSave('questionWheelSavedSets',savedSets);updateSavedSetsSelect(n);resultQuestion.textContent='Set guardado';playSoftClick()}function loadSet(){const n=savedSetsSelect.value;if(!n||!savedSets[n])return;setNameInput.value=n;questions=[...savedSets[n]];activeQuestions=[...questions];saveState();renderQuestionList();renderWheel();resultQuestion.textContent=n;playSoftClick()}function deleteSet(){const n=savedSetsSelect.value||setNameInput.value.trim();if(!n||!savedSets[n]){resultQuestion.textContent='Elige un set';return}delete savedSets[n];safeSave('questionWheelSavedSets',savedSets);updateSavedSetsSelect();setNameInput.value='';resultQuestion.textContent='Set borrado';playSoftClick()}function updateSavedSetsSelect(s=''){savedSetsSelect.innerHTML='<option value="">Seleccionar set guardado...</option>';Object.keys(savedSets).sort().forEach(n=>{const o=document.createElement('option');o.value=n;o.textContent=n;savedSetsSelect.appendChild(o)});if(s)savedSetsSelect.value=s}function suggestQuestions(){
+ const c=suggestionCategory.value;
+ const topic=(aiTopicInput.value.trim()||setNameInput.value.trim()||getCategoryName(c)).trim();
+ const generated=generateSmartQuestions(c,topic,6);
+ questions=[...new Set([...questions,...generated])];
+ activeQuestions=[...questions];
+ saveState();
+ renderQuestionList();
+ renderWheel();
+ resultQuestion.textContent=`Preguntas generadas sobre: ${topic}`;
+ playMagicSound()
+}
+function getCategoryName(c){
+ return {conversation:'conversación',ap:'AP Spanish',debate:'debate',fun:'preguntas divertidas',critical:'pensamiento crítico',culture:'cultura'}[c]||'español'
+}
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
+function generateSmartQuestions(category,topic,count=6){
+ const t=topic||getCategoryName(category);
+ const stems={
+  conversation:[
+   `¿Qué experiencia personal relacionas con ${t}?`,
+   `¿Qué opinas sobre ${t} y por qué?`,
+   `¿Cómo aparece ${t} en tu vida diaria?`,
+   `¿Qué ejemplo real puedes dar sobre ${t}?`,
+   `¿Qué pregunta le harías a un compañero sobre ${t}?`,
+   `¿Qué cambiarías de ${t} si pudieras?`
+  ],
+  ap:[
+   `¿Cómo influye ${t} en la identidad de una comunidad?`,
+   `Compara el papel de ${t} en tu comunidad y en una comunidad hispanohablante.`,
+   `¿Qué desafío social relacionado con ${t} merece más atención?`,
+   `¿Cómo refleja ${t} los valores de una cultura?`,
+   `¿Qué perspectiva cultural se puede analizar a través de ${t}?`,
+   `¿Qué impacto tiene ${t} en las generaciones jóvenes?`
+  ],
+  debate:[
+   `¿Debería la escuela dedicar más tiempo a hablar de ${t}?`,
+   `¿Tiene ${t} más beneficios o más riesgos?`,
+   `¿Quién debería tomar decisiones importantes sobre ${t}?`,
+   `¿Es ${t} una solución real o solo una moda?`,
+   `¿Qué argumento usarías para defender ${t}?`,
+   `¿Qué contraargumento existe sobre ${t}?`
+  ],
+  fun:[
+   `Si ${t} fuera un superpoder, ¿cuál sería?`,
+   `¿Qué pasaría si ${t} desapareciera por una semana?`,
+   `Si pudieras crear una película sobre ${t}, ¿cómo se llamaría?`,
+   `¿Qué animal representaría mejor ${t}?`,
+   `¿Qué meme harías sobre ${t}?`,
+   `¿Qué objeto mágico resolvería un problema relacionado con ${t}?`
+  ],
+  critical:[
+   `¿Qué causa principal explica un problema relacionado con ${t}?`,
+   `¿Qué evidencia necesitarías para formar una opinión sobre ${t}?`,
+   `¿Qué consecuencias inesperadas puede tener ${t}?`,
+   `¿Qué punto de vista suele ignorarse cuando hablamos de ${t}?`,
+   `¿Qué solución sería más justa para un problema de ${t}?`,
+   `¿Cómo distinguirías hechos y opiniones sobre ${t}?`
+  ],
+  culture:[
+   `¿Cómo se expresa ${t} en diferentes culturas?`,
+   `¿Qué tradición cultural podrías conectar con ${t}?`,
+   `¿Cómo cambia ${t} de una generación a otra?`,
+   `¿Qué producto, práctica o perspectiva cultural se relaciona con ${t}?`,
+   `¿Qué comparación harías entre ${t} en Estados Unidos y en el mundo hispano?`,
+   `¿Por qué puede ser importante proteger o cuestionar ${t}?`
+  ]
+ };
+ const base=stems[category]||stems.conversation;
+ const extras=[
+  `¿Qué palabra clave necesitas para hablar bien de ${t} en español?`,
+  `¿Qué ejemplo concreto demuestra la importancia de ${t}?`,
+  `¿Qué conexión puedes hacer entre ${t} y la lección de hoy?`,
+  `¿Qué aprendiste recientemente que se conecta con ${t}?`
+ ];
+ return [...base,...extras].sort(()=>Math.random()-.5).slice(0,count)
+}
+function addQuestion(){const q=newQuestionInput.value.trim();if(!q){resultQuestion.textContent='Escribe una pregunta';return}questions.push(q);activeQuestions=[...questions];newQuestionInput.value='';saveState();renderQuestionList();renderWheel();resultQuestion.textContent='Pregunta añadida';playSoftClick()}function updateQuestion(i,v){questions[i]=v.trim();questions=questions.filter(q=>q.length>0);activeQuestions=[...questions];saveState();renderQuestionList();renderWheel()}function deleteQuestion(i){questions.splice(i,1);activeQuestions=activeQuestions.filter(q=>questions.includes(q));saveState();renderQuestionList();renderWheel();playSoftClick()}function clearQuestions(){questions=[];activeQuestions=[];saveState();renderQuestionList();renderWheel();resultQuestion.textContent='---'}function resetDefaultQuestions(){questions=[...defaultQuestions];activeQuestions=[...questions];saveState();renderQuestionList();renderWheel();resultQuestion.textContent='Ejemplo base cargado';playSoftClick()}function renderQuestionList(){questionList.innerHTML='';if(questions.length===0){questionList.innerHTML='<div class="question-item">No hay preguntas todavía.</div>';return}questions.forEach((q,i)=>{const item=document.createElement('div');item.className='question-item';const input=document.createElement('input');input.value=q;input.addEventListener('change',()=>updateQuestion(i,input.value));const b=document.createElement('button');b.className='danger';b.textContent='🗑️';b.addEventListener('click',()=>deleteQuestion(i));item.appendChild(input);item.appendChild(b);questionList.appendChild(item)})}function shouldShowRealQuestions(){
+ if(visualMode.value==='compact')return false;
+ if(visualMode.value==='showcase')return true;
+ return activeQuestions.length<=12;
+}
+function getShortQuestion(q,l=42){return !q?'':q.length>l?q.slice(0,l).trim()+'…':q}function getWheelLabel(q,i,t){
+ if(!shouldShowRealQuestions())return`P${i+1}`;
+ return String(q||'').trim();
+}
+function renderLegend(){
+ wheelLegend.innerHTML='';
+ if(!shouldShowRealQuestions()||activeQuestions.length===0){wheelLegend.style.display='none';return}
+ wheelLegend.style.display='grid';
+ activeQuestions.forEach((q,i)=>{
+   const item=document.createElement('div');
+   item.className='legend-item';
+   item.textContent=q;
+   item.style.fontSize=Math.max(.72,wheelTextSize+.10)+'rem';
+   wheelLegend.appendChild(item);
+ });
+ wheelLegend.classList.toggle('scroll-needed',activeQuestions.length>10);
+}
+function chooseQuestion(){spinWheel()}
+function spinWheel(){if(spinning)return;if(activeQuestions.length===0){resultQuestion.textContent='No hay preguntas disponibles';return}spinning=true;selectedQuestion=null;selectedQuestionIndex=-1;resultQuestion.textContent='Girando...';wheel.classList.add('spin-glow');playSpinSound();currentRotation+=1440+Math.floor(Math.random()*720);wheel.style.transform=`rotate(${currentRotation}deg)`;setTimeout(()=>{const slice=360/activeQuestions.length,n=((currentRotation%360)+360)%360,pa=(360-n)%360,i=Math.floor(pa/slice)%activeQuestions.length,q=activeQuestions[i];selectedQuestion=q;selectedQuestionIndex=i;resultQuestion.textContent=q;resultBox.classList.remove('result-pop');void resultBox.offsetWidth;resultBox.classList.add('result-pop');playFinishSound();wheel.classList.remove('spin-glow');spinning=false},3000)}function keepQuestion(){if(!selectedQuestion)return;resultQuestion.textContent=selectedQuestion;playSoftClick()}function removeQuestion(){if(!selectedQuestion)return;if(selectedQuestionIndex>=0)activeQuestions.splice(selectedQuestionIndex,1);safeSave('questionWheelActiveQuestions',activeQuestions);renderWheel();resultQuestion.textContent='Pregunta sacada temporalmente';selectedQuestion=null;selectedQuestionIndex=-1;playSoftClick()}function renderWheel(){
+ 
+ wheel.innerHTML='';
+ const logo=document.createElement('img');
+ logo.className='wheel-logo';
+ logo.src='./logo.png';
+ logo.alt='Logo Miguel Iglesias';
+ wheel.appendChild(logo);
+
+ const total=activeQuestions.length||1;
+ const palette=['#0ea5e9','#ffffff','#1d4ed8','#fef3c7','#22c55e','#fce7f3','#a78bfa','#ccfbf1','#f97316','#e0f2fe'];
+ const colors=[];
+ for(let i=0;i<total;i++){
+   let c=palette[i%palette.length];
+   if(i>0&&c===colors[i-1])c=palette[(i+1)%palette.length];
+   colors.push(c);
+ }
+ if(total>1&&colors[0]===colors[total-1]){
+   colors[total-1]=palette.find(c=>c!==colors[total-2]&&c!==colors[0])||'#fef3c7';
+ }
+ const step=360/total;
+ wheel.style.background=`conic-gradient(${colors.map((c,i)=>`${c} ${i*step}deg ${(i+1)*step}deg`).join(',')})`;
+ activeQuestions.forEach((q,i)=>{
+   const label=document.createElement('div');
+   label.className='wheel-name';
+   label.textContent=getWheelLabel(q,i,total);
+   const r=shouldShowRealQuestions()?(window.innerWidth<=760?82:104):(window.innerWidth<=760?96:122);
+   const angle=i*step+step/2;
+   const rad=(angle-90)*Math.PI/180;
+   const x=Math.cos(rad)*r;
+   const y=Math.sin(rad)*r;
+   label.style.fontSize=wheelTextSize+'rem';
+   label.style.width=getWheelTextWidth(total);
+   label.style.transform=`translate(${x}px, ${y}px) translate(-50%, -50%) rotate(${angle+90}deg)`;
+   wheel.appendChild(label);
+ });
+ renderLegend();
+ applyWheelStageMode();
+ updateWheelTextSizeLabel();
+ updateLogoByTheme();
+}
+
+function getWheelTextWidth(total){
+ if(total<=4)return '132px';
+ if(total<=6)return '120px';
+ if(total<=8)return '110px';
+ if(total<=10)return '98px';
+ return '86px';
+}
+function updateWheelTextSizeLabel(){
+ if(wheelTextSizeLabel)wheelTextSizeLabel.textContent=`Texto ruleta: ${Math.round(wheelTextSize*100)}%`;
+}
+function adjustWheelTextSize(delta){
+ wheelTextSize=Math.max(.42,Math.min(1.05,Number((wheelTextSize+delta).toFixed(2))));
+ localStorage.setItem('questionWheelTextSize',String(wheelTextSize));
+ renderWheel();
+}
+function applyWheelStageMode(){
+ const st=document.querySelector('.stage');
+ if(st)st.classList.add('wheel-active');
+}
+function toggleWheelFullscreen(){
+ const isFull=document.body.classList.toggle('wheel-fullscreen-mode');
+ if(fullscreenWheelBtn)fullscreenWheelBtn.textContent=isFull?'↙ Salir pantalla completa':'⛶ Pantalla completa';
+ renderWheel();
+}
+function getAudioContext(){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;if(!audioCtx||audioCtx.state==='closed')audioCtx=new A;if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx}function playTone(f,d=.08,t='sine',v=.06,delay=0){const c=getAudioContext();if(!c)return;const o=c.createOscillator(),g=c.createGain(),s=c.currentTime+delay;o.type=t;o.frequency.setValueAtTime(f,s);g.gain.setValueAtTime(v,s);g.gain.exponentialRampToValueAtTime(.001,s+d);o.connect(g);g.connect(c.destination);o.start(s);o.stop(s+d+.02)}function playSoftClick(){playTone(620,.08,'sine',.04)}function playMagicSound(){[523.25,659.25,783.99].forEach((f,i)=>playTone(f,.14,'sine',.065,i*.09))}function playSpinSound(duration=2950){const start=performance.now();let interval=22;function tick(){const e=performance.now()-start;playTone(720+Math.random()*240,.028,'square',.045);const p=Math.min(e/duration,1);interval=18+p*38;if(e<duration)setTimeout(tick,interval)}tick()}
+function playFinishSound(){[0,.24,.48].forEach(d=>{playTone(1046.5,.14,'triangle',.11,d);playTone(1567.98,.12,'sine',.05,d+.02)})}
+/* ===== OVERRIDE SEGURO V2.2 · COLORES, LOGOS Y TAMAÑOS ===== */
+(function(){
+  const BLUE_PALETTE=['#e0f2fe','#bae6fd','#7dd3fc','#38bdf8','#0ea5e9','#0284c7','#0369a1','#075985'];
+  const RED_PALETTE=['#fee2e2','#fecaca','#fca5a5','#f87171','#ef4444','#dc2626','#b91c1c','#991b1b'];
+
+  window.updateLogoByTheme=function(){
+    const dark=document.body.classList.contains('dark-mode');
+    document.querySelectorAll('img.logo,.wheel-logo').forEach(img=>{
+      img.src='./logo.png';
+    });
+  };
+
+  window.getWheelPalette=function(){
+    return BLUE_PALETTE;
+  };
+
+  window.shouldShowRealQuestions=function(){
+    if(!window.visualMode)return true;
+    if(visualMode.value==='compact')return false;
+    if(visualMode.value==='showcase')return activeQuestions.length<=8;
+    return activeQuestions.length<=8;
+  };
+
+  window.getWheelLabel=function(q,i,t){
+    return shouldShowRealQuestions()?String(q||'').trim():`P${i+1}`;
+  };
+
+  window.getWheelTextWidth=function(total){
+    if(!shouldShowRealQuestions())return '54px';
+    if(total<=4)return '132px';
+    if(total<=6)return '120px';
+    if(total<=8)return '110px';
+    return '64px';
+  };
+
+  window.updateWheelTextSizeLabel=function(){
+    const w=document.getElementById('wheelTextSizeLabel');
+    const l=document.getElementById('legendTextSizeLabel');
+    if(w)w.textContent=`Texto ruleta: ${Math.round(wheelTextSize*100)}%`;
+    if(l)l.textContent=`Texto preguntas: ${Math.round(legendTextSize*100)}%`;
+  };
+
+  window.adjustWheelTextSize=function(delta){
+    wheelTextSize=Math.max(.42,Math.min(1.05,Number((wheelTextSize+delta).toFixed(2))));
+    localStorage.setItem('questionWheelTextSize',String(wheelTextSize));
+    renderWheel();
+  };
+
+  window.adjustLegendTextSize=function(delta){
+    legendTextSize=Math.max(.72,Math.min(1.35,Number((legendTextSize+delta).toFixed(2))));
+    localStorage.setItem('questionWheelLegendTextSize',String(legendTextSize));
+    renderLegend();
+    updateWheelTextSizeLabel();
+  };
+
+  window.renderLegend=function(){
+    wheelLegend.innerHTML='';
+    if(!shouldShowRealQuestions()||activeQuestions.length===0){
+      wheelLegend.style.display='none';
+      return;
+    }
+    wheelLegend.style.display='grid';
+    activeQuestions.forEach(q=>{
+      const item=document.createElement('div');
+      item.className='legend-item';
+      item.textContent=q;
+      item.style.fontSize=legendTextSize+'rem';
+      wheelLegend.appendChild(item);
+    });
+    wheelLegend.classList.toggle('scroll-needed',activeQuestions.length>8);
+  };
+
+  window.renderWheel=function(){
+    
+    updateLogoByTheme();
+    wheel.innerHTML='<img class="wheel-logo" src="./logo.png" alt="Logo Miguel Iglesias"/>';
+    const total=activeQuestions.length||1;
+    const palette=getWheelPalette();
+    const colors=[];
+    for(let i=0;i<total;i++){
+      let c=palette[i%palette.length];
+      if(i>0 && c===colors[i-1]) c=palette[(i+1)%palette.length];
+      colors.push(c);
+    }
+    if(total>1 && colors[0]===colors[total-1]){
+      colors[total-1]=palette.find(c=>c!==colors[total-2]&&c!==colors[0])||palette[1];
+    }
+    const step=360/total;
+    wheel.style.background=`conic-gradient(${colors.map((c,i)=>`${c} ${i*step}deg ${(i+1)*step}deg`).join(',')})`;
+    activeQuestions.forEach((q,i)=>{
+      const label=document.createElement('div');
+      label.className='wheel-name';
+      label.textContent=getWheelLabel(q,i,total);
+      label.style.fontSize=(shouldShowRealQuestions()?wheelTextSize:Math.max(.62,wheelTextSize+.08))+'rem';
+      label.style.width=getWheelTextWidth(total);
+      const r=shouldShowRealQuestions()?(window.innerWidth<=760?82:104):(window.innerWidth<=760?92:118);
+      const angle=i*step+step/2;
+      const rad=(angle-90)*Math.PI/180;
+      const x=Math.cos(rad)*r;
+      const y=Math.sin(rad)*r;
+      label.style.transform=`translate(${x}px, ${y}px) translate(-50%, -50%) rotate(${angle+90}deg)`;
+      wheel.appendChild(label);
+    });
+    renderLegend();
+    applyWheelStageMode();
+    updateWheelTextSizeLabel();
+  };
+
+  const oldToggle=window.toggleDarkMode;
+  window.toggleDarkMode=function(){
+    if(typeof oldToggle==='function') oldToggle();
+    else document.body.classList.toggle('dark-mode');
+    updateLogoByTheme();
+    renderWheel();
+  };
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    document.getElementById('legendTextMinusBtn')?.addEventListener('click',()=>adjustLegendTextSize(-0.06));
+    document.getElementById('legendTextPlusBtn')?.addEventListener('click',()=>adjustLegendTextSize(0.06));
+    document.getElementById('wheelTextMinusBtn')?.addEventListener('click',()=>adjustWheelTextSize(-0.06));
+    document.getElementById('wheelTextPlusBtn')?.addEventListener('click',()=>adjustWheelTextSize(0.06));
+    setTimeout(()=>{updateLogoByTheme();renderWheel();},0);
+  });
+})();
+
+/* TEST 01 · Solo sincroniza texto del botón existente */
+(function(){
+  function fsButton(){
+    return document.getElementById('fullscreenWheelBtn') ||
+           document.getElementById('wheelFullscreenBtn') ||
+           document.querySelector('.wheel-fullscreen-btn');
+  }
+
+  function updateFullscreenButtonText(){
+    const btn = fsButton();
+    if(!btn) return;
+    btn.textContent = document.body.classList.contains('wheel-fullscreen-mode')
+      ? '✕ Cerrar'
+      : '⛶ Pantalla completa';
+  }
+
+  const oldToggle = window.toggleWheelFullscreen;
+  if(typeof oldToggle === 'function'){
+    window.toggleWheelFullscreen = function(){
+      oldToggle.apply(this, arguments);
+      setTimeout(updateFullscreenButtonText, 0);
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    updateFullscreenButtonText();
+    const btn = fsButton();
+    if(btn && !btn.dataset.test01TextSync){
+      btn.addEventListener('click', function(){
+        setTimeout(updateFullscreenButtonText, 0);
+      });
+      btn.dataset.test01TextSync = '1';
+    }
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') setTimeout(updateFullscreenButtonText, 0);
+  });
+})();
+
+/* =========================================================
+   FULLSCREEN CLEAN · JS SEGURO SIN CREAR BOTONES
+   ========================================================= */
+(function(){
+  function fsButton(){
+    return document.getElementById('fullscreenWheelBtn') ||
+           document.querySelector('.wheel-fullscreen-btn');
+  }
+
+  function syncFullscreenButton(){
+    const b = fsButton();
+    if(!b) return;
+    b.textContent = document.body.classList.contains('wheel-fullscreen-mode')
+      ? '✕ Cerrar'
+      : '⛶ Pantalla completa';
+  }
+
+  const oldToggle = window.toggleWheelFullscreen;
+  window.toggleWheelFullscreen = function(){
+    if(typeof oldToggle === 'function'){
+      oldToggle.apply(this, arguments);
+    }else{
+      document.body.classList.toggle('wheel-fullscreen-mode');
+    }
+    syncFullscreenButton();
+    if(typeof renderWheel === 'function') setTimeout(renderWheel, 0);
+  };
+
+  function hideQuestionModal(){
+    const modal = document.getElementById('questionActionModal');
+    if(!modal) return;
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden','true');
+  }
+
+  function showQuestionModal(){
+    const modal = document.getElementById('questionActionModal');
+    const text = document.getElementById('questionActionText');
+    const result = document.getElementById('resultQuestion');
+    if(!modal || !text || !result) return;
+    const q = (result.textContent || '').trim();
+    if(!q || q === '---' || q === 'Girando...') return;
+    text.textContent = q;
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden','false');
+  }
+
+  function wireModal(){
+    const keep = document.getElementById('modalKeepBtn');
+    const remove = document.getElementById('modalRemoveBtn');
+    const keepOriginal = document.getElementById('keepQuestionBtn');
+    const removeOriginal = document.getElementById('removeQuestionBtn');
+    const modal = document.getElementById('questionActionModal');
+
+    if(keep && !keep.dataset.wiredClean){
+      keep.addEventListener('click', function(){
+        hideQuestionModal();
+        if(keepOriginal) keepOriginal.click();
+      });
+      keep.dataset.wiredClean = '1';
+    }
+
+    if(remove && !remove.dataset.wiredClean){
+      remove.addEventListener('click', function(){
+        hideQuestionModal();
+        if(removeOriginal) removeOriginal.click();
+      });
+      remove.dataset.wiredClean = '1';
+    }
+
+    if(modal && !modal.dataset.wiredClean){
+      modal.addEventListener('click', function(e){
+        if(e.target === modal) hideQuestionModal();
+      });
+      modal.dataset.wiredClean = '1';
+    }
+  }
+
+  const oldSpin = window.spinQuestion || window.spinWheel || window.chooseQuestion;
+  ['spinQuestion','spinWheel','chooseQuestion'].forEach(function(name){
+    if(typeof window[name] === 'function' && !window[name].__cleanWrapped){
+      const original = window[name];
+      const wrapped = function(){
+        hideQuestionModal();
+        const out = original.apply(this, arguments);
+        setTimeout(showQuestionModal, 3200);
+        return out;
+      };
+      wrapped.__cleanWrapped = true;
+      window[name] = wrapped;
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function(){
+    syncFullscreenButton();
+    wireModal();
+
+    const b = fsButton();
+    if(b && !b.dataset.fullscreenClean){
+      b.addEventListener('click', function(){
+        setTimeout(syncFullscreenButton, 0);
+      });
+      b.dataset.fullscreenClean = '1';
+    }
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){
+      hideQuestionModal();
+      setTimeout(syncFullscreenButton, 0);
+    }
+  });
+})();
+
+
+</script>
+<div id="questionActionModal" class="question-action-modal" aria-hidden="true">
+  <div class="question-action-card" role="dialog" aria-modal="true">
+    <div class="question-action-title">Pregunta seleccionada</div>
+    <div id="questionActionText" class="question-action-text">---</div>
+    <div class="question-action-buttons">
+      <button id="modalKeepBtn" class="secondary" type="button">✅ Mantener</button>
+      <button id="modalRemoveBtn" class="danger" type="button">✔️ Sacar temporalmente</button>
+    </div>
+  </div>
+</div>
+
+
+<style id="charlie-final-wheel-size-and-buttons-v2">
+/* =========================================================
+   AJUSTE FINAL · RULETA NORMAL MÁS GRANDE + TEXTO SEGURO + BOTONES A±
+   Toca solo:
+   1) tamaño de ruleta normal
+   2) radio/ancho del texto en ruleta normal
+   3) botones A- / A+ en modo claro y oscuro
+   Fullscreen queda intacto.
+   ========================================================= */
+
+/* Ruleta normal un poco más grande, aprovechando el espacio vertical */
+body:not(.wheel-fullscreen-mode) .wheel{
+  width:min(340px,86vw)!important;
+  height:min(340px,86vw)!important;
+}
+
+/* En móvil, que no se salga del contenedor */
+@media(max-width:760px){
+  body:not(.wheel-fullscreen-mode) .wheel{
+    width:min(330px,84vw)!important;
+    height:min(330px,84vw)!important;
+  }
+}
+
+/* Botones A- y A+ visibles y coherentes por modo */
+body:not(.dark-mode) #wheelTextMinusBtn,
+body:not(.dark-mode) #wheelTextPlusBtn,
+body:not(.dark-mode) #stageWheelTextMinusBtn,
+body:not(.dark-mode) #stageWheelTextPlusBtn,
+body:not(.dark-mode) #fullscreenWheelTextMinusBtn,
+body:not(.dark-mode) #fullscreenWheelTextPlusBtn,
+body:not(.dark-mode) .wheel-text-tools button{
+  background:#075985!important;
+  color:#ffffff!important;
+  border:1px solid rgba(7,89,133,.45)!important;
+  box-shadow:0 6px 14px rgba(7,89,133,.22)!important;
+}
+
+body.dark-mode #wheelTextMinusBtn,
+body.dark-mode #wheelTextPlusBtn,
+body.dark-mode #stageWheelTextMinusBtn,
+body.dark-mode #stageWheelTextPlusBtn,
+body.dark-mode #fullscreenWheelTextMinusBtn,
+body.dark-mode #fullscreenWheelTextPlusBtn,
+body.dark-mode .wheel-text-tools button{
+  background:#b91c1c!important;
+  color:#ffffff!important;
+  border:1px solid rgba(248,113,113,.55)!important;
+  box-shadow:0 8px 18px rgba(239,68,68,.24)!important;
+}
+</style>
+
+<script id="charlie-final-normal-wheel-radius-v2">
+(function(){
+  /*
+    Ajuste quirúrgico:
+    - Fullscreen se mantiene como estaba.
+    - En ruleta normal: texto algo más cerca del logo y más lejos del aro exterior.
+    - Se aplica automáticamente a todas las preguntas.
+  */
+  window.getWheelTextWidth = function(total){
+    const fs = document.body.classList.contains('wheel-fullscreen-mode');
+
+    if(fs){
+      if(typeof shouldShowRealQuestions === 'function' && !shouldShowRealQuestions()) return '54px';
+      if(total <= 4) return '116px';
+      if(total <= 6) return '100px';
+      if(total <= 8) return '88px';
+      return '54px';
+    }
+
+    if(total <= 4) return '118px';
+    if(total <= 6) return '104px';
+    if(total <= 8) return '90px';
+    return '52px';
+  };
+
+  window.getWheelLabelRadius = function(total){
+    const fs = document.body.classList.contains('wheel-fullscreen-mode');
+    const mobile = window.innerWidth <= 760;
+
+    if(fs){
+      if(typeof shouldShowRealQuestions === 'function' && !shouldShowRealQuestions()) return mobile ? 100 : 142;
+      if(total <= 4) return mobile ? 98 : 136;
+      if(total <= 6) return mobile ? 102 : 142;
+      if(total <= 8) return mobile ? 106 : 148;
+      return mobile ? 100 : 142;
+    }
+
+    /*
+      Radio normal corregido:
+      - antes quedaba demasiado exterior.
+      - ahora baja hacia el centro para evitar tocar aro exterior.
+    */
+    if(total <= 4) return mobile ? 92 : 118;
+    if(total <= 6) return mobile ? 96 : 124;
+    if(total <= 8) return mobile ? 100 : 130;
+    return mobile ? 92 : 120;
+  };
+
+  function refreshWheel(){
+    if(typeof renderWheel === 'function') setTimeout(renderWheel, 30);
+  }
+  document.addEventListener('DOMContentLoaded', refreshWheel);
+  window.addEventListener('resize', refreshWheel);
+  refreshWheel();
+})();
+</script>
+
+
+<style id="charlie-v16-fullscreen-normal-scaling-style">
+/* =========================================================
+   FINAL v16 · FULLSCREEN ESCALA COMO RULETA NORMAL
+   - No toca colores.
+   - No toca base de datos.
+   - No toca organización de botones.
+   - Solo corrige proporción de texto/ruleta en fullscreen.
+   - Repara A− / A+ de tamaño de texto.
+   ========================================================= */
+
+body.wheel-fullscreen-mode .wheel-name{
+  transform-origin:center center!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+  line-height:1.04!important;
+}
+
+/* Mantiene el tamaño visual que ya tenía fullscreen, pero el texto se calcula desde el tamaño real de la ruleta */
+body.wheel-fullscreen-mode .wheel{
+  width:min(61vh,620px)!important;
+  height:min(61vh,620px)!important;
+}
+
+@media(max-width:760px){
+  body.wheel-fullscreen-mode .wheel{
+    width:min(56vh,92vw)!important;
+    height:min(56vh,92vw)!important;
+  }
+}
+
+/* Botones de tamaño: mismos botones, funcionando y visibles */
+body.wheel-fullscreen-mode #fullscreenWheelTextMinusBtn,
+body.wheel-fullscreen-mode #fullscreenWheelTextPlusBtn,
+body.wheel-fullscreen-mode #stageWheelTextMinusBtn,
+body.wheel-fullscreen-mode #stageWheelTextPlusBtn,
+body.wheel-fullscreen-mode #wheelTextMinusBtn,
+body.wheel-fullscreen-mode #wheelTextPlusBtn{
+  pointer-events:auto!important;
+  cursor:pointer!important;
+  z-index:95!important;
+}
+</style>
+
+<script id="charlie-v16-fullscreen-normal-scaling">
+(function(){
+  const BASE_NORMAL_WHEEL = 340;
+
+  function clamp(n,min,max){
+    return Math.max(min, Math.min(max,n));
+  }
+
+  function realQuestionsVisible(){
+    try{
+      return typeof shouldShowRealQuestions === 'function' ? shouldShowRealQuestions() : true;
+    }catch(e){
+      return true;
+    }
+  }
+
+  function getTextSettings(total, wheelSize){
+    /*
+      Parte del comportamiento que ya funciona en la ruleta normal:
+      radio/ancho/fuente se calculan como proporción del tamaño REAL de la rueda.
+      Así al aumentar/disminuir, todo se mueve junto.
+    */
+    const real = realQuestionsVisible();
+    const scale = wheelSize / BASE_NORMAL_WHEEL;
+
+    if(!real){
+      return {
+        width: 52 * scale,
+        radius: 92 * scale,
+        fontPx: 12.2 * scale
+      };
+    }
+
+    if(total <= 4){
+      return { width:118 * scale, radius:92 * scale, fontPx:15.3 * scale };
+    }
+    if(total <= 6){
+      return { width:104 * scale, radius:96 * scale, fontPx:14.6 * scale };
+    }
+    if(total <= 8){
+      return { width:90 * scale, radius:100 * scale, fontPx:13.8 * scale };
+    }
+    return { width:52 * scale, radius:92 * scale, fontPx:12.5 * scale };
+  }
+
+  function applyWheelGeometryLikeNormal(){
+    const wheelEl = document.querySelector('.wheel');
+    if(!wheelEl) return;
+
+    const labels = Array.from(wheelEl.querySelectorAll('.wheel-name'));
+    if(!labels.length) return;
+
+    const total = labels.length;
+    const rect = wheelEl.getBoundingClientRect();
+    const wheelSize = rect.width || wheelEl.offsetWidth || BASE_NORMAL_WHEEL;
+    const settings = getTextSettings(total, wheelSize);
+    const step = 360 / total;
+
+    /*
+      En modo normal no tocamos si todo ya está bien.
+      En fullscreen sí forzamos la misma lógica proporcional.
+    */
+    if(!document.body.classList.contains('wheel-fullscreen-mode')) return;
+
+    const textScale =
+      Number(localStorage.getItem('fsWheelTextScale') || localStorage.getItem('questionWheelTextSize') || 1);
+
+    labels.forEach(function(label,index){
+      const angle = index * step + step / 2;
+      const rad = (angle - 90) * Math.PI / 180;
+      const x = Math.cos(rad) * settings.radius;
+      const y = Math.sin(rad) * settings.radius;
+
+      label.style.width = Math.round(settings.width) + 'px';
+      label.style.maxHeight = Math.round(wheelSize * 0.18) + 'px';
+      label.style.fontSize = clamp(settings.fontPx * textScale, 8, 24) + 'px';
+      label.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%) rotate(${angle + 90}deg)`;
+    });
+  }
+
+  const previousRenderWheel = window.renderWheel;
+  if(typeof previousRenderWheel === 'function' && !previousRenderWheel.__charlieV16){
+    const wrapped = function(){
+      const out = previousRenderWheel.apply(this, arguments);
+      requestAnimationFrame(applyWheelGeometryLikeNormal);
+      return out;
+    };
+    wrapped.__charlieV16 = true;
+    window.renderWheel = wrapped;
+  }
+
+  window.adjustFullscreenWheelText = function(delta){
+    const current = Number(localStorage.getItem('fsWheelTextScale') || 1);
+    const next = clamp(Number((current + delta).toFixed(2)), .65, 1.7);
+    localStorage.setItem('fsWheelTextScale', String(next));
+    if(typeof window.renderWheel === 'function') window.renderWheel();
+    requestAnimationFrame(applyWheelGeometryLikeNormal);
+  };
+
+  function wireTextButtons(){
+    const idsMinus = ['fullscreenWheelTextMinusBtn','stageWheelTextMinusBtn','wheelTextMinusBtn'];
+    const idsPlus = ['fullscreenWheelTextPlusBtn','stageWheelTextPlusBtn','wheelTextPlusBtn'];
+
+    idsMinus.forEach(function(id){
+      const btn = document.getElementById(id);
+      if(btn && !btn.dataset.charlieV16Text){
+        btn.addEventListener('click', function(e){
+          if(document.body.classList.contains('wheel-fullscreen-mode')){
+            e.preventDefault();
+            e.stopPropagation();
+            window.adjustFullscreenWheelText(-0.08);
+          }
+        }, true);
+        btn.dataset.charlieV16Text = '1';
+      }
+    });
+
+    idsPlus.forEach(function(id){
+      const btn = document.getElementById(id);
+      if(btn && !btn.dataset.charlieV16Text){
+        btn.addEventListener('click', function(e){
+          if(document.body.classList.contains('wheel-fullscreen-mode')){
+            e.preventDefault();
+            e.stopPropagation();
+            window.adjustFullscreenWheelText(0.08);
+          }
+        }, true);
+        btn.dataset.charlieV16Text = '1';
+      }
+    });
+  }
+
+  const previousToggle = window.toggleWheelFullscreen;
+  if(typeof previousToggle === 'function' && !previousToggle.__charlieV16Toggle){
+    const wrappedToggle = function(){
+      previousToggle.apply(this, arguments);
+      setTimeout(function(){
+        wireTextButtons();
+        if(typeof window.renderWheel === 'function') window.renderWheel();
+        applyWheelGeometryLikeNormal();
+      }, 60);
+    };
+    wrappedToggle.__charlieV16Toggle = true;
+    window.toggleWheelFullscreen = wrappedToggle;
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    wireTextButtons();
+    setTimeout(function(){
+      if(typeof window.renderWheel === 'function') window.renderWheel();
+      applyWheelGeometryLikeNormal();
+    }, 120);
+  });
+
+  window.addEventListener('resize', function(){
+    if(document.body.classList.contains('wheel-fullscreen-mode')){
+      if(typeof window.renderWheel === 'function') window.renderWheel();
+      requestAnimationFrame(applyWheelGeometryLikeNormal);
+    }
+  });
+})();
+</script>
+
+<style id="charlie-v17-fix-margenes-fullscreen">
+/* Fullscreen usa exactamente los mismos márgenes que la ruleta normal */
+body.wheel-fullscreen-mode .wheel-name{
+  width:112px !important;   /* mismo ancho base que modo normal */
+  padding-left:0 !important;
+  padding-right:0 !important;
+  max-height:64px !important;
+}
+/* Mantener separación del borde exterior */
+body.wheel-fullscreen-mode .wheel-name{
+  overflow:hidden !important;
+}
+</style>
+
+<style id="charlie-remove-reset-button-final-style">
+/* Elimina el botón Reiniciar en ruleta normal y en pantalla completa */
+#wheelResetBtn,
+.wheel-reset-btn,
+#restartWheelBtn{
+  display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+</style>
+
+<script id="charlie-remove-reset-button-final">
+(function(){
+  function removeResetButtons(){
+    document.querySelectorAll('#wheelResetBtn,.wheel-reset-btn,#restartWheelBtn').forEach(function(btn){
+      btn.remove();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', removeResetButtons);
+  window.addEventListener('resize', removeResetButtons);
+  setTimeout(removeResetButtons, 100);
+  setTimeout(removeResetButtons, 600);
+  setTimeout(removeResetButtons, 1200);
+})();
+</script>
+
+<style id="charlix-platform-blue-skin-v2">
+  :root{
+    --brand-950:#082f49;
+    --brand-900:#075985;
+    --brand-700:#0284c7;
+    --brand-600:#0ea5e9;
+    --brand-500:#38bdf8;
+    --brand-100:#e0f2fe;
+    --ink:#0f172a;
+    --panel:#f7fbff;
+    --surface:#ffffff;
+  }
+
+  body:not(.wheel-fullscreen-mode):not(.dark-mode){
+    background:
+      radial-gradient(circle at 16% 6%,rgba(56,189,248,.26),transparent 30%),
+      radial-gradient(circle at 88% 12%,rgba(14,165,233,.18),transparent 26%),
+      linear-gradient(180deg,#f8fcff 0%,#e9f7ff 52%,#dff2ff 100%)!important;
+    color:var(--ink)!important;
+    padding:18px!important;
+  }
+
+  body:not(.wheel-fullscreen-mode) .app,
+  body.dark-mode:not(.wheel-fullscreen-mode) .app{
+    width:100%!important;
+    max-width:1180px!important;
+    border-radius:26px!important;
+    padding:24px!important;
+  }
+
+  body:not(.wheel-fullscreen-mode):not(.dark-mode) .app{
+    background:rgba(255,255,255,.97)!important;
+    border:1px solid rgba(14,165,233,.30)!important;
+    box-shadow:0 24px 60px rgba(8,47,73,.16)!important;
+  }
+
+  body:not(.wheel-fullscreen-mode) .layout,
+  body.dark-mode:not(.wheel-fullscreen-mode) .layout{
+    grid-template-columns:.92fr 1.08fr!important;
+    gap:18px!important;
+  }
+
+  body:not(.wheel-fullscreen-mode):not(.dark-mode) .panel,
+  body:not(.wheel-fullscreen-mode):not(.dark-mode) .stage,
+  body:not(.wheel-fullscreen-mode):not(.dark-mode) .question-item,
+  body:not(.wheel-fullscreen-mode):not(.dark-mode) .result-box{
+    background:linear-gradient(180deg,var(--surface),var(--panel))!important;
+    border:1px solid #d6ecfa!important;
+    border-radius:20px!important;
+    box-shadow:0 14px 30px rgba(8,47,73,.07)!important;
+  }
+
+  body:not(.wheel-fullscreen-mode):not(.dark-mode) .home-button,
+  body:not(.wheel-fullscreen-mode):not(.dark-mode) .secondary,
+  body:not(.wheel-fullscreen-mode):not(.dark-mode) .wheel-fullscreen-btn,
+  body:not(.wheel-fullscreen-mode):not(.dark-mode) #fullscreenWheelBtn{
+    background:#e5f5fd!important;
+    color:var(--brand-900)!important;
+    border:1px solid #b8e4f8!important;
+  }
+
+  body:not(.wheel-fullscreen-mode):not(.dark-mode) .primary,
+  body:not(.wheel-fullscreen-mode):not(.dark-mode) .start-button{
+    background:linear-gradient(135deg,var(--brand-700),#2563eb)!important;
+    color:#fff!important;
+    box-shadow:0 14px 30px rgba(37,99,235,.22)!important;
+  }
+
+  body:not(.wheel-fullscreen-mode):not(.dark-mode) input,
+  body:not(.wheel-fullscreen-mode):not(.dark-mode) select,
+  body:not(.wheel-fullscreen-mode):not(.dark-mode) textarea{
+    background:#fff!important;
+    color:var(--ink)!important;
+    border:2px solid #b9e4f8!important;
+    border-radius:15px!important;
+  }
+
+  body:not(.wheel-fullscreen-mode):not(.dark-mode) h1{color:#071c33!important;letter-spacing:0!important}
+  body:not(.wheel-fullscreen-mode):not(.dark-mode) .subtitle,
+  body:not(.wheel-fullscreen-mode):not(.dark-mode) .footer{color:#334155!important}
+  body:not(.wheel-fullscreen-mode):not(.dark-mode) .panel-title,
+  body:not(.wheel-fullscreen-mode):not(.dark-mode) label{color:var(--brand-900)!important}
+
+  body.dark-mode:not(.wheel-fullscreen-mode){
+    background:
+      radial-gradient(circle at 16% 7%, rgba(56,189,248,.18), transparent 32%),
+      radial-gradient(circle at 88% 10%, rgba(14,165,233,.14), transparent 28%),
+      radial-gradient(circle at 50% 100%, rgba(37,99,235,.14), transparent 38%),
+      linear-gradient(135deg,#020617 0%,#07182d 52%,#082f49 100%)!important;
+    color:#eaf6ff!important;
+    padding:18px!important;
+  }
+
+  body.dark-mode:not(.wheel-fullscreen-mode) .app{
+    background:linear-gradient(180deg,rgba(8,30,52,.98),rgba(2,6,23,.98))!important;
+    border:1px solid rgba(56,189,248,.34)!important;
+    box-shadow:
+      0 0 0 1px rgba(14,165,233,.10),
+      0 24px 70px rgba(0,0,0,.52),
+      0 0 44px rgba(14,165,233,.12)!important;
+  }
+
+  body.dark-mode:not(.wheel-fullscreen-mode) .panel,
+  body.dark-mode:not(.wheel-fullscreen-mode) .stage,
+  body.dark-mode:not(.wheel-fullscreen-mode) .question-item,
+  body.dark-mode:not(.wheel-fullscreen-mode) .result-box{
+    background:
+      radial-gradient(circle at 18% 0%, rgba(56,189,248,.08), transparent 38%),
+      linear-gradient(180deg,rgba(9,35,60,.95),rgba(5,17,32,.97))!important;
+    border:1px solid rgba(125,211,252,.22)!important;
+    box-shadow:
+      0 16px 36px rgba(0,0,0,.30),
+      0 0 22px rgba(14,165,233,.08),
+      inset 0 0 0 1px rgba(255,255,255,.035)!important;
+  }
+
+  body.dark-mode:not(.wheel-fullscreen-mode) .home-button,
+  body.dark-mode:not(.wheel-fullscreen-mode) .secondary,
+  body.dark-mode:not(.wheel-fullscreen-mode) .wheel-fullscreen-btn,
+  body.dark-mode:not(.wheel-fullscreen-mode) #fullscreenWheelBtn{
+    background:rgba(12,44,72,.92)!important;
+    color:#eaf6ff!important;
+    border:1px solid rgba(125,211,252,.28)!important;
+  }
+
+  body.dark-mode:not(.wheel-fullscreen-mode) .primary,
+  body.dark-mode:not(.wheel-fullscreen-mode) .start-button,
+  body.dark-mode:not(.wheel-fullscreen-mode) .magic{
+    background:linear-gradient(135deg,#0284c7,#2563eb 58%,#1d4ed8)!important;
+    color:#fff!important;
+    border:1px solid rgba(191,239,255,.18)!important;
+  }
+
+  body.dark-mode:not(.wheel-fullscreen-mode) input,
+  body.dark-mode:not(.wheel-fullscreen-mode) select,
+  body.dark-mode:not(.wheel-fullscreen-mode) textarea{
+    background:rgba(2,12,24,.88)!important;
+    color:#f8fcff!important;
+    border-color:rgba(125,211,252,.34)!important;
+  }
+
+  body.dark-mode:not(.wheel-fullscreen-mode) h1,
+  body.dark-mode:not(.wheel-fullscreen-mode) .panel-title,
+  body.dark-mode:not(.wheel-fullscreen-mode) label,
+  body.dark-mode:not(.wheel-fullscreen-mode) .result-question,
+  body.dark-mode:not(.wheel-fullscreen-mode) .question-item{color:#f8fcff!important}
+
+  body.dark-mode:not(.wheel-fullscreen-mode) .subtitle,
+  body.dark-mode:not(.wheel-fullscreen-mode) .footer,
+  body.dark-mode:not(.wheel-fullscreen-mode) .result-label{color:#b6d7ea!important}
+
+  body.dark-mode:not(.wheel-fullscreen-mode) .db-status,
+  body.dark-mode:not(.wheel-fullscreen-mode) .wheel-legend{
+    background:rgba(8,47,73,.78)!important;
+    color:#d9f4ff!important;
+    border:1px solid rgba(125,211,252,.30)!important;
+  }
+
+  body:not(.wheel-fullscreen-mode) .logo,
+  body:not(.wheel-fullscreen-mode) .wheel-logo,
+  body.dark-mode:not(.wheel-fullscreen-mode) .logo,
+  body.dark-mode:not(.wheel-fullscreen-mode) .wheel-logo{
+    background:#fff!important;
+    border:1px solid rgba(14,165,233,.24)!important;
+    box-shadow:0 14px 32px rgba(8,47,73,.16)!important;
+  }
+
+  body.dark-mode:not(.wheel-fullscreen-mode) .logo,
+  body.dark-mode:not(.wheel-fullscreen-mode) .wheel-logo{
+    box-shadow:
+      0 16px 34px rgba(0,0,0,.34),
+      0 0 30px rgba(56,189,248,.18)!important;
+  }
+
+  @media(max-width:760px){
+    body:not(.wheel-fullscreen-mode) .app,
+    body.dark-mode:not(.wheel-fullscreen-mode) .app{
+      padding:18px!important;
+      border-radius:22px!important;
+    }
+    body:not(.wheel-fullscreen-mode) .layout,
+    body.dark-mode:not(.wheel-fullscreen-mode) .layout{
+      grid-template-columns:1fr!important;
+    }
+  }
+</style>
+<script id="charlix-platform-blue-logo-v2">
+(function(){
+  const BLUE_PALETTE=['#e0f2fe','#bae6fd','#7dd3fc','#38bdf8','#0ea5e9','#0284c7','#0369a1','#075985'];
+
+  function forceBlueLogo(){
+    document.querySelectorAll('img.logo,img.wheel-logo').forEach(img=>{
+      if(img && !img.src.endsWith('/logo.png')) img.src='./logo.png';
+    });
+  }
+
+  const previousUpdateLogo=window.updateLogoByTheme;
+  window.updateLogoByTheme=function(){
+    if(typeof previousUpdateLogo==='function') previousUpdateLogo.apply(this,arguments);
+    forceBlueLogo();
+  };
+
+  const previousGetPalette=window.getPalette;
+  window.getPalette=function(){
+    if(document.body.classList.contains('dark-mode')) return BLUE_PALETTE;
+    return typeof previousGetPalette==='function' ? previousGetPalette.apply(this,arguments) : BLUE_PALETTE;
+  };
+
+  const previousRenderWheel=window.renderWheel;
+  window.renderWheel=function(){
+    const out=typeof previousRenderWheel==='function' ? previousRenderWheel.apply(this,arguments) : undefined;
+    forceBlueLogo();
+    return out;
+  };
+
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(forceBlueLogo,0));
+  document.addEventListener('click',()=>setTimeout(forceBlueLogo,0),true);
+  setInterval(forceBlueLogo,700);
+})();
+</script>
+<style id="charlix-platform-blue-fix-v3">
+  body.dark-mode #wheelTextMinusBtn,
+  body.dark-mode #wheelTextPlusBtn,
+  body.dark-mode #legendTextMinusBtn,
+  body.dark-mode #legendTextPlusBtn,
+  body.dark-mode #fullscreenWheelTextMinusBtn,
+  body.dark-mode #fullscreenWheelTextPlusBtn,
+  body.dark-mode #stageWheelTextMinusBtn,
+  body.dark-mode #stageWheelTextPlusBtn{
+    background:linear-gradient(135deg,#0c4a6e,#075985)!important;
+    color:#f0fbff!important;
+    border:1px solid rgba(125,211,252,.38)!important;
+    box-shadow:0 10px 22px rgba(0,0,0,.22),0 0 18px rgba(56,189,248,.16)!important;
+  }
+
+  body.dark-mode #wheelTextSizeLabel,
+  body.dark-mode #legendTextSizeLabel,
+  body.dark-mode #fullscreenTextSizeControl .fs-text-label{
+    color:#d9f4ff!important;
+    text-shadow:none!important;
+  }
+
+  body.dark-mode .wheel{
+    border-color:#e0f2fe!important;
+    box-shadow:
+      0 18px 34px rgba(0,0,0,.30),
+      inset 0 0 0 3px #061426,
+      0 0 36px rgba(56,189,248,.20)!important;
+  }
+
+  body.dark-mode .wheel:after{
+    box-shadow:inset 0 0 0 3px #0ea5e9!important;
+  }
+</style>
+<script id="charlix-platform-blue-fix-v3">
+(function(){
+  const BLUE_PALETTE=['#e0f2fe','#bae6fd','#7dd3fc','#38bdf8','#0ea5e9','#0284c7','#0369a1','#075985'];
+
+  function forceBlueWheel(){
+    document.querySelectorAll('img.logo,img.wheel-logo').forEach(img=>{
+      if(img) img.src='./logo.png';
+    });
+
+    const wheel=document.getElementById('wheel');
+    if(!wheel || !document.body.classList.contains('dark-mode')) return;
+
+    const labels=[...wheel.querySelectorAll('.wheel-name')];
+    const count=Math.max(labels.length,1);
+    const step=360/count;
+    const stops=[];
+    for(let i=0;i<count;i++){
+      const color=BLUE_PALETTE[i%BLUE_PALETTE.length];
+      stops.push(`${color} ${i*step}deg ${(i+1)*step}deg`);
+    }
+    wheel.style.background=`conic-gradient(${stops.join(',')})`;
+
+    labels.forEach(label=>{
+      label.style.color='#061426';
+      label.style.textShadow='0 1px 0 rgba(255,255,255,.40),0 0 5px rgba(224,242,254,.70)';
+    });
+  }
+
+  ['renderWheel','toggleDarkMode','chooseQuestion','spinWheel'].forEach(name=>{
+    const previous=window[name];
+    if(typeof previous==='function' && !previous.__charlixBlueWrapped){
+      const wrapped=function(){
+        const result=previous.apply(this,arguments);
+        setTimeout(forceBlueWheel,0);
+        setTimeout(forceBlueWheel,90);
+        setTimeout(forceBlueWheel,220);
+        return result;
+      };
+      wrapped.__charlixBlueWrapped=true;
+      window[name]=wrapped;
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(forceBlueWheel,0));
+  document.addEventListener('click',()=>setTimeout(forceBlueWheel,30),true);
+  document.addEventListener('change',()=>setTimeout(forceBlueWheel,30),true);
+  window.addEventListener('resize',()=>setTimeout(forceBlueWheel,80));
+  setInterval(forceBlueWheel,600);
+})();
+</script>
+</body></html>
