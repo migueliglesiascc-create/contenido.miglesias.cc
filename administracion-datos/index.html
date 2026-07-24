@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="apple-touch-icon" href="../favicon.png">
+<title>Administración | Clases de Bolsillo</title>
+<style>
+*{box-sizing:border-box}
+:root{
+  --ink:#07182d;
+  --text:#0f172a;
+  --muted:#52677f;
+  --blue:#0284c7;
+  --blue-dark:#075985;
+  --blue-soft:#e0f2fe;
+  --line:#9dd8f4;
+  --panel:#f8fcff;
+  --danger:#991b1b;
+  --danger-soft:#fee2e2;
+  --ok:#047857;
+  --ok-soft:#dcfce7;
+  --warn:#b45309;
+  --warn-soft:#fffbeb;
+}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at 14% 8%,rgba(14,165,233,.20),transparent 32%),radial-gradient(circle at 88% 10%,rgba(37,99,235,.12),transparent 28%),linear-gradient(135deg,#f8fcff 0%,#eaf7ff 100%);color:var(--text);min-height:100vh;padding:22px}
+.app{width:100%;max-width:1180px;margin:0 auto;background:rgba(255,255,255,.96);border:1px solid rgba(14,165,233,.34);border-radius:28px;padding:26px;box-shadow:0 24px 54px rgba(8,47,73,.14);position:relative;overflow:hidden}
+.app:before{content:"";position:absolute;width:330px;height:330px;border-radius:50%;background:rgba(14,165,233,.10);top:-135px;right:-125px;z-index:0}
+.content{position:relative;z-index:1}
+.home-button{display:inline-flex;align-items:center;gap:8px;text-decoration:none;background:var(--blue-soft);color:var(--blue-dark);border:1px solid var(--line);padding:10px 16px;border-radius:999px;font-weight:900;font-size:.92rem;margin-bottom:16px}
+.brand{text-align:center}
+.logo{width:92px;height:92px;object-fit:contain;border-radius:50%;background:#fff;padding:0;border:1px solid rgba(14,165,233,.28);box-shadow:0 14px 32px rgba(8,47,73,.16);transform:scale(1.16)}
+h1{margin:18px 0 8px;text-align:center;font-size:2.45rem;line-height:1.05;color:var(--ink)}
+.subtitle{max-width:760px;margin:0 auto 18px;text-align:center;color:var(--muted);line-height:1.55}
+.dark-toggle{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:6px 0 16px}
+.warning{border:1.5px dashed #f9a8d4;background:#fff1f8;color:var(--danger);border-radius:22px;padding:20px 22px;line-height:1.55;margin:0 auto 22px;max-width:900px;text-align:center;font-size:.98rem}
+.warning-title{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:10px;font-size:1.5rem;font-weight:1000;line-height:1.1}
+.warning-icon{width:52px;height:46px;background:#232323;clip-path:polygon(50% 0,100% 100%,0 100%);display:inline-flex;align-items:flex-end;justify-content:center;padding-bottom:6px;flex:0 0 auto}
+.warning-icon span{width:38px;height:34px;background:#ffdc00;clip-path:polygon(50% 0,100% 100%,0 100%);display:flex;align-items:flex-end;justify-content:center;color:#232323;font-size:1.55rem;font-weight:1000;line-height:.82;padding-bottom:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:16px;margin-top:18px;align-items:stretch}
+.admin-card{background:rgba(248,252,255,.94);border:1.5px solid rgba(56,189,248,.58);border-radius:22px;padding:22px 20px;box-shadow:0 16px 34px rgba(15,23,42,.08);display:grid;grid-template-rows:1fr auto;gap:18px;min-height:260px;text-align:left}
+.card-top{display:grid;grid-template-columns:auto 1fr;gap:13px;align-items:start;align-content:start}
+.icon{font-size:2.35rem;line-height:1;flex:0 0 auto}
+.card-copy{display:grid;gap:10px}
+.admin-card h2,.panel h2{margin:0;font-size:1.22rem;color:var(--ink)}
+.admin-card p{margin:0;color:#334155;line-height:1.48;font-size:.95rem}
+.actions{display:grid;gap:10px;align-self:end}
+.actions button{width:100%;height:50px;min-height:50px}
+body.admin-compact .admin-card{min-height:210px;text-align:center}
+body.admin-compact .card-top{grid-template-columns:1fr;gap:12px;place-items:center;align-content:center}
+body.admin-compact .icon{font-size:3.4rem}
+body.admin-compact .admin-card p{display:none}
+button{border:none;border-radius:999px;padding:12px 16px;font-weight:900;font-size:.92rem;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease,opacity .15s ease;min-height:46px;display:inline-flex;align-items:center;justify-content:center;text-align:center;line-height:1.15}
+button:hover:not(:disabled){transform:translateY(-1px)}
+.primary{background:linear-gradient(135deg,#0284c7,#2563eb);color:#fff;box-shadow:0 14px 28px rgba(37,99,235,.18)}
+.secondary{background:var(--blue-soft);color:var(--blue-dark);border:1px solid var(--line)}
+.panel-back-btn{background:#cbeafd;color:#075985;border-color:#8bd3f7}
+.refresh-action{background:#dcfce7;color:#047857;border:1px solid #86efac}
+.danger{background:var(--danger-soft);color:var(--danger);border:1px solid #fecaca}
+.ok{background:var(--ok-soft);color:var(--ok);border:1px solid #bbf7d0}
+button:disabled{opacity:.48;cursor:not-allowed;box-shadow:none}
+.note{margin-top:16px;color:#64748b;font-size:.86rem;line-height:1.45}
+.panel{display:none;margin-top:22px;background:rgba(248,252,255,.94);border:1.5px solid rgba(56,189,248,.58);border-radius:22px;padding:20px;box-shadow:0 16px 34px rgba(15,23,42,.08)}
+.panel.active{display:block}
+.panel-head{display:grid;grid-template-columns:1fr minmax(180px,220px) minmax(180px,220px);gap:14px;align-items:start;margin-bottom:14px}
+.panel-head button{width:100%;height:46px}
+.panel-head p{margin:0;color:#52677f;line-height:1.45}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin:14px 0}
+.summary-card{background:#eef9ff;border:1px solid #b9e7fb;border-radius:16px;padding:12px;text-align:center}
+.summary-card strong{display:block;font-size:1.45rem;color:var(--blue-dark)}
+.summary-card span{color:#52677f;font-weight:800;font-size:.82rem}
+.message{display:none;margin:12px 0;padding:12px 14px;border-radius:16px;font-weight:800;line-height:1.4}
+.message.show{display:block}
+.message.ok{background:var(--ok-soft);color:var(--ok);border:1px solid #bbf7d0}
+.message.error{background:var(--danger-soft);color:var(--danger);border:1px solid #fecaca}
+.message.info{background:var(--blue-soft);color:var(--blue-dark);border:1px solid var(--line)}
+.panel-filter{display:grid;grid-template-columns:minmax(220px,360px) 1fr;gap:12px;align-items:end;margin:12px 0}
+.panel-filter label{display:grid;gap:7px;color:var(--blue-dark);font-weight:900;font-size:.9rem}
+.panel-filter select{width:100%;border:2px solid var(--line);border-radius:16px;background:#fff;color:var(--text);padding:12px 14px;font-size:.95rem;font-weight:800;outline:none}
+.panel-filter select:focus{box-shadow:0 0 0 4px rgba(14,165,233,.16)}
+.filter-note{color:#52677f;font-weight:800;font-size:.88rem;line-height:1.35}
+.screen-hidden{display:none!important}
+.table-wrap{overflow:auto;border:1px solid #d6e9f7;border-radius:18px;background:#fff}
+table{width:100%;border-collapse:collapse;min-width:920px}
+th,td{padding:12px 10px;text-align:left;border-bottom:none;border-right:1px solid rgba(148,163,184,.18);vertical-align:middle}
+th:last-child,td:last-child{border-right:none}
+th{background:var(--blue-soft);color:var(--blue-dark);font-size:.92rem}
+td{font-size:.92rem}
+tbody tr:nth-child(even){background:rgba(224,242,254,.30)}
+tbody tr:nth-child(odd){background:rgba(255,255,255,.72)}
+tbody tr:hover{background:rgba(186,230,253,.38)}
+th:nth-child(n+3),td:nth-child(n+3){text-align:center}
+.class-name{font-weight:900;color:var(--ink)}
+.mono{font-family:"Courier New",monospace;font-size:.88rem}
+.badge{display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:.82rem;line-height:1.2;border:none;background:transparent;box-shadow:none;cursor:default;user-select:none}
+.badge.active{color:var(--ok)}
+.badge.safe,.badge.blocked{color:var(--blue-dark)}
+.badge.inactive{color:var(--danger)}
+.status-cell{position:relative;display:flex;align-items:center;justify-content:center}
+.status-toggle{width:34px;height:34px;min-width:34px;min-height:34px;padding:0;border-radius:10px;font-size:1.08rem;line-height:1;box-shadow:0 6px 14px rgba(15,23,42,.10)}
+.status-toggle.active{background:var(--ok-soft);color:var(--ok);border:1.5px solid #86efac}
+.status-toggle.inactive{background:#fff;color:#94a3b8;border:1.5px solid #cbd5e1}
+.status-toggle:disabled{cursor:not-allowed;opacity:.52}
+.status-label{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.status-label .badge{max-width:140px;text-align:center}
+.status-label[data-tooltip]:hover:after,.status-label[data-tooltip]:focus-within:after{content:attr(data-tooltip);position:absolute;left:50%;bottom:calc(100% + 10px);transform:translateX(-50%);z-index:5;width:280px;max-width:70vw;background:#07182d;color:#fff;border:1px solid rgba(125,211,252,.55);border-radius:14px;padding:10px 12px;font-size:.78rem;font-weight:800;line-height:1.35;text-align:left;box-shadow:0 16px 34px rgba(15,23,42,.24)}
+.status-label[data-tooltip]:hover:before,.status-label[data-tooltip]:focus-within:before{content:"";position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);z-index:6;border:8px solid transparent;border-top-color:#07182d}
+.status-cell[data-tooltip]:hover:after,.status-cell[data-tooltip]:focus-within:after{content:attr(data-tooltip);position:absolute;left:50%;bottom:calc(100% + 10px);transform:translateX(-50%);z-index:5;width:260px;max-width:70vw;background:#07182d;color:#fff;border:1px solid rgba(125,211,252,.55);border-radius:14px;padding:10px 12px;font-size:.78rem;font-weight:800;line-height:1.35;text-align:left;box-shadow:0 16px 34px rgba(15,23,42,.24)}
+.status-cell[data-tooltip]:hover:before,.status-cell[data-tooltip]:focus-within:before{content:"";position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);z-index:6;border:8px solid transparent;border-top-color:#07182d}
+.row-actions{display:grid;grid-template-columns:1fr;gap:8px;min-width:180px}
+.row-actions button{width:100%;height:42px;min-height:42px;padding:8px 14px;font-size:.82rem;white-space:normal}
+.bank-table{min-width:1020px}
+.bank-table th:last-child,.bank-table td:last-child{width:230px;min-width:230px}
+.bank-actions{display:grid;grid-template-columns:1fr;gap:8px;min-width:200px}
+.bank-actions button{width:100%;height:42px;min-height:42px;padding:8px 14px;white-space:normal;line-height:1.15}
+.tooltip-action{width:100%}
+.tooltip-action{position:relative;display:inline-flex}
+.tooltip-action[data-tooltip]:hover:after,.tooltip-action[data-tooltip]:focus-within:after{content:attr(data-tooltip);position:absolute;right:0;bottom:calc(100% + 10px);z-index:5;width:280px;max-width:70vw;background:#07182d;color:#fff;border:1px solid rgba(125,211,252,.55);border-radius:14px;padding:10px 12px;font-size:.78rem;font-weight:800;line-height:1.35;box-shadow:0 16px 34px rgba(15,23,42,.24)}
+.tooltip-action[data-tooltip]:hover:before,.tooltip-action[data-tooltip]:focus-within:before{content:"";position:absolute;right:26px;bottom:calc(100% + 2px);z-index:6;border:8px solid transparent;border-top-color:#07182d}
+.tooltip-action button:disabled{pointer-events:none}
+.modal-backdrop{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:22px;background:rgba(7,24,45,.42);backdrop-filter:blur(8px)}
+.modal-backdrop.active{display:flex}
+.platform-modal{width:min(720px,100%);background:rgba(255,255,255,.97);border:1.5px solid rgba(56,189,248,.62);border-radius:24px;padding:22px;box-shadow:0 28px 80px rgba(8,47,73,.28)}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px}
+.modal-kicker{margin:0 0 5px;color:#075985;font-size:.82rem;font-weight:900;text-transform:uppercase;letter-spacing:.04em}
+.modal-title{margin:0;color:#07182d;font-size:1.45rem;line-height:1.15}
+.modal-subtitle{margin:8px 0 0;color:#52677f;line-height:1.45}
+.modal-close{flex:0 0 auto;background:#e0f2fe;color:#075985;border:1px solid #9dd8f4;padding:10px 14px}
+.dependency-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:18px 0}
+.dependency-card{background:#eef9ff;border:1px solid #b9e7fb;border-radius:16px;padding:14px;text-align:center}
+.dependency-card strong{display:block;color:#075985;font-size:1.65rem;line-height:1}
+.dependency-card span{display:block;margin-top:6px;color:#52677f;font-weight:900;font-size:.82rem}
+.dependency-result{border-radius:18px;padding:14px 16px;font-weight:900;line-height:1.45}
+.dependency-result.safe{background:#dcfce7;color:#047857;border:1px solid #bbf7d0}
+.dependency-result.blocked{background:#fffbeb;color:#b45309;border:1px solid #fde68a}
+.confirm-body{display:grid;gap:14px;margin-top:12px}
+.confirm-warning{background:#fff1f2;color:#991b1b;border:1px dashed #fca5a5;border-radius:18px;padding:14px 16px;font-weight:900;line-height:1.45}
+.confirm-details{background:#eef9ff;border:1px solid #b9e7fb;border-radius:18px;padding:14px 16px;color:#0f172a;line-height:1.55}
+.confirm-details ul{margin:8px 0 0;padding-left:20px}
+.confirm-field label{display:block;color:#075985;font-weight:900;margin-bottom:8px}
+.confirm-field input{width:100%;border:2px solid #9dd8f4;border-radius:16px;padding:13px 14px;font-size:1rem;font-weight:900;color:#07182d;background:#fff;outline:none}
+.confirm-field input:focus{box-shadow:0 0 0 4px rgba(14,165,233,.16)}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:6px}
+.modal-actions button{min-width:150px}
+.danger-strong{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
+.danger-strong:not(:disabled){box-shadow:0 14px 28px rgba(153,27,27,.14)}
+.footer{margin-top:30px;text-align:center;color:#64748b;font-size:.92rem}
+body.dark-mode{background:radial-gradient(circle at 16% 7%,rgba(56,189,248,.18),transparent 32%),radial-gradient(circle at 88% 10%,rgba(14,165,233,.14),transparent 28%),linear-gradient(135deg,#020617 0%,#07182d 52%,#082f49 100%);color:#eaf6ff}
+body.dark-mode .app{background:linear-gradient(180deg,rgba(8,30,52,.98),rgba(2,6,23,.98));border:1px solid rgba(125,211,252,.72);box-shadow:0 0 0 1px rgba(224,242,254,.18),0 24px 70px rgba(0,0,0,.52),0 0 48px rgba(56,189,248,.20)}
+body.dark-mode .app:before{background:radial-gradient(circle,rgba(56,189,248,.16),transparent 64%)}
+body.dark-mode h1,body.dark-mode .admin-card h2,body.dark-mode .panel h2,body.dark-mode .class-name{color:#f8fcff}
+body.dark-mode .subtitle,body.dark-mode .admin-card p,body.dark-mode .panel-head p,body.dark-mode .note,body.dark-mode .footer{color:#b6d7ea}
+body.dark-mode .panel-filter label{color:#eaf6ff}
+body.dark-mode .panel-filter select{background:#020617;color:#eaf6ff;border-color:rgba(125,211,252,.42)}
+body.dark-mode .filter-note{color:#b6d7ea}
+body.dark-mode .admin-card,body.dark-mode .panel{background:linear-gradient(180deg,rgba(8,47,73,.82),rgba(2,6,23,.92));border:1.5px solid rgba(56,189,248,.62);box-shadow:0 18px 42px rgba(0,0,0,.26),inset 0 0 0 1px rgba(255,255,255,.03)}
+body.dark-mode .secondary,body.dark-mode .home-button{background:rgba(8,47,73,.78);color:#eaf6ff;border:1px solid rgba(125,211,252,.30)}
+body.dark-mode .panel-back-btn{background:rgba(2,28,50,.96);color:#eaf6ff;border-color:rgba(125,211,252,.48)}
+body.dark-mode .refresh-action{background:rgba(20,83,45,.82);color:#dcfce7;border:1px solid rgba(134,239,172,.54)}
+body.dark-mode .danger,body.dark-mode .danger-strong{background:linear-gradient(135deg,rgba(69,10,10,.92),rgba(127,29,29,.88));color:#fecaca;border:1px solid rgba(248,113,113,.42);box-shadow:0 10px 22px rgba(0,0,0,.24),inset 0 0 0 1px rgba(255,255,255,.03)}
+body.dark-mode .danger:hover:not(:disabled),body.dark-mode .danger-strong:hover:not(:disabled){background:linear-gradient(135deg,rgba(91,14,14,.96),rgba(153,27,27,.92));border-color:rgba(252,165,165,.58);box-shadow:0 14px 28px rgba(0,0,0,.30)}
+body.dark-mode .danger:disabled,body.dark-mode .danger-strong:disabled{opacity:.78;color:#fecaca}
+body.dark-mode .message.error{background:rgba(127,29,29,.38);color:#fecaca;border-color:rgba(248,113,113,.42)}
+body.dark-mode .warning{background:rgba(127,29,29,.42);border-color:rgba(248,113,113,.62);color:#fee2e2}
+body.dark-mode .summary-card{background:rgba(8,47,73,.72);border-color:rgba(125,211,252,.34)}
+body.dark-mode .summary-card strong,body.dark-mode .summary-card span{color:#eaf6ff}
+body.dark-mode .table-wrap{background:rgba(2,6,23,.72);border-color:rgba(125,211,252,.24)}
+body.dark-mode th{background:rgba(8,47,73,.82);color:#eaf6ff;border-color:rgba(125,211,252,.18)}
+body.dark-mode td{border-color:rgba(125,211,252,.10)}
+body.dark-mode tbody tr:nth-child(even){background:rgba(8,47,73,.24)}
+body.dark-mode tbody tr:nth-child(odd){background:rgba(2,6,23,.22)}
+body.dark-mode tbody tr:hover{background:rgba(14,165,233,.16)}
+body.dark-mode th,body.dark-mode td{border-right-color:rgba(125,211,252,.10)}
+body.dark-mode .tooltip-action[data-tooltip]:hover:after,body.dark-mode .tooltip-action[data-tooltip]:focus-within:after{background:#eaf6ff;color:#07182d;border-color:rgba(125,211,252,.75)}
+body.dark-mode .tooltip-action[data-tooltip]:hover:before,body.dark-mode .tooltip-action[data-tooltip]:focus-within:before{border-top-color:#eaf6ff}
+body.dark-mode .status-toggle.active{background:rgba(20,83,45,.82);color:#dcfce7;border-color:rgba(134,239,172,.62)}
+body.dark-mode .status-toggle.inactive{background:rgba(15,23,42,.82);color:#b6d7ea;border-color:rgba(125,211,252,.34)}
+body.dark-mode .badge.active{color:#86efac}
+body.dark-mode .badge.safe,body.dark-mode .badge.blocked{color:#7dd3fc}
+body.dark-mode .badge.inactive{color:#fecaca}
+body.dark-mode .status-label[data-tooltip]:hover:after,body.dark-mode .status-label[data-tooltip]:focus-within:after{background:#eaf6ff;color:#07182d;border-color:rgba(125,211,252,.75)}
+body.dark-mode .status-label[data-tooltip]:hover:before,body.dark-mode .status-label[data-tooltip]:focus-within:before{border-top-color:#eaf6ff}
+body.dark-mode .status-cell[data-tooltip]:hover:after,body.dark-mode .status-cell[data-tooltip]:focus-within:after{background:#eaf6ff;color:#07182d;border-color:rgba(125,211,252,.75)}
+body.dark-mode .status-cell[data-tooltip]:hover:before,body.dark-mode .status-cell[data-tooltip]:focus-within:before{border-top-color:#eaf6ff}
+body.dark-mode .modal-backdrop{background:rgba(2,6,23,.62)}
+body.dark-mode .platform-modal{background:linear-gradient(180deg,rgba(8,47,73,.98),rgba(2,6,23,.98));border-color:rgba(125,211,252,.70);box-shadow:0 28px 90px rgba(0,0,0,.58),0 0 38px rgba(56,189,248,.16)}
+body.dark-mode .modal-title{color:#f8fcff}
+body.dark-mode .modal-kicker,body.dark-mode .modal-subtitle{color:#b6d7ea}
+body.dark-mode .dependency-card{background:rgba(8,47,73,.74);border-color:rgba(125,211,252,.34)}
+body.dark-mode .dependency-card strong,body.dark-mode .dependency-card span{color:#eaf6ff}
+body.dark-mode .confirm-warning{background:rgba(127,29,29,.34);border-color:rgba(248,113,113,.46);color:#fee2e2}
+body.dark-mode .confirm-details{background:rgba(8,47,73,.74);border-color:rgba(125,211,252,.34);color:#eaf6ff}
+body.dark-mode .confirm-field label{color:#eaf6ff}
+body.dark-mode .confirm-field input{background:#020617;color:#eaf6ff;border-color:rgba(125,211,252,.42)}
+@media(max-width:760px){
+  body{padding:14px}.app{padding:20px;border-radius:24px}h1{font-size:2rem}.grid{grid-template-columns:1fr}.panel-head{display:block}.panel-head button{width:100%;margin-top:12px}.panel-filter{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<main class="app">
+<div class="content">
+<a class="home-button" href="../">← Volver al menú</a>
+<div class="brand"><img class="logo" src="../logo.png" alt="Logo Miguel Iglesias" /></div>
+<h1>Administración</h1>
+<p class="subtitle">Panel separado para revisar registros, mantener la base de datos limpia y ejecutar acciones definitivas con confirmación.</p>
+<div class="dark-toggle"><button class="secondary" id="darkModeBtn">🌙 Modo oscuro</button><button class="secondary" id="cardModeBtn">Vista compacta</button></div>
+
+<section class="warning" id="adminWarning">
+  <div class="warning-title">
+    <span class="warning-icon" aria-hidden="true"><span>!</span></span>
+    <strong>¡¡¡Atención!!!</strong>
+    <span class="warning-icon" aria-hidden="true"><span>!</span></span>
+  </div>
+  <div>Si continúas con una acción de borrado definitivo, el registro ya no podrá recuperarse. Para el uso normal seguiremos recomendando activar/desactivar desde la Base de datos de Clases de Bolsillo.</div>
+</section>
+
+<section class="grid" id="adminMenu">
+<article class="admin-card">
+<div class="card-top"><div class="icon">🏫</div><div class="card-copy"><h2>Clases</h2><p>Revisar dependencias y borrar definitivamente una clase solo cuando ya no tenga estudiantes ni historial asociado.</p></div></div>
+<div class="actions"><button class="primary" id="openClassesBtn">Gestionar clases</button></div>
+</article>
+
+<article class="admin-card">
+<div class="card-top"><div class="icon">👨‍🎓</div><div class="card-copy"><h2>Estudiantes</h2><p>Localizar estudiantes inactivos, mover registros antiguos y borrar definitivamente si procede.</p></div></div>
+<div class="actions"><button class="primary" id="openStudentsBtn">Gestionar estudiantes</button></div>
+</article>
+
+<article class="admin-card">
+<div class="card-top"><div class="icon">❓</div><div class="card-copy"><h2>Bancos de preguntas</h2><p>Revisar bancos desactivados, limpiar pruebas y eliminar bancos que no se usarán en ninguna app.</p></div></div>
+<div class="actions"><button class="primary" id="openQuestionBanksBtn">Gestionar bancos de preguntas</button></div>
+</article>
+
+<article class="admin-card">
+<div class="card-top"><div class="icon">🧩</div><div class="card-copy"><h2>Bancos de temas</h2><p>Mantener los bancos de temas, revisar datos antiguos y eliminar registros definitivos con seguridad.</p></div></div>
+<div class="actions"><button class="primary" id="openTopicBanksBtn">Gestionar bancos de temas</button></div>
+</article>
+</section>
+
+<section class="panel" id="classesPanel" aria-live="polite">
+  <div class="panel-head">
+    <div>
+      <h2>Administración de clases</h2>
+      <p>Una clase solo se puede borrar definitivamente si no aparece en Estudiantes, Historial de grupos ni Registro de participación.</p>
+    </div>
+    <button class="secondary panel-back-btn" type="button">Volver a Administración</button>
+    <button class="secondary refresh-action" id="reloadPanelBtn">Actualizar ahora</button>
+  </div>
+  <div class="summary" id="classesSummary"></div>
+  <div class="message info show" id="classesMessage">Pulsa “Gestionar clases” para leer la base de datos.</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ClassID</th>
+          <th>Clase</th>
+          <th>Activo</th>
+          <th>Estudiantes</th>
+          <th>Historial grupos</th>
+          <th>Participación</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="classesTableBody">
+        <tr><td colspan="8">Sin datos cargados todavía.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel" id="studentsPanel" aria-live="polite">
+  <div class="panel-head">
+    <div>
+      <h2>Administración de estudiantes</h2>
+      <p>Un estudiante solo se puede borrar definitivamente si no aparece en Historial de grupos, Registro de participación ni respuestas de tickets.</p>
+    </div>
+    <button class="secondary panel-back-btn" type="button">Volver a Administración</button>
+    <button class="secondary refresh-action" id="reloadStudentsPanelBtn">Actualizar ahora</button>
+  </div>
+  <div class="summary" id="studentsSummary"></div>
+  <div class="message info show" id="studentsMessage">Pulsa “Gestionar estudiantes” para leer la base de datos.</div>
+  <div class="panel-filter" id="studentsFilterWrap">
+    <label for="studentsClassFilter">Filtrar por clase
+      <select id="studentsClassFilter">
+        <option value="">Todas las clases</option>
+      </select>
+    </label>
+    <div class="filter-note" id="studentsFilterNote">Carga estudiantes para poder filtrar por clase.</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Clase</th>
+          <th>StudentID</th>
+          <th>Estudiante</th>
+          <th>Activo</th>
+          <th>Grupos</th>
+          <th>Participación</th>
+          <th>Tickets</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="studentsTableBody">
+        <tr><td colspan="9">Sin datos cargados todavía.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel" id="questionBanksPanel" aria-live="polite">
+  <div class="panel-head">
+    <div>
+      <h2>Administración de bancos de preguntas</h2>
+      <p>Los bancos activos e inactivos se muestran aquí para poder limpiar pruebas, versiones antiguas o bancos que ya no se usarán.</p>
+    </div>
+    <button class="secondary panel-back-btn" type="button">Volver a Administración</button>
+    <button class="secondary refresh-action" id="reloadQuestionBanksPanelBtn">Actualizar ahora</button>
+  </div>
+  <div class="summary" id="questionBanksSummary"></div>
+  <div class="message info show" id="questionBanksMessage">Pulsa “Gestionar bancos de preguntas” para leer la base de datos.</div>
+  <div class="panel-filter" id="questionBanksFilterWrap">
+    <label for="questionBanksClassFilter">Filtrar por clase
+      <select id="questionBanksClassFilter">
+        <option value="">Todas las clases</option>
+      </select>
+    </label>
+    <div class="filter-note" id="questionBanksFilterNote">Carga bancos para poder filtrar por clase.</div>
+  </div>
+  <div class="table-wrap">
+    <table class="bank-table">
+      <thead>
+        <tr>
+          <th>Banco</th>
+          <th>Categoría</th>
+          <th>Activo</th>
+          <th>Preguntas</th>
+          <th>Vista previa</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="questionBanksTableBody">
+        <tr><td colspan="7">Sin datos cargados todavía.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel" id="topicBanksPanel" aria-live="polite">
+  <div class="panel-head">
+    <div>
+      <h2>Administración de bancos de temas</h2>
+      <p>Los bancos activos e inactivos se muestran aquí para limpiar pruebas, versiones antiguas o bancos de temas que ya no se usarán.</p>
+    </div>
+    <button class="secondary panel-back-btn" type="button">Volver a Administración</button>
+    <button class="secondary refresh-action" id="reloadTopicBanksPanelBtn">Actualizar ahora</button>
+  </div>
+  <div class="summary" id="topicBanksSummary"></div>
+  <div class="message info show" id="topicBanksMessage">Pulsa “Gestionar bancos de temas” para leer la base de datos.</div>
+  <div class="panel-filter" id="topicBanksFilterWrap">
+    <label for="topicBanksClassFilter">Filtrar por clase
+      <select id="topicBanksClassFilter">
+        <option value="">Todas las clases</option>
+      </select>
+    </label>
+    <div class="filter-note" id="topicBanksFilterNote">Carga bancos para poder filtrar por clase.</div>
+  </div>
+  <div class="table-wrap">
+    <table class="bank-table">
+      <thead>
+        <tr>
+          <th>Banco</th>
+          <th>Categoría</th>
+          <th>Activo</th>
+          <th>Temas</th>
+          <th>Vista previa</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="topicBanksTableBody">
+        <tr><td colspan="7">Sin datos cargados todavía.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="footer">© 2026 · Miguel Iglesias · Clases de Bolsillo · Administración</div>
+</div>
+</main>
+
+<div class="modal-backdrop" id="dependencyModal" role="dialog" aria-modal="true" aria-labelledby="dependencyModalTitle">
+  <section class="platform-modal">
+    <div class="modal-head">
+      <div>
+        <p class="modal-kicker" id="dependencyModalKicker">Dependencias</p>
+        <h2 class="modal-title" id="dependencyModalTitle">Registro seleccionado</h2>
+        <p class="modal-subtitle" id="dependencyModalSubtitle"></p>
+      </div>
+      <button class="modal-close" id="dependencyModalClose">Cerrar</button>
+    </div>
+    <div class="dependency-grid" id="dependencyModalGrid"></div>
+    <div class="dependency-result" id="dependencyModalResult"></div>
+  </section>
+</div>
+
+<div class="modal-backdrop" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+  <section class="platform-modal">
+    <div class="modal-head">
+      <div>
+        <p class="modal-kicker" id="confirmModalKicker">Confirmación definitiva</p>
+        <h2 class="modal-title" id="confirmModalTitle">¡¡¡Atención!!!</h2>
+        <p class="modal-subtitle" id="confirmModalSubtitle"></p>
+      </div>
+      <button class="modal-close" id="confirmModalClose">Cancelar</button>
+    </div>
+    <div class="confirm-body">
+      <div class="confirm-warning" id="confirmModalWarning"></div>
+      <div class="confirm-details" id="confirmModalDetails"></div>
+      <div class="confirm-field">
+        <label for="confirmModalInput">Para confirmar, escribe BORRAR</label>
+        <input id="confirmModalInput" autocomplete="off" spellcheck="false" />
+      </div>
+      <div class="modal-actions">
+        <button class="secondary" id="confirmModalCancel">Cancelar</button>
+        <button class="danger-strong" id="confirmModalAccept" disabled>Confirmar borrado</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const DATABASE_API_URL = "https://script.google.com/macros/s/AKfycbxMtfLwM0Mf_soESyWHYKUFQ-Pt0Q_gfjZUAodjNDAI-zPmF1M58DtD3WCjSPDQiC95Xg/exec";
+const darkModeBtn = document.getElementById("darkModeBtn");
+const cardModeBtn = document.getElementById("cardModeBtn");
+const adminMenu = document.getElementById("adminMenu");
+const adminWarning = document.getElementById("adminWarning");
+const openClassesBtn = document.getElementById("openClassesBtn");
+const reloadPanelBtn = document.getElementById("reloadPanelBtn");
+const openStudentsBtn = document.getElementById("openStudentsBtn");
+const reloadStudentsPanelBtn = document.getElementById("reloadStudentsPanelBtn");
+const openQuestionBanksBtn = document.getElementById("openQuestionBanksBtn");
+const reloadQuestionBanksPanelBtn = document.getElementById("reloadQuestionBanksPanelBtn");
+const openTopicBanksBtn = document.getElementById("openTopicBanksBtn");
+const reloadTopicBanksPanelBtn = document.getElementById("reloadTopicBanksPanelBtn");
+const classesPanel = document.getElementById("classesPanel");
+const classesSummary = document.getElementById("classesSummary");
+const classesMessage = document.getElementById("classesMessage");
+const classesTableBody = document.getElementById("classesTableBody");
+const studentsPanel = document.getElementById("studentsPanel");
+const studentsSummary = document.getElementById("studentsSummary");
+const studentsMessage = document.getElementById("studentsMessage");
+const studentsTableBody = document.getElementById("studentsTableBody");
+const studentsClassFilter = document.getElementById("studentsClassFilter");
+const studentsFilterNote = document.getElementById("studentsFilterNote");
+const questionBanksPanel = document.getElementById("questionBanksPanel");
+const questionBanksSummary = document.getElementById("questionBanksSummary");
+const questionBanksMessage = document.getElementById("questionBanksMessage");
+const questionBanksTableBody = document.getElementById("questionBanksTableBody");
+const questionBanksClassFilter = document.getElementById("questionBanksClassFilter");
+const questionBanksFilterNote = document.getElementById("questionBanksFilterNote");
+const topicBanksPanel = document.getElementById("topicBanksPanel");
+const topicBanksSummary = document.getElementById("topicBanksSummary");
+const topicBanksMessage = document.getElementById("topicBanksMessage");
+const topicBanksTableBody = document.getElementById("topicBanksTableBody");
+const topicBanksClassFilter = document.getElementById("topicBanksClassFilter");
+const topicBanksFilterNote = document.getElementById("topicBanksFilterNote");
+const dependencyModal = document.getElementById("dependencyModal");
+const dependencyModalKicker = document.getElementById("dependencyModalKicker");
+const dependencyModalTitle = document.getElementById("dependencyModalTitle");
+const dependencyModalSubtitle = document.getElementById("dependencyModalSubtitle");
+const dependencyModalGrid = document.getElementById("dependencyModalGrid");
+const dependencyModalResult = document.getElementById("dependencyModalResult");
+const dependencyModalClose = document.getElementById("dependencyModalClose");
+const confirmModal = document.getElementById("confirmModal");
+const confirmModalKicker = document.getElementById("confirmModalKicker");
+const confirmModalTitle = document.getElementById("confirmModalTitle");
+const confirmModalSubtitle = document.getElementById("confirmModalSubtitle");
+const confirmModalWarning = document.getElementById("confirmModalWarning");
+const confirmModalDetails = document.getElementById("confirmModalDetails");
+const confirmModalInput = document.getElementById("confirmModalInput");
+const confirmModalClose = document.getElementById("confirmModalClose");
+const confirmModalCancel = document.getElementById("confirmModalCancel");
+const confirmModalAccept = document.getElementById("confirmModalAccept");
+const panelBackButtons = document.querySelectorAll(".panel-back-btn");
+let loadedClasses = [];
+let loadedStudents = [];
+let loadedQuestionBanks = [];
+let loadedTopicBanks = [];
+let selectedStudentClassId = "";
+let selectedQuestionBankClassId = "";
+let selectedTopicBankClassId = "";
+let pendingConfirmResolve = null;
+
+function applyDarkMode(isDark){
+  document.body.classList.toggle("dark-mode",isDark);
+  darkModeBtn.textContent=isDark ? "☀️ Modo claro" : "🌙 Modo oscuro";
+  localStorage.setItem("clasesBolsilloAdminDarkMode",JSON.stringify(isDark));
+}
+
+function applyCardMode(isCompact){
+  document.body.classList.toggle("admin-compact",isCompact);
+  cardModeBtn.textContent = isCompact ? "Vista informativa" : "Vista compacta";
+  localStorage.setItem("clasesBolsilloAdminCompactMode",JSON.stringify(isCompact));
+}
+
+function apiCall(params){
+  return new Promise((resolve,reject)=>{
+    const callbackName = "cbAdmin" + Date.now() + Math.floor(Math.random() * 100000);
+    const script = document.createElement("script");
+    const query = new URLSearchParams({...params,callback:callbackName});
+    const timeout = setTimeout(()=>{
+      cleanup();
+      reject(new Error("La base de datos no respondió a tiempo."));
+    },20000);
+
+    function cleanup(){
+      clearTimeout(timeout);
+      delete window[callbackName];
+      script.remove();
+    }
+
+    window[callbackName] = data => {
+      cleanup();
+      resolve(data);
+    };
+
+    script.onerror = () => {
+      cleanup();
+      reject(new Error("No se pudo conectar con la base de datos."));
+    };
+
+    script.src = DATABASE_API_URL + "?" + query.toString();
+    document.body.appendChild(script);
+  });
+}
+
+function showAdminHome(){
+  adminMenu.classList.remove("screen-hidden");
+  adminWarning.classList.remove("screen-hidden");
+  classesPanel.classList.remove("active");
+  studentsPanel.classList.remove("active");
+  questionBanksPanel.classList.remove("active");
+  topicBanksPanel.classList.remove("active");
+}
+
+function showOnlyPanel(panel){
+  adminMenu.classList.add("screen-hidden");
+  adminWarning.classList.add("screen-hidden");
+  classesPanel.classList.remove("active");
+  studentsPanel.classList.remove("active");
+  questionBanksPanel.classList.remove("active");
+  topicBanksPanel.classList.remove("active");
+  panel.classList.add("active");
+}
+
+function setMessage(type,text){
+  classesMessage.className = "message show " + type;
+  classesMessage.textContent = text;
+}
+
+function setStudentsMessage(type,text){
+  studentsMessage.className = "message show " + type;
+  studentsMessage.textContent = text;
+}
+
+function setQuestionBanksMessage(type,text){
+  questionBanksMessage.className = "message show " + type;
+  questionBanksMessage.textContent = text;
+}
+
+function setTopicBanksMessage(type,text){
+  topicBanksMessage.className = "message show " + type;
+  topicBanksMessage.textContent = text;
+}
+
+function renderSummary(summary){
+  const items = [
+    ["Total", summary.total || 0],
+    ["Activas", summary.active || 0],
+    ["Inactivas", summary.inactive || 0],
+    ["Se pueden borrar", summary.deletable || 0],
+    ["Bloqueadas", summary.blocked || 0],
+    ["Duplicadas", summary.duplicates || 0]
+  ];
+  classesSummary.innerHTML = items.map(([label,value]) => (
+    `<div class="summary-card"><strong>${escapeHtml(value)}</strong><span>${escapeHtml(label)}</span></div>`
+  )).join("");
+}
+
+function renderStudentsSummary(summary){
+  const items = [
+    ["Total", summary.total || 0],
+    ["Activos", summary.active || 0],
+    ["Inactivos", summary.inactive || 0],
+    ["Baja posible", summary.deletable || 0],
+    ["Requieren limpieza", summary.cascade || summary.blocked || 0],
+    ["Duplicados", summary.duplicates || 0]
+  ];
+  studentsSummary.innerHTML = items.map(([label,value]) => (
+    `<div class="summary-card"><strong>${escapeHtml(value)}</strong><span>${escapeHtml(label)}</span></div>`
+  )).join("");
+}
+
+function renderQuestionBanksSummary(summary){
+  const items = [
+    ["Total", summary.total || 0],
+    ["Activos", summary.active || 0],
+    ["Inactivos", summary.inactive || 0],
+    ["Preguntas", summary.questions || 0],
+    ["Se pueden borrar", summary.deletable || 0],
+    ["Nombres repetidos", summary.repeatedNames || 0]
+  ];
+  questionBanksSummary.innerHTML = items.map(([label,value]) => (
+    `<div class="summary-card"><strong>${escapeHtml(value)}</strong><span>${escapeHtml(label)}</span></div>`
+  )).join("");
+}
+
+function renderTopicBanksSummary(summary){
+  const items = [
+    ["Total", summary.total || 0],
+    ["Activos", summary.active || 0],
+    ["Inactivos", summary.inactive || 0],
+    ["Temas", summary.topics || 0],
+    ["Se pueden borrar", summary.deletable || 0],
+    ["Nombres repetidos", summary.repeatedNames || 0]
+  ];
+  topicBanksSummary.innerHTML = items.map(([label,value]) => (
+    `<div class="summary-card"><strong>${escapeHtml(value)}</strong><span>${escapeHtml(label)}</span></div>`
+  )).join("");
+}
+
+function renderClasses(classes){
+  loadedClasses = classes || [];
+
+  if (!loadedClasses.length) {
+    classesTableBody.innerHTML = `<tr><td colspan="8">No hay clases para mostrar.</td></tr>`;
+    return;
+  }
+
+  classesTableBody.innerHTML = loadedClasses.map(item => {
+    const deps = item.dependencies || {};
+    const classIsActive = isActive(item.active);
+    const activeControl = renderActiveToggle({
+      active: classIsActive,
+      action: "class-toggle",
+      activeLabel: "Clase activa. Pulsa para desactivarla.",
+      inactiveLabel: "Clase desactivada. Pulsa para activarla.",
+      attrs: `data-class-id="${escapeAttr(item.classId)}" data-next-active="${classIsActive ? "FALSE" : "TRUE"}"`
+    });
+    const status = item.canDelete
+      ? renderStatusLabel("Se puede borrar","Esta clase no tiene datos relacionados. Puedes borrarla definitivamente si estas seguro.")
+      : renderStatusLabel("Tiene dependencias",getClassDeleteBlockReason(deps),"blocked");
+    const duplicateText = item.duplicateCount > 1 ? ` · ${item.duplicateCount} duplicadas` : "";
+    const deleteTooltip = item.canDelete
+      ? "Esta clase no tiene datos relacionados. Puedes borrarla definitivamente si estás seguro."
+      : getClassDeleteBlockReason(deps);
+
+    return `<tr>
+      <td class="mono">${escapeHtml(item.classId)}</td>
+      <td><div class="class-name">${escapeHtml(item.displayName || item.course || "Clase sin nombre")}</div><div class="note">${escapeHtml(duplicateText.replace(/^ · /,""))}</div></td>
+      <td>${activeControl}</td>
+      <td>${escapeHtml(deps.students || 0)}</td>
+      <td>${escapeHtml(deps.groupHistory || 0)}</td>
+      <td>${escapeHtml(deps.participationLog || 0)}</td>
+      <td>${status}</td>
+      <td><div class="row-actions">
+        <button class="secondary" data-action="details" data-class-id="${escapeAttr(item.classId)}">Ver dependencias</button>
+        <span class="tooltip-action" data-tooltip="${escapeAttr(deleteTooltip)}">
+          <button class="danger" data-action="delete" data-class-id="${escapeAttr(item.classId)}" ${item.canDelete ? "" : "disabled"} title="${escapeAttr(deleteTooltip)}">Borrar definitivamente</button>
+        </span>
+      </div></td>
+    </tr>`;
+  }).join("");
+}
+
+function getClassDeleteBlockReason(deps){
+  const reasons = [];
+  if ((deps.students || 0) > 0) reasons.push((deps.students || 0) + " estudiante(s)");
+  if ((deps.groupHistory || 0) > 0) reasons.push((deps.groupHistory || 0) + " registro(s) de historial de grupos");
+  if ((deps.participationLog || 0) > 0) reasons.push((deps.participationLog || 0) + " registro(s) de participación");
+
+  return "No se puede borrar todavía: esta clase tiene " + reasons.join(", ") + ". Borra o mueve primero esos datos desde Administración.";
+}
+
+function renderStudents(students){
+  loadedStudents = students || [];
+  renderStudentsClassFilter();
+  renderFilteredStudents();
+}
+
+function renderStudentsClassFilter(){
+  const classMap = new Map();
+
+  loadedStudents.forEach(item => {
+    const classId = String(item.classId || "").trim();
+    if (!classId) return;
+    classMap.set(classId,item.className || classId);
+  });
+
+  const currentExists = !selectedStudentClassId || classMap.has(selectedStudentClassId);
+  if (!currentExists) selectedStudentClassId = "";
+
+  const options = [`<option value="">Todas las clases</option>`].concat(
+    [...classMap.entries()]
+      .sort((a,b)=>String(a[1]).localeCompare(String(b[1]),"es"))
+      .map(([classId,className]) => `<option value="${escapeAttr(classId)}" ${classId === selectedStudentClassId ? "selected" : ""}>${escapeHtml(className)}</option>`)
+  );
+
+  studentsClassFilter.innerHTML = options.join("");
+  studentsClassFilter.disabled = classMap.size === 0;
+  updateStudentsFilterNote(loadedStudents.length);
+}
+
+function renderFilteredStudents(){
+  const visibleStudents = selectedStudentClassId
+    ? loadedStudents.filter(item => item.classId === selectedStudentClassId)
+    : loadedStudents;
+
+  if (!loadedStudents.length) {
+    studentsTableBody.innerHTML = `<tr><td colspan="9">No hay estudiantes para mostrar.</td></tr>`;
+    updateStudentsFilterNote(0);
+    return;
+  }
+
+  if (!visibleStudents.length) {
+    studentsTableBody.innerHTML = `<tr><td colspan="9">No hay estudiantes en esta clase.</td></tr>`;
+    updateStudentsFilterNote(0);
+    return;
+  }
+
+  studentsTableBody.innerHTML = visibleStudents.map(item => {
+    const deps = item.dependencies || {};
+    const studentIsActive = isActive(item.active);
+    const activeControl = renderActiveToggle({
+      active: studentIsActive,
+      action: "student-toggle",
+      activeLabel: "Estudiante activo. Pulsa para desactivarlo.",
+      inactiveLabel: "Estudiante desactivado. Pulsa para activarlo.",
+      attrs: `data-class-id="${escapeAttr(item.classId)}" data-student-id="${escapeAttr(item.studentId)}" data-next-active="${studentIsActive ? "FALSE" : "TRUE"}"`
+    });
+    const totalDeps = (deps.groupHistory || 0) + (deps.participationLog || 0) + (deps.exitTickets || 0);
+    const status = totalDeps === 0
+      ? renderStatusLabel("Se puede borrar","Este estudiante no tiene datos relacionados. Puedes darlo de baja definitiva si estas seguro.")
+      : renderStatusLabel("Tiene dependencias",getStudentDeleteBlockReason(deps),"blocked");
+    const duplicateText = item.duplicateCount > 1 ? `${item.duplicateCount} duplicados` : "";
+    const deleteTooltip = totalDeps === 0
+      ? "Este estudiante no tiene datos relacionados. Puedes darlo de baja definitiva si estás seguro."
+      : getStudentDeleteBlockReason(deps);
+
+    return `<tr>
+      <td><div class="class-name">${escapeHtml(item.className || item.classId)}</div><div class="note mono">${escapeHtml(item.classId)}</div></td>
+      <td class="mono">${escapeHtml(item.studentId)}</td>
+      <td><div class="class-name">${escapeHtml(item.studentName || "Estudiante sin nombre")}</div><div class="note">${escapeHtml(duplicateText)}</div></td>
+      <td>${activeControl}</td>
+      <td>${escapeHtml(deps.groupHistory || 0)}</td>
+      <td>${escapeHtml(deps.participationLog || 0)}</td>
+      <td>${escapeHtml(deps.exitTickets || 0)}</td>
+      <td>${status}</td>
+      <td><div class="row-actions">
+        <button class="secondary" data-action="student-details" data-class-id="${escapeAttr(item.classId)}" data-student-id="${escapeAttr(item.studentId)}">Ver dependencias</button>
+        <span class="tooltip-action" data-tooltip="${escapeAttr(deleteTooltip)}">
+          <button class="danger" data-action="student-delete" data-class-id="${escapeAttr(item.classId)}" data-student-id="${escapeAttr(item.studentId)}" title="${escapeAttr(deleteTooltip)}">Baja definitiva</button>
+        </span>
+      </div></td>
+    </tr>`;
+  }).join("");
+  updateStudentsFilterNote(visibleStudents.length);
+}
+
+function updateStudentsFilterNote(count){
+  if (!loadedStudents.length) {
+    studentsFilterNote.textContent = "Carga estudiantes para poder filtrar por clase.";
+    return;
+  }
+
+  if (selectedStudentClassId) {
+    const selectedOption = studentsClassFilter.options[studentsClassFilter.selectedIndex];
+    const className = selectedOption ? selectedOption.textContent : "esta clase";
+    studentsFilterNote.textContent = `Mostrando ${count} estudiante(s) de ${className}.`;
+    return;
+  }
+
+  studentsFilterNote.textContent = `Mostrando todos los estudiantes: ${count}.`;
+}
+
+function getStudentDeleteBlockReason(deps){
+  const reasons = [];
+  if ((deps.groupHistory || 0) > 0) reasons.push((deps.groupHistory || 0) + " registro(s) de historial de grupos");
+  if ((deps.participationLog || 0) > 0) reasons.push((deps.participationLog || 0) + " registro(s) de participación");
+  if ((deps.exitTickets || 0) > 0) reasons.push((deps.exitTickets || 0) + " respuesta(s) de tickets");
+
+  return "Baja definitiva con limpieza: se borrará el estudiante y también " + reasons.join(", ") + ". Esta acción no se puede deshacer.";
+}
+
+function getClassDisplayName(item){
+  return item.displayName || [item.course,item.section,item.schoolYear].filter(Boolean).join(" - ") || item.classId || "Clase sin nombre";
+}
+
+function normalizeMatch(value){
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/[_-]+/g," ")
+    .replace(/\s+/g," ")
+    .trim();
+}
+
+function getClassFilterOptions(){
+  return loadedClasses
+    .map(item => ({
+      classId:String(item.classId || "").trim(),
+      label:getClassDisplayName(item),
+      course:item.course || "",
+      section:item.section || "",
+      schoolYear:item.schoolYear || ""
+    }))
+    .filter(item => item.classId)
+    .sort((a,b)=>a.label.localeCompare(b.label,"es"));
+}
+
+function renderClassFilter(selectEl,selectedClassId){
+  const classes = getClassFilterOptions();
+  const exists = !selectedClassId || classes.some(item => item.classId === selectedClassId);
+  if (!exists) selectedClassId = "";
+
+  selectEl.innerHTML = [`<option value="">Todas las clases</option>`].concat(
+    classes.map(item => `<option value="${escapeAttr(item.classId)}" ${item.classId === selectedClassId ? "selected" : ""}>${escapeHtml(item.label)}</option>`)
+  ).join("");
+  selectEl.disabled = classes.length === 0;
+
+  return selectedClassId;
+}
+
+function bankMatchesClass(bank,classId){
+  if (!classId) return true;
+  const classItem = getClassFilterOptions().find(item => item.classId === classId);
+  if (!classItem) return true;
+
+  const directClassId = String(bank.classId || bank.ClassID || bank.classID || "").trim();
+  if (directClassId && directClassId === classId) return true;
+
+  const haystack = normalizeMatch([
+    bank.bankId,
+    bank.bankName,
+    bank.category,
+    bank.preview,
+    bank.className,
+    bank.course,
+    bank.section,
+    bank.schoolYear
+  ].join(" "));
+
+  const classIdText = normalizeMatch(classItem.classId);
+  if (classIdText && haystack.includes(classIdText)) return true;
+
+  const strongTerms = [
+    classItem.course,
+    classItem.section,
+    classItem.schoolYear,
+    classItem.label
+  ]
+    .flatMap(value => normalizeMatch(value).split(" "))
+    .filter(term => term.length >= 3 && !["2025","2026","2027","2028"].includes(term));
+
+  return [...new Set(strongTerms)].some(term => haystack.includes(term));
+}
+
+function updateBankFilterNote(noteEl,selectedClassId,count,total){
+  if (!getClassFilterOptions().length) {
+    noteEl.textContent = "Carga clases para poder filtrar por clase.";
+    return;
+  }
+
+  if (selectedClassId) {
+    const selected = getClassFilterOptions().find(item => item.classId === selectedClassId);
+    noteEl.textContent = `Mostrando ${count} de ${total} banco(s) relacionados con ${selected ? selected.label : "esta clase"}.`;
+    return;
+  }
+
+  noteEl.textContent = `Mostrando todos los bancos: ${total}.`;
+}
+
+function renderQuestionBanks(banks){
+  loadedQuestionBanks = banks || [];
+  selectedQuestionBankClassId = renderClassFilter(questionBanksClassFilter,selectedQuestionBankClassId);
+  const visibleBanks = selectedQuestionBankClassId
+    ? loadedQuestionBanks.filter(item => bankMatchesClass(item,selectedQuestionBankClassId))
+    : loadedQuestionBanks;
+
+  if (!loadedQuestionBanks.length) {
+    questionBanksTableBody.innerHTML = `<tr><td colspan="7">No hay bancos de preguntas para mostrar.</td></tr>`;
+    updateBankFilterNote(questionBanksFilterNote,selectedQuestionBankClassId,0,0);
+    return;
+  }
+
+  if (!visibleBanks.length) {
+    questionBanksTableBody.innerHTML = `<tr><td colspan="7">No hay bancos de preguntas relacionados con esta clase.</td></tr>`;
+    updateBankFilterNote(questionBanksFilterNote,selectedQuestionBankClassId,0,loadedQuestionBanks.length);
+    return;
+  }
+
+  questionBanksTableBody.innerHTML = visibleBanks.map(item => {
+    const bankIsActive = isActive(item.active);
+    const repeatedText = item.sameNameCount > 1 ? `${item.sameNameCount} versiones con este nombre` : "";
+    const activeControl = renderActiveToggle({
+      active: bankIsActive,
+      action: "question-bank-toggle",
+      activeLabel: "Banco activo. Pulsa para desactivarlo.",
+      inactiveLabel: "Banco desactivado. Pulsa para activarlo.",
+      disabledLabel: "Ahora solo puedes ver este banco. Pulsa Actualizar ahora y vuelve a intentarlo.",
+      attrs: `data-bank-id="${escapeAttr(item.bankId)}" data-next-active="${bankIsActive ? "FALSE" : "TRUE"}"`,
+      disabled: item.adminUnavailable
+    });
+    const status = item.adminUnavailable
+      ? renderStatusLabel("Solo lectura","Puedes ver este banco, pero ahora no puedes cambiarlo ni borrarlo desde aqui. Pulsa Actualizar ahora y vuelve a intentarlo.","blocked")
+      : bankIsActive
+        ? renderStatusLabel("Protegido","Este banco esta activo. Primero desmarca el checkmark de Activo y despues podras borrarlo si no lo vas a usar mas.","blocked")
+        : renderStatusLabel("Se puede borrar","Este banco esta desactivado. Si estas seguro de que no lo vas a usar mas, puedes borrarlo definitivamente.");
+    const deleteTooltip = item.adminUnavailable
+      ? "Ahora solo puedes ver este banco. Pulsa Actualizar ahora y vuelve a intentarlo."
+      : bankIsActive
+        ? "No se puede borrar porque esta activo. Desmarca primero el checkmark de Activo."
+        : "Borrado definitivo: se eliminaran " + (item.rowCount || item.questionCount || 0) + " fila(s) de este banco. Esta accion no se puede deshacer.";
+
+    return `<tr>
+      <td><div class="class-name">${escapeHtml(item.bankName || "Banco sin nombre")}</div><div class="note">${escapeHtml(repeatedText)}</div></td>
+      <td>${escapeHtml(item.category || "Sin categoria")}</td>
+      <td>${activeControl}</td>
+      <td>${escapeHtml(item.questionCount || 0)}</td>
+      <td>${escapeHtml(item.preview || "Sin vista previa")}</td>
+      <td>${status}</td>
+      <td><div class="bank-actions">
+        <button class="secondary" data-action="question-bank-details" data-bank-id="${escapeAttr(item.bankId)}">Ver detalles</button>
+        <span class="tooltip-action" data-tooltip="${escapeAttr(deleteTooltip)}">
+          <button class="danger" data-action="question-bank-delete" data-bank-id="${escapeAttr(item.bankId)}" ${(item.adminUnavailable || bankIsActive) ? "disabled" : ""} title="${escapeAttr(deleteTooltip)}">Borrar definitivamente</button>
+        </span>
+      </div></td>
+    </tr>`;
+  }).join("");
+  updateBankFilterNote(questionBanksFilterNote,selectedQuestionBankClassId,visibleBanks.length,loadedQuestionBanks.length);
+}
+
+function renderTopicBanks(banks){
+  loadedTopicBanks = banks || [];
+  selectedTopicBankClassId = renderClassFilter(topicBanksClassFilter,selectedTopicBankClassId);
+  const visibleBanks = selectedTopicBankClassId
+    ? loadedTopicBanks.filter(item => bankMatchesClass(item,selectedTopicBankClassId))
+    : loadedTopicBanks;
+
+  if (!loadedTopicBanks.length) {
+    topicBanksTableBody.innerHTML = `<tr><td colspan="7">No hay bancos de temas para mostrar.</td></tr>`;
+    updateBankFilterNote(topicBanksFilterNote,selectedTopicBankClassId,0,0);
+    return;
+  }
+
+  if (!visibleBanks.length) {
+    topicBanksTableBody.innerHTML = `<tr><td colspan="7">No hay bancos de temas relacionados con esta clase.</td></tr>`;
+    updateBankFilterNote(topicBanksFilterNote,selectedTopicBankClassId,0,loadedTopicBanks.length);
+    return;
+  }
+
+  topicBanksTableBody.innerHTML = visibleBanks.map(item => {
+    const bankIsActive = isActive(item.active);
+    const repeatedText = item.sameNameCount > 1 ? `${item.sameNameCount} versiones con este nombre` : "";
+    const activeControl = renderActiveToggle({
+      active: bankIsActive,
+      action: "topic-bank-toggle",
+      activeLabel: "Banco activo. Pulsa para desactivarlo.",
+      inactiveLabel: "Banco desactivado. Pulsa para activarlo.",
+      disabledLabel: "Ahora solo puedes ver este banco. Pulsa Actualizar ahora y vuelve a intentarlo.",
+      attrs: `data-bank-id="${escapeAttr(item.bankId)}" data-next-active="${bankIsActive ? "FALSE" : "TRUE"}"`,
+      disabled: item.adminUnavailable
+    });
+    const status = item.adminUnavailable
+      ? renderStatusLabel("Solo lectura","Puedes ver este banco, pero ahora no puedes cambiarlo ni borrarlo desde aqui. Pulsa Actualizar ahora y vuelve a intentarlo.","blocked")
+      : bankIsActive
+        ? renderStatusLabel("Protegido","Este banco esta activo. Primero desmarca el checkmark de Activo y despues podras borrarlo si no lo vas a usar mas.","blocked")
+        : renderStatusLabel("Se puede borrar","Este banco esta desactivado. Si estas seguro de que no lo vas a usar mas, puedes borrarlo definitivamente.");
+    const deleteTooltip = item.adminUnavailable
+      ? "Ahora solo puedes ver este banco. Pulsa Actualizar ahora y vuelve a intentarlo."
+      : bankIsActive
+        ? "No se puede borrar porque esta activo. Desmarca primero el checkmark de Activo."
+        : "Borrado definitivo: se eliminaran " + (item.rowCount || item.topicCount || 0) + " fila(s) de este banco. Esta accion no se puede deshacer.";
+
+    return `<tr>
+      <td><div class="class-name">${escapeHtml(item.bankName || "Banco sin nombre")}</div><div class="note">${escapeHtml(repeatedText)}</div></td>
+      <td>${escapeHtml(item.category || "Sin categoria")}</td>
+      <td>${activeControl}</td>
+      <td>${escapeHtml(item.topicCount || 0)}</td>
+      <td>${escapeHtml(item.preview || "Sin vista previa")}</td>
+      <td>${status}</td>
+      <td><div class="bank-actions">
+        <button class="secondary" data-action="topic-bank-details" data-bank-id="${escapeAttr(item.bankId)}">Ver detalles</button>
+        <span class="tooltip-action" data-tooltip="${escapeAttr(deleteTooltip)}">
+          <button class="danger" data-action="topic-bank-delete" data-bank-id="${escapeAttr(item.bankId)}" ${(item.adminUnavailable || bankIsActive) ? "disabled" : ""} title="${escapeAttr(deleteTooltip)}">Borrar definitivamente</button>
+        </span>
+      </div></td>
+    </tr>`;
+  }).join("");
+  updateBankFilterNote(topicBanksFilterNote,selectedTopicBankClassId,visibleBanks.length,loadedTopicBanks.length);
+}
+
+function renderActiveToggle(config){
+  const active = config.active === true;
+  const attrs = config.attrs || "";
+  const disabled = config.disabled ? "disabled" : "";
+  const label = config.disabled
+    ? (config.disabledLabel || "Ahora mismo no se puede cambiar este campo.")
+    : active
+      ? (config.activeLabel || "Activo. Pulsa para desactivar.")
+      : (config.inactiveLabel || "Desactivado. Pulsa para activar.");
+  const icon = active ? "&#10003;" : "";
+
+  return `<span class="status-cell" data-tooltip="${escapeAttr(label)}"><button class="status-toggle ${active ? "active" : "inactive"}" data-action="${escapeAttr(config.action)}" ${attrs} ${disabled} aria-label="${escapeAttr(label)}" title="${escapeAttr(label)}">${icon}</button></span>`;
+}
+
+function renderStatusLabel(label,tooltip,type="safe"){
+  return `<span class="status-label" data-tooltip="${escapeAttr(tooltip)}"><span class="badge ${type === "blocked" ? "blocked" : "safe"}">${escapeHtml(label)}</span></span>`;
+}
+
+async function loadClasses(){
+  showOnlyPanel(classesPanel);
+  setMessage("info","Leyendo clases y dependencias...");
+  renderSummary({});
+  try{
+    const data = await apiCall({action:"adminGetClasses"});
+    if (data.status !== "success") throw new Error(data.message || "No se pudieron cargar las clases.");
+    renderSummary(data.summary || {});
+    renderClasses(data.classes || []);
+    setMessage("ok","Clases cargadas. Las clases con dependencias quedan protegidas contra borrado definitivo.");
+  }catch(error){
+    setMessage("error",error.message);
+  }
+}
+
+async function loadStudents(){
+  showOnlyPanel(studentsPanel);
+  setStudentsMessage("info","Leyendo estudiantes y dependencias...");
+  renderStudentsSummary({});
+  try{
+    const data = await apiCall({action:"adminGetStudents"});
+    if (data.status !== "success") throw new Error(data.message || "No se pudieron cargar los estudiantes.");
+    renderStudentsSummary(data.summary || {});
+    renderStudents(data.students || []);
+    setStudentsMessage("ok","Estudiantes cargados. La baja definitiva puede limpiar automáticamente historial, participación y tickets asociados.");
+  }catch(error){
+    setStudentsMessage("error",error.message);
+  }
+}
+
+async function ensureClassesLoaded(){
+  if (loadedClasses.length) return;
+  try{
+    const data = await apiCall({action:"adminGetClasses"});
+    if (data.status === "success") loadedClasses = data.classes || [];
+  }catch(error){
+    loadedClasses = loadedClasses || [];
+  }
+}
+
+async function loadQuestionBanks(){
+  showOnlyPanel(questionBanksPanel);
+  setQuestionBanksMessage("info","Leyendo bancos de preguntas...");
+  renderQuestionBanksSummary({});
+  try{
+    await ensureClassesLoaded();
+    const data = await apiCall({action:"adminGetQuestionBanks"});
+    if (data.status !== "success") {
+      const fallback = await apiCall({action:"getQuestionBanks",includeInactive:"TRUE"});
+      if (fallback.status !== "success") throw new Error(data.message || fallback.message || "No se pudieron cargar los bancos de preguntas.");
+
+      const fallbackBanks = (fallback.banks || []).map(bank => {
+        const questions = bank.questions || [];
+        return {
+          bankId: bank.bankId || "",
+          bankName: bank.bankName || "",
+          category: bank.category || "",
+          active: bank.active,
+          activeLabel: isActive(bank.active) ? "Si" : "No",
+          questions: questions,
+          questionCount: questions.length,
+          rowCount: questions.length,
+          preview: questions.slice(0,2).join(" | "),
+          sameNameCount: 1,
+          adminUnavailable: true
+        };
+      });
+
+      renderQuestionBanksSummary({
+        total: fallbackBanks.length,
+        active: fallbackBanks.filter(bank => isActive(bank.active)).length,
+        inactive: fallbackBanks.filter(bank => !isActive(bank.active)).length,
+        questions: fallbackBanks.reduce((sum, bank) => sum + (bank.questionCount || 0), 0),
+        deletable: 0,
+        repeatedNames: 0
+      });
+      renderQuestionBanks(fallbackBanks);
+      setQuestionBanksMessage("error","Bancos cargados en modo solo lectura. Puedes revisarlos, pero ahora no se pueden cambiar desde aqui. Pulsa Actualizar ahora y vuelve a intentarlo.");
+      return;
+    }
+    renderQuestionBanksSummary(data.summary || {});
+    renderQuestionBanks(data.banks || []);
+    setQuestionBanksMessage("ok","Bancos de preguntas cargados. En Administracion aparecen activos e inactivos para poder limpiar la base de datos.");
+  }catch(error){
+    setQuestionBanksMessage("error",error.message);
+  }
+}
+
+async function loadTopicBanks(){
+  showOnlyPanel(topicBanksPanel);
+  setTopicBanksMessage("info","Leyendo bancos de temas...");
+  renderTopicBanksSummary({});
+  try{
+    await ensureClassesLoaded();
+    const data = await apiCall({action:"adminGetTopicBanks"});
+    if (data.status !== "success") {
+      const fallback = await apiCall({action:"getTopicBanks",includeInactive:"TRUE"});
+      if (fallback.status !== "success") throw new Error(data.message || fallback.message || "No se pudieron cargar los bancos de temas.");
+
+      const fallbackBanks = (fallback.banks || []).map(bank => {
+        const topics = bank.topics || [];
+        return {
+          bankId: bank.bankId || "",
+          bankName: bank.bankName || "",
+          category: bank.category || "",
+          active: bank.active,
+          activeLabel: isActive(bank.active) ? "Si" : "No",
+          topics: topics,
+          topicCount: topics.length,
+          rowCount: topics.length,
+          preview: topics.slice(0,2).join(" | "),
+          sameNameCount: 1,
+          adminUnavailable: true
+        };
+      });
+
+      renderTopicBanksSummary({
+        total: fallbackBanks.length,
+        active: fallbackBanks.filter(bank => isActive(bank.active)).length,
+        inactive: fallbackBanks.filter(bank => !isActive(bank.active)).length,
+        topics: fallbackBanks.reduce((sum, bank) => sum + (bank.topicCount || 0), 0),
+        deletable: 0,
+        repeatedNames: 0
+      });
+      renderTopicBanks(fallbackBanks);
+      setTopicBanksMessage("error","Bancos de temas cargados en modo solo lectura. Puedes revisarlos, pero ahora no se pueden cambiar desde aqui. Pulsa Actualizar ahora y vuelve a intentarlo.");
+      return;
+    }
+    renderTopicBanksSummary(data.summary || {});
+    renderTopicBanks(data.banks || []);
+    setTopicBanksMessage("ok","Bancos de temas cargados. En Administracion aparecen activos e inactivos para poder limpiar la base de datos.");
+  }catch(error){
+    setTopicBanksMessage("error",error.message);
+  }
+}
+
+function showDependencies(classId){
+  const item = loadedClasses.find(entry => entry.classId === classId);
+  if (!item) return;
+  const deps = item.dependencies || {};
+  openDependencyModal({
+    kicker:"Dependencias de clase",
+    title:item.displayName || item.course || classId,
+    subtitle:"ClassID: " + classId,
+    items:[
+      ["Estudiantes", deps.students || 0],
+      ["Historial de grupos", deps.groupHistory || 0],
+      ["Participación", deps.participationLog || 0]
+    ],
+    canDelete:item.canDelete,
+    safeText:"Esta clase no tiene datos relacionados. Se puede borrar definitivamente si estás seguro.",
+    blockedText:"Esta clase todavía tiene datos relacionados. Borra o mueve primero esos datos para proteger la base de datos."
+  });
+}
+
+function showStudentDependencies(classId,studentId){
+  const item = loadedStudents.find(entry => entry.classId === classId && entry.studentId === studentId);
+  if (!item) return;
+  const deps = item.dependencies || {};
+  const totalDeps = (deps.groupHistory || 0) + (deps.participationLog || 0) + (deps.exitTickets || 0);
+  openDependencyModal({
+    kicker:"Dependencias de estudiante",
+    title:item.studentName || studentId,
+    subtitle:"Clase: " + (item.className || classId) + " · StudentID: " + studentId,
+    items:[
+      ["Historial de grupos", deps.groupHistory || 0],
+      ["Participación", deps.participationLog || 0],
+      ["Tickets", deps.exitTickets || 0]
+    ],
+    canDelete:totalDeps === 0,
+    safeText:"Este estudiante no tiene datos relacionados. La baja definitiva solo eliminará su ficha de estudiante.",
+    blockedText:"Este estudiante tiene datos asociados. La baja definitiva eliminará su ficha y limpiará automáticamente esos registros."
+  });
+}
+
+function showQuestionBankDetails(bankId){
+  const item = loadedQuestionBanks.find(entry => entry.bankId === bankId);
+  if (!item) return;
+  openDependencyModal({
+    kicker:"Detalles del banco de preguntas",
+    title:item.bankName || "Banco sin nombre",
+    subtitle:"Banco de preguntas",
+    items:[
+      ["Filas", item.rowCount || 0],
+      ["Preguntas", item.questionCount || 0],
+      ["Activo", item.activeLabel || (isActive(item.active) ? "Si" : "No")]
+    ],
+    canDelete:true,
+    safeText:"Este banco puede borrarse definitivamente desde Administracion. Se eliminaran todas sus preguntas.",
+    blockedText:""
+  });
+}
+
+function showTopicBankDetails(bankId){
+  const item = loadedTopicBanks.find(entry => entry.bankId === bankId);
+  if (!item) return;
+  openDependencyModal({
+    kicker:"Detalles del banco de temas",
+    title:item.bankName || "Banco sin nombre",
+    subtitle:"Banco de temas",
+    items:[
+      ["Filas", item.rowCount || 0],
+      ["Temas", item.topicCount || 0],
+      ["Activo", item.activeLabel || (isActive(item.active) ? "Si" : "No")]
+    ],
+    canDelete:true,
+    safeText:"Este banco puede borrarse definitivamente desde Administracion. Se eliminaran todos sus temas.",
+    blockedText:""
+  });
+}
+
+function openDependencyModal(config){
+  dependencyModalKicker.textContent = config.kicker || "Dependencias";
+  dependencyModalTitle.textContent = config.title || "Registro seleccionado";
+  dependencyModalSubtitle.textContent = config.subtitle || "";
+  dependencyModalGrid.innerHTML = (config.items || []).map(([label,value]) => (
+    `<article class="dependency-card"><strong>${escapeHtml(value)}</strong><span>${escapeHtml(label)}</span></article>`
+  )).join("");
+  dependencyModalResult.className = "dependency-result " + (config.canDelete ? "safe" : "blocked");
+  dependencyModalResult.textContent = config.canDelete ? config.safeText : config.blockedText;
+  dependencyModal.classList.add("active");
+  dependencyModalClose.focus();
+}
+
+function closeDependencyModal(){
+  dependencyModal.classList.remove("active");
+}
+
+function openConfirmModal(config){
+  return new Promise(resolve=>{
+    pendingConfirmResolve = resolve;
+    confirmModalKicker.textContent = config.kicker || "Confirmación definitiva";
+    confirmModalTitle.textContent = config.title || "¡¡¡Atención!!!";
+    confirmModalSubtitle.textContent = config.subtitle || "";
+    confirmModalWarning.textContent = config.warning || "Esta acción no se puede deshacer.";
+    confirmModalDetails.innerHTML = config.detailsHtml || "";
+    confirmModalInput.value = "";
+    confirmModalAccept.disabled = true;
+    confirmModal.classList.add("active");
+    setTimeout(()=>confirmModalInput.focus(),0);
+  });
+}
+
+function closeConfirmModal(result){
+  confirmModal.classList.remove("active");
+  if (pendingConfirmResolve) {
+    pendingConfirmResolve(result === true);
+    pendingConfirmResolve = null;
+  }
+}
+
+function updateConfirmState(){
+  confirmModalAccept.disabled = confirmModalInput.value.trim().toUpperCase() !== "BORRAR";
+}
+
+async function deleteClass(classId){
+  const item = loadedClasses.find(entry => entry.classId === classId);
+  if (!item || !item.canDelete) return;
+
+  const ok = await openConfirmModal({
+    kicker:"Borrado definitivo de clase",
+    title:"Borrar clase definitivamente",
+    subtitle:item.displayName || item.course || classId,
+    warning:"Si continúas, esta clase se borrará definitivamente y no podrá recuperarse.",
+    detailsHtml:`<strong>Registro afectado</strong><ul><li>ClassID: ${escapeHtml(classId)}</li><li>Clase: ${escapeHtml(item.displayName || item.course || "Clase sin nombre")}</li></ul>`
+  });
+  if (!ok) {
+    setMessage("info","Borrado cancelado. No se ha eliminado nada.");
+    return;
+  }
+
+  setMessage("info","Comprobando dependencias y borrando la clase...");
+  try{
+    const data = await apiCall({action:"adminDeleteClass",classId:classId,confirmation:"BORRAR"});
+    if (data.status !== "success") throw new Error(data.message || "No se pudo borrar la clase.");
+    setMessage("ok",data.message || "Clase borrada definitivamente.");
+    await loadClasses();
+  }catch(error){
+    setMessage("error",error.message);
+  }
+}
+
+async function deleteStudent(classId,studentId){
+  const item = loadedStudents.find(entry => entry.classId === classId && entry.studentId === studentId);
+  if (!item) return;
+
+  const deps = item.dependencies || {};
+  const label = (item.studentName || studentId) + " · " + (item.className || classId);
+  const ok = await openConfirmModal({
+    kicker:"Baja definitiva de estudiante",
+    title:"Dar de baja definitiva",
+    subtitle:label,
+    warning:"Si continúas, el estudiante y sus registros asociados se eliminarán definitivamente. Esta acción no podrá recuperarse.",
+    detailsHtml:`<strong>También se eliminarán estos registros asociados</strong><ul><li>Historial de grupos: ${escapeHtml(deps.groupHistory || 0)}</li><li>Participación: ${escapeHtml(deps.participationLog || 0)}</li><li>Tickets: ${escapeHtml(deps.exitTickets || 0)}</li></ul>`
+  });
+  if (!ok) {
+    setStudentsMessage("info","Borrado cancelado. No se ha eliminado nada.");
+    return;
+  }
+
+  setStudentsMessage("info","Dando de baja definitiva al estudiante y limpiando sus registros asociados...");
+  try{
+    const data = await apiCall({
+      action:"adminDeleteStudent",
+      classId:classId,
+      studentId:studentId,
+      studentName:item.studentName || "",
+      confirmation:"BORRAR"
+    });
+    if (data.status !== "success") throw new Error(data.message || "No se pudo borrar el estudiante.");
+    const removed = data.deletedDependencies || {};
+    setStudentsMessage(
+      "ok",
+      (data.message || "Estudiante dado de baja definitiva.") +
+      " Limpieza: grupos " + (removed.groupHistory || 0) +
+      ", participación " + (removed.participationLog || 0) +
+      ", tickets " + (removed.exitTickets || 0) + "."
+    );
+    await loadStudents();
+  }catch(error){
+    setStudentsMessage("error",error.message);
+  }
+}
+
+async function setClassActiveState(classId,nextActive){
+  const item = loadedClasses.find(entry => entry.classId === classId);
+  if (!item) return;
+
+  const willActivate = isActive(nextActive);
+  const deps = item.dependencies || {};
+
+  if (!willActivate && (deps.students || 0) > 0) {
+    setMessage(
+      "error",
+      "No se puede desactivar esta clase porque todavia tiene estudiantes. Mueve o desactiva primero esos estudiantes para evitar cambios inesperados en las apps."
+    );
+    return;
+  }
+
+  setMessage("info",willActivate ? "Activando clase..." : "Desactivando clase...");
+  try{
+    const data = await apiCall({
+      action:"setClassActive",
+      classId:classId,
+      active:willActivate ? "TRUE" : "FALSE"
+    });
+    if (data.status !== "success") throw new Error(data.message || "No se pudo cambiar el estado de la clase.");
+    setMessage("ok",willActivate ? "Clase activada." : "Clase desactivada. Ya no aparecera en las apps normales.");
+    await loadClasses();
+  }catch(error){
+    setMessage("error",error.message);
+  }
+}
+
+async function setStudentActiveState(classId,studentId,nextActive){
+  const item = loadedStudents.find(entry => entry.classId === classId && entry.studentId === studentId);
+  if (!item) return;
+
+  const willActivate = isActive(nextActive);
+  setStudentsMessage("info",willActivate ? "Activando estudiante..." : "Desactivando estudiante...");
+  try{
+    const data = await apiCall({
+      action:"setStudentActive",
+      classId:classId,
+      studentId:studentId,
+      studentName:item.studentName || "",
+      notes:item.notes || "",
+      active:willActivate ? "TRUE" : "FALSE"
+    });
+    if (data.status !== "success") throw new Error(data.message || "No se pudo cambiar el estado del estudiante.");
+    setStudentsMessage("ok",willActivate ? "Estudiante activado." : "Estudiante desactivado. Ya no aparecera en las apps normales.");
+    await loadStudents();
+  }catch(error){
+    setStudentsMessage("error",error.message);
+  }
+}
+
+async function deleteQuestionBank(bankId){
+  const item = loadedQuestionBanks.find(entry => entry.bankId === bankId);
+  if (!item) return;
+
+  const ok = await openConfirmModal({
+    kicker:"Borrado definitivo de banco de preguntas",
+    title:"Borrar banco definitivamente",
+    subtitle:item.bankName || bankId,
+    warning:"Si continuas, este banco de preguntas se eliminara definitivamente de la base de datos. Esta accion no podra recuperarse.",
+    detailsHtml:`<strong>Registro afectado</strong><ul><li>Banco: ${escapeHtml(item.bankName || "Banco sin nombre")}</li><li>Categoria: ${escapeHtml(item.category || "Sin categoria")}</li><li>Filas: ${escapeHtml(item.rowCount || 0)}</li><li>Preguntas: ${escapeHtml(item.questionCount || 0)}</li></ul>`
+  });
+  if (!ok) {
+    setQuestionBanksMessage("info","Borrado cancelado. No se ha eliminado nada.");
+    return;
+  }
+
+  setQuestionBanksMessage("info","Borrando definitivamente el banco de preguntas...");
+  try{
+    const data = await apiCall({
+      action:"adminDeleteQuestionBank",
+      bankId:bankId,
+      confirmation:"BORRAR"
+    });
+    if (data.status !== "success") throw new Error(data.message || "No se pudo borrar el banco de preguntas.");
+    setQuestionBanksMessage("ok",(data.message || "Banco borrado definitivamente.") + " Filas eliminadas: " + (data.deletedRows || 0) + ".");
+    await loadQuestionBanks();
+  }catch(error){
+    setQuestionBanksMessage("error",error.message);
+  }
+}
+
+async function setQuestionBankActive(bankId,nextActive){
+  const item = loadedQuestionBanks.find(entry => entry.bankId === bankId);
+  if (!item) return;
+  const willActivate = isActive(nextActive);
+  setQuestionBanksMessage("info",willActivate ? "Activando banco de preguntas..." : "Desactivando banco de preguntas...");
+  try{
+    const data = await apiCall({
+      action:"adminSetQuestionBankActive",
+      bankId:bankId,
+      active:willActivate ? "TRUE" : "FALSE"
+    });
+    if (data.status !== "success") throw new Error(data.message || "No se pudo cambiar el estado del banco.");
+    setQuestionBanksMessage("ok",willActivate ? "Banco de preguntas activado." : "Banco de preguntas desactivado. Ya puede borrarse definitivamente si no se va a usar mas.");
+    await loadQuestionBanks();
+  }catch(error){
+    setQuestionBanksMessage("error",error.message);
+  }
+}
+
+async function deleteTopicBank(bankId){
+  const item = loadedTopicBanks.find(entry => entry.bankId === bankId);
+  if (!item) return;
+
+  const ok = await openConfirmModal({
+    kicker:"Borrado definitivo de banco de temas",
+    title:"Borrar banco definitivamente",
+    subtitle:item.bankName || "Banco sin nombre",
+    warning:"Si continuas, este banco de temas se eliminara definitivamente de la base de datos. Esta accion no podra recuperarse.",
+    detailsHtml:`<strong>Registro afectado</strong><ul><li>Banco: ${escapeHtml(item.bankName || "Banco sin nombre")}</li><li>Categoria: ${escapeHtml(item.category || "Sin categoria")}</li><li>Filas: ${escapeHtml(item.rowCount || 0)}</li><li>Temas: ${escapeHtml(item.topicCount || 0)}</li></ul>`
+  });
+  if (!ok) {
+    setTopicBanksMessage("info","Borrado cancelado. No se ha eliminado nada.");
+    return;
+  }
+
+  setTopicBanksMessage("info","Borrando definitivamente el banco de temas...");
+  try{
+    const data = await apiCall({
+      action:"adminDeleteTopicBank",
+      bankId:bankId,
+      confirmation:"BORRAR"
+    });
+    if (data.status !== "success") throw new Error(data.message || "No se pudo borrar el banco de temas.");
+    setTopicBanksMessage("ok",(data.message || "Banco de temas borrado definitivamente.") + " Filas eliminadas: " + (data.deletedRows || 0) + ".");
+    await loadTopicBanks();
+  }catch(error){
+    setTopicBanksMessage("error",error.message);
+  }
+}
+
+async function setTopicBankActive(bankId,nextActive){
+  const item = loadedTopicBanks.find(entry => entry.bankId === bankId);
+  if (!item) return;
+  const willActivate = isActive(nextActive);
+  setTopicBanksMessage("info",willActivate ? "Activando banco de temas..." : "Desactivando banco de temas...");
+  try{
+    const data = await apiCall({
+      action:"adminSetTopicBankActive",
+      bankId:bankId,
+      active:willActivate ? "TRUE" : "FALSE"
+    });
+    if (data.status !== "success") throw new Error(data.message || "No se pudo cambiar el estado del banco.");
+    setTopicBanksMessage("ok",willActivate ? "Banco de temas activado." : "Banco de temas desactivado. Ya puede borrarse definitivamente si no se va a usar mas.");
+    await loadTopicBanks();
+  }catch(error){
+    setTopicBanksMessage("error",error.message);
+  }
+}
+
+function isActive(value){
+  const v = String(value || "").trim().toLowerCase();
+  return ["true","active","activo","sí","si","yes","1"].includes(v);
+}
+
+function escapeHtml(value){
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[char]));
+}
+
+function escapeAttr(value){
+  return escapeHtml(value).replace(/`/g,"&#096;");
+}
+
+darkModeBtn.addEventListener("click",()=>applyDarkMode(!document.body.classList.contains("dark-mode")));
+cardModeBtn.addEventListener("click",()=>applyCardMode(!document.body.classList.contains("admin-compact")));
+openClassesBtn.addEventListener("click",loadClasses);
+reloadPanelBtn.addEventListener("click",loadClasses);
+openStudentsBtn.addEventListener("click",loadStudents);
+reloadStudentsPanelBtn.addEventListener("click",loadStudents);
+studentsClassFilter.addEventListener("change",event=>{
+  selectedStudentClassId = event.target.value;
+  renderFilteredStudents();
+});
+openQuestionBanksBtn.addEventListener("click",loadQuestionBanks);
+reloadQuestionBanksPanelBtn.addEventListener("click",loadQuestionBanks);
+questionBanksClassFilter.addEventListener("change",event=>{
+  selectedQuestionBankClassId = event.target.value;
+  renderQuestionBanks(loadedQuestionBanks);
+});
+openTopicBanksBtn.addEventListener("click",loadTopicBanks);
+reloadTopicBanksPanelBtn.addEventListener("click",loadTopicBanks);
+topicBanksClassFilter.addEventListener("change",event=>{
+  selectedTopicBankClassId = event.target.value;
+  renderTopicBanks(loadedTopicBanks);
+});
+panelBackButtons.forEach(button => button.addEventListener("click",showAdminHome));
+dependencyModalClose.addEventListener("click",closeDependencyModal);
+dependencyModal.addEventListener("click",event=>{
+  if (event.target === dependencyModal) closeDependencyModal();
+});
+confirmModalInput.addEventListener("input",updateConfirmState);
+confirmModalInput.addEventListener("keydown",event=>{
+  if (event.key === "Enter" && !confirmModalAccept.disabled) closeConfirmModal(true);
+});
+confirmModalAccept.addEventListener("click",()=>closeConfirmModal(true));
+confirmModalCancel.addEventListener("click",()=>closeConfirmModal(false));
+confirmModalClose.addEventListener("click",()=>closeConfirmModal(false));
+confirmModal.addEventListener("click",event=>{
+  if (event.target === confirmModal) closeConfirmModal(false);
+});
+document.addEventListener("keydown",event=>{
+  if (event.key === "Escape" && dependencyModal.classList.contains("active")) closeDependencyModal();
+  if (event.key === "Escape" && confirmModal.classList.contains("active")) closeConfirmModal(false);
+});
+classesTableBody.addEventListener("click",event=>{
+  const button = event.target.closest("button[data-action]");
+  if (!button) return;
+  const classId = button.dataset.classId;
+  if (button.dataset.action === "details") showDependencies(classId);
+  if (button.dataset.action === "class-toggle") setClassActiveState(classId,button.dataset.nextActive);
+  if (button.dataset.action === "delete") deleteClass(classId);
+});
+studentsTableBody.addEventListener("click",event=>{
+  const button = event.target.closest("button[data-action]");
+  if (!button) return;
+  const classId = button.dataset.classId;
+  const studentId = button.dataset.studentId;
+  if (button.dataset.action === "student-details") showStudentDependencies(classId,studentId);
+  if (button.dataset.action === "student-toggle") setStudentActiveState(classId,studentId,button.dataset.nextActive);
+  if (button.dataset.action === "student-delete") deleteStudent(classId,studentId);
+});
+questionBanksTableBody.addEventListener("click",event=>{
+  const button = event.target.closest("button[data-action]");
+  if (!button) return;
+  const bankId = button.dataset.bankId;
+  if (button.dataset.action === "question-bank-details") showQuestionBankDetails(bankId);
+  if (button.dataset.action === "question-bank-toggle") setQuestionBankActive(bankId,button.dataset.nextActive);
+  if (button.dataset.action === "question-bank-delete") deleteQuestionBank(bankId);
+});
+topicBanksTableBody.addEventListener("click",event=>{
+  const button = event.target.closest("button[data-action]");
+  if (!button) return;
+  const bankId = button.dataset.bankId;
+  if (button.dataset.action === "topic-bank-details") showTopicBankDetails(bankId);
+  if (button.dataset.action === "topic-bank-toggle") setTopicBankActive(bankId,button.dataset.nextActive);
+  if (button.dataset.action === "topic-bank-delete") deleteTopicBank(bankId);
+});
+
+try{applyDarkMode(JSON.parse(localStorage.getItem("clasesBolsilloAdminDarkMode"))===true)}catch(e){applyDarkMode(false)}
+try{applyCardMode(JSON.parse(localStorage.getItem("clasesBolsilloAdminCompactMode"))===true)}catch(e){applyCardMode(false)}
+</script>
+</body>
+</html>
